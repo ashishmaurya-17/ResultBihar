@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translaterx(0%);
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+@layer utilities {
+  .pause {
+    animation-play-state: paused;
+  }
+}

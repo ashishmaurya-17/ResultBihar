@@ -1,0 +1,6 @@
+{
+  "name": "Result Bihar Portal",
+  "description": "An elegant, master-planned portal hub for latest govt jobs, exam results, admit cards, answer keys, scholarships, and yojanas in Bihar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
