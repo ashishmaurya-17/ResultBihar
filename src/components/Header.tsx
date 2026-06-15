@@ -438,6 +438,7 @@ export default function Header({
                 {cat.label}
               </button>
             ))}
+            
           </div>
         </div>
       </div>

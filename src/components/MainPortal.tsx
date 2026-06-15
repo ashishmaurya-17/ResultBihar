@@ -201,6 +201,7 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
         {/* Visually hidden but SEO important H1 */}
         <h1 className="sr-only">Sarkari Result 2026 - Latest Govt Jobs, Admit Cards & Results</h1>
 
+
         {/* SARKARI SAVER OFFLINE BOOKMARKS POCKET */}
         {savedPocket && savedPocket.length > 0 && (
           <section className="border-2 border-dashed border-amber-500 dark:border-amber-700/60 p-4 bg-amber-50/20 dark:bg-zinc-900/30 relative rounded-none transition-all">
