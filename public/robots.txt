@@ -1,2 +1,4 @@
 User-agent: *
-Disallow: /
+Allow: /
+Sitemap: https://sarkariboard.com/sitemap.xml
+Sitemap: https://sarkariboard.com/news-sitemap.xml

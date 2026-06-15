@@ -106,6 +106,66 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
 
+  // Quick inline age check states
+  const [eligibilityDob, setEligibilityDob] = useState("");
+  const [eligibilityCategory, setEligibilityCategory] = useState("GEN");
+
+  const parsedMinAge = useMemo(() => {
+    const raw = post.a6_ageLimit?.minAge || "";
+    const match = raw.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 18;
+  }, [post.a6_ageLimit?.minAge]);
+
+  const parsedMaxAge = useMemo(() => {
+    const raw = post.a6_ageLimit?.maxAge || "";
+    const match = raw.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 30;
+  }, [post.a6_ageLimit?.maxAge]);
+
+  const ageValidationResult = useMemo(() => {
+    if (!eligibilityDob) return null;
+    const dobDate = new Date(eligibilityDob);
+    if (isNaN(dobDate.getTime())) return null;
+
+    // Use current date for counting age (June 15, 2026 based on mock system context)
+    const valuationDate = new Date("2026-06-15");
+    let years = valuationDate.getFullYear() - dobDate.getFullYear();
+    let months = valuationDate.getMonth() - dobDate.getMonth();
+    let days = valuationDate.getDate() - dobDate.getDate();
+
+    if (days < 0) {
+      months--;
+      const prevMonth = new Date(valuationDate.getFullYear(), valuationDate.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    const calculatedApproxAge = years + (months / 12) + (days / 365);
+
+    let relaxation = 0;
+    if (eligibilityCategory === "OBC") relaxation = 3;
+    else if (eligibilityCategory === "SCST") relaxation = 5;
+    else if (eligibilityCategory === "PH") relaxation = 10;
+
+    const adjustedMaxAge = parsedMaxAge + relaxation;
+
+    let status: "eligible" | "underage" | "overage" = "eligible";
+    if (calculatedApproxAge < parsedMinAge) status = "underage";
+    else if (calculatedApproxAge > adjustedMaxAge) status = "overage";
+
+    return {
+      years,
+      months,
+      days,
+      status,
+      adjustedMaxAge,
+      relaxation
+    };
+  }, [eligibilityDob, eligibilityCategory, parsedMinAge, parsedMaxAge]);
+
   useEffect(() => {
     try {
       const saved = safeLocalStorage.getItem("sarkari_saver_bookmarks");
@@ -119,6 +179,16 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
       console.warn("Failed parsing bookmarked post:", e);
     }
   }, [post.id]);
+
+  useEffect(() => {
+    const originalTitle = document.title;
+    if (post.a1_postName) {
+      document.title = `${post.a1_postName} - SarkariBoard 2026`;
+    }
+    return () => {
+      document.title = originalTitle;
+    };
+  }, [post.a1_postName]);
 
   const toggleBookmark = () => {
     try {
@@ -782,6 +852,90 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
                 headers={["Category Type", "Age Limit Details"]}
                 rows={ageLimitRows}
               />
+            </div>
+
+            {/* Interactive "Am I Eligible?" custom tool */}
+            <div className="bg-red-50/10 dark:bg-zinc-800/20 p-4 border border-dashed border-red-800/40 dark:border-zinc-700 rounded-xl mt-4">
+              <h4 className="text-xs font-black uppercase text-red-800 dark:text-red-400 flex items-center gap-1.5 mb-3 select-none">
+                <span>⚡ Am I Eligible? (आयु पात्रता जांच)</span>
+                <span className="text-[9px] bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300 px-1.5 py-0.5 rounded font-mono">AUTOMATED CHECK</span>
+              </h4>
+
+              <p className="text-[11px] text-gray-500 dark:text-zinc-400 mb-3 leading-relaxed">
+                Test your age eligibility instantly based on this notification's criteria limits (Min: <b>{parsedMinAge} Yrs</b>, Max: <b>{parsedMaxAge} Yrs</b>).
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-b border-gray-100 dark:border-zinc-800 py-3 mb-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase mb-1.5 font-mono">
+                    Your Date of Birth (जन्म तिथि)
+                  </label>
+                  <input
+                    type="date"
+                    value={eligibilityDob}
+                    onChange={(e) => setEligibilityDob(e.target.value)}
+                    className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-750 p-2 text-xs rounded text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-red-850 focus:ring-1 focus:ring-red-850"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase mb-1.5 font-mono">
+                    Category (श्रेणी)
+                  </label>
+                  <select
+                    value={eligibilityCategory}
+                    onChange={(e) => setEligibilityCategory(e.target.value)}
+                    className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-750 p-2 text-xs rounded text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-red-850"
+                  >
+                    <option value="GEN">General / EWS (Standard Limit: {parsedMaxAge} Yrs)</option>
+                    <option value="OBC">OBC (+3 Yrs Relaxation: {parsedMaxAge + 3} Yrs)</option>
+                    <option value="SCST">SC / ST (+5 Yrs Relaxation: {parsedMaxAge + 5} Yrs)</option>
+                    <option value="PH">PH / Divyang (+10 Yrs Relaxation: {parsedMaxAge + 10} Yrs)</option>
+                  </select>
+                </div>
+              </div>
+
+              {ageValidationResult ? (
+                <div className={`p-3 border rounded-xl flex items-center justify-between gap-3 ${
+                  ageValidationResult.status === 'eligible'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+                    : ageValidationResult.status === 'overage'
+                      ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900 text-rose-900 dark:text-rose-200'
+                      : 'bg-amber-50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-900 text-amber-900 dark:text-amber-200'
+                }`}>
+                  <div className="text-left font-sans">
+                    <div className="text-xs font-black uppercase flex items-center gap-1.5">
+                      {ageValidationResult.status === 'eligible' && (
+                        <>
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                          <span>Eligible / आप पात्र हैं</span>
+                        </>
+                      )}
+                      {ageValidationResult.status === 'overage' && (
+                        <>
+                          <span className="w-2 h-2 rounded-full bg-rose-500 inline-block animate-pulse"></span>
+                          <span>Overage / अधिकतम उम्र सीमा पार</span>
+                        </>
+                      )}
+                      {ageValidationResult.status === 'underage' && (
+                        <>
+                          <span className="w-2 h-2 rounded-full bg-amber-500 inline-block animate-pulse"></span>
+                          <span>Underage / न्यूनतम उम्र से कम</span>
+                        </>
+                      )}
+                    </div>
+                    <div className="text-[10px] text-gray-500 dark:text-zinc-400 mt-1 font-mono">
+                      Your calculated age: <b>{ageValidationResult.years} yrs, {ageValidationResult.months} mos, {ageValidationResult.days} days</b>
+                    </div>
+                  </div>
+                  <div className="text-right text-[10px] font-mono shrink-0 font-bold opacity-80">
+                    Max Allowed: {ageValidationResult.adjustedMaxAge} Yrs
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 bg-neutral-50 dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 rounded-xl text-center text-xs text-gray-500 font-mono">
+                  Enter Date of Birth to view calculated age & eligibility checklist status.
+                </div>
+              )}
             </div>
           </section>
 
