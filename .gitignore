@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-ssr/
+build/
+coverage/
+.DS_Store
+*.log
+
+# Sandbox / Framework files
+.astro/
+tsconfig.tsbuildinfo
+firebase-applet-config.json
+.firebase/
+copy.ts
+fix_post.cjs
+replace_tabs.cjs

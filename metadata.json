@@ -1,0 +1,6 @@
+{
+  "name": "SarkariBoard",
+  "description": "An elegant, master-planned portal hub for latest govt jobs, exam results, admit cards, answer keys, scholarships, and yojanas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
