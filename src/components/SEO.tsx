@@ -46,6 +46,23 @@ export const SEO: React.FC<SEOProps> = ({
 
   const isProduction = typeof window !== 'undefined' ? window.location.hostname === 'sarkariboard.com' : true;
 
+  // Helper to append/set the language query parameter for alternates
+  const getLocalizedUrl = (urlStr: string, lang: string): string => {
+    try {
+      const parsed = new URL(urlStr);
+      parsed.searchParams.set('lng', lang);
+      return parsed.toString();
+    } catch (err) {
+      const baseUrl = urlStr.split('?')[0];
+      const params = new URLSearchParams(urlStr.split('?')[1] || '');
+      params.set('lng', lang);
+      return `${baseUrl}?${params.toString()}`;
+    }
+  };
+
+  const englishUrl = getLocalizedUrl(seoUrl, 'en');
+  const hindiUrl = getLocalizedUrl(seoUrl, 'hi');
+
   return (
     <Helmet>
       {/* Standard Meta Tags */}
@@ -55,7 +72,9 @@ export const SEO: React.FC<SEOProps> = ({
       <title>{seoTitle}</title>
       <meta name="description" content={seoDescription} />
       <link rel="canonical" href={seoUrl} />
-      <link rel="alternate" hrefLang="en" href={seoUrl} />
+      <link rel="alternate" hrefLang="en" href={englishUrl} />
+      <link rel="alternate" hrefLang="hi" href={hindiUrl} />
+      <link rel="alternate" hrefLang="x-default" href={seoUrl} />
 
       {/* Open Graph / Facebook Meta Tags */}
       <meta property="og:site_name" content={metadata.name} />

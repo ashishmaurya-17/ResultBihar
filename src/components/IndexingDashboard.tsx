@@ -116,7 +116,18 @@ export default function IndexingDashboard() {
   ]);
 
   // Backlink Acquisition & Internal Link Siloing states
-  const [seoDashboardTab, setSeoDashboardTab] = useState<'silo' | 'backlink' | 'publish' | 'dir' | 'anchor' | 'pdf' | 'faq'>('silo');
+  const [seoDashboardTab, setSeoDashboardTab] = useState<'silo' | 'backlink' | 'publish' | 'dir' | 'anchor' | 'pdf' | 'faq' | 'cms'>('silo');
+  
+  // Headless CMS integration states
+  const [cmsProviderSelected, setCmsProviderSelected] = useState<'local' | 'mock' | 'contentful' | 'strapi'>('local');
+  const [cmsSpaceId, setCmsSpaceId] = useState('');
+  const [cmsAccessToken, setCmsAccessToken] = useState('');
+  const [cmsUrl, setCmsUrl] = useState('');
+  const [cmsToken, setCmsToken] = useState('');
+  const [cmsLogsList, setCmsLogsList] = useState<string[]>([]);
+  const [cmsSyncStatus, setCmsSyncStatus] = useState<'idle' | 'syncing' | 'complete' | 'failed'>('idle');
+  const [cmsStatusMessage, setCmsStatusMessage] = useState('');
+
   const [selectedHub, setSelectedHub] = useState<'ssc' | 'upsc' | 'railway'>('ssc');
   const [crawlSimulating, setCrawlSimulating] = useState(false);
   const [crawlLogs, setCrawlLogs] = useState<string[]>(["Select a category hub and press 'Simulate Googlebot Silo Crawl' to start testing layout flow consistency."]);
@@ -210,6 +221,32 @@ Candidates are requested to review standard trade guidelines before submitting d
     } catch(e) {
       console.warn("Speculation checking threw errors:", e);
     }
+  }, []);
+
+  // Load Headless CMS configuration and initial logs
+  useEffect(() => {
+    const fetchCmsData = async () => {
+      try {
+        const configRes = await fetch("/api/cms/config");
+        if (configRes.ok) {
+          const cfg = await configRes.json();
+          setCmsProviderSelected(cfg.cmsProvider || 'local');
+          setCmsSpaceId(cfg.contentfulSpaceId || '');
+          setCmsAccessToken(cfg.contentfulAccessToken || '');
+          setCmsUrl(cfg.strapiApiUrl || '');
+          setCmsToken(cfg.strapiApiToken || '');
+        }
+        
+        const logsRes = await fetch("/api/cms/logs");
+        if (logsRes.ok) {
+          const lgs = await logsRes.json();
+          setCmsLogsList(lgs.logs || []);
+        }
+      } catch (err) {
+        console.warn("Could not query server CMS config:", err);
+      }
+    };
+    fetchCmsData();
   }, []);
 
   const runSpeedDiagnostic = () => {
@@ -1708,6 +1745,16 @@ Candidates are requested to review standard trade guidelines before submitting d
                   }`}
                 >
                   📄 7. PDF Alerts & Sitemap
+                </button>
+                <button
+                  onClick={() => setSeoDashboardTab('cms')}
+                  className={`px-4 py-2 border-t-2 -mb-[1px] transition-all cursor-pointer ${
+                    seoDashboardTab === 'cms'
+                      ? "border-amber-600 bg-neutral-50 dark:bg-zinc-950 text-amber-655 border-x border-neutral-300 dark:border-zinc-800"
+                      : "border-transparent text-neutral-500 hover:text-neutral-900 dark:hover:text-zinc-100"
+                  }`}
+                >
+                  📡 8. Headless CMS Hub
                 </button>
               </div>
 

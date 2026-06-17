@@ -85,6 +85,21 @@ def scrape_dynamic_page(url):
         return content
 ```
 
+### 🛰️ Dynamic Sitemap Generator (Python)
+We have added a custom automated Python sitemap generator `generate_sitemap.py` at the root. It reads static page definitions and dynamically scans all markdown database posts from `src/content/`.
+
+To manually trigger sitemap and news sitemap generation:
+```bash
+python generate_sitemap.py
+```
+
+**Features Included:**
+1. **Zero External Dependencies**: Uses built-in Python libraries (`os`, `re`, `datetime`, `urllib.parse`) so it can be scheduled on any container, lightweight VM, or shell script out-of-the-box.
+2. **Smart Priorities & Crawl Budgets**: Downgrades expired listings to lowest crawl frequency (`monthly`, priority `0.50`) and boosts active alerts/results up to `daily` priority (`0.90` and `0.85` respectively).
+3. **Google News XML Schema**: Generates a secondary `news-sitemap.xml` file which includes top alert categories published in the last 7 days conforming exactly to Google's news indexing specification.
+4. **Dual Directories sync**: Automatically writes to `public/` and copies directly to `dist/` if a build has already been generated.
+
+
 ---
 
 ## 5. React State Consumption

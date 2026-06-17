@@ -32,7 +32,11 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   // Live dynamic mutable posts state
-  const [posts] = useState<Post[]>(initialPosts);
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
+
+  React.useEffect(() => {
+    setPosts(initialPosts);
+  }, [initialPosts]);
 
   // Sarkari Saver Saved Pocket Offline alerts
   const [savedPocket, setSavedPocket] = useState<any[]>([]);

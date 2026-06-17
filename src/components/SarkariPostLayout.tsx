@@ -1478,20 +1478,22 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
     <aside className="col-span-12 lg:col-span-4 xl:col-span-3 space-y-6 no-print w-full min-w-0 overflow-hidden">
        
        {/* 1. SARKARIBOARD OFFICIAL ALERT DESK */}
-       <div className="bg-[#FAF9F5] dark:bg-zinc-900 border-2 border-gray-900 dark:border-zinc-700 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)]">
-         <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-[#1e293b] dark:text-zinc-100 border-b-2 border-gray-900 dark:border-zinc-700 pb-2 mb-3 flex items-center justify-between font-bold">
-           <span>🔔 ALERT DESK / अलर्ट डेस्क</span>
-           <span className="font-mono text-[9px] bg-red-800 text-white px-2 py-0.5 uppercase tracking-wide">Live Updates</span>
+       <div className="bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+         {/* Soft Colored Bloom */}
+         <div className="absolute right-0 top-0 w-32 h-32 bg-rose-500/5 dark:bg-rose-500/10 blur-2xl pointer-events-none"></div>
+         <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-[#1e293b] dark:text-zinc-100 border-b border-neutral-100 dark:border-neutral-800 pb-3 mb-3.5 flex items-center justify-between">
+           <span className="flex items-center gap-1.5"><span className="text-rose-500">🔔</span> ALERT DESK / अलर्ट डेस्क</span>
+           <span className="font-mono text-[9px] font-black bg-rose-500 text-white px-2.5 py-1 rounded-full uppercase tracking-wider">Live Updates</span>
          </h3>
-         <p className="text-[11px] font-bold text-gray-700 dark:text-zinc-300 leading-relaxed mb-3 font-sans">
+         <p className="text-[11px] font-bold text-neutral-600 dark:text-zinc-300 leading-relaxed mb-4 font-sans">
            जुड़ें भारत के सबसे बड़े सरकारी नौकरी सूचना नेटवर्क से और पाएं हर भर्ती का अपडेट सबसे पहले सीधे अपने फ़ोन पर!
          </p>
-         <div className="flex flex-col gap-2">
+         <div className="flex flex-col gap-2.5 relative z-10">
            <a
              href="https://whatsapp.com/channel/0029Vb7jr5D17En1gOUJB01u"
              target="_blank"
              rel="noopener noreferrer"
-             className="flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] active:bg-[#1ca34d] text-white font-sans font-black text-xs uppercase tracking-wider py-2.5 px-3 border border-gray-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition transform active:translate-x-[0.5px] active:translate-y-[0.5px] cursor-pointer text-center select-none"
+             className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba59] text-white font-sans font-black text-xs uppercase tracking-widest py-3 px-4 rounded-full shadow-sm transition-colors cursor-pointer select-none text-center"
            >
              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 shrink-0">
                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 00-5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -1502,7 +1504,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
              href="https://t.me/sarkariboardweb"
              target="_blank"
              rel="noopener noreferrer"
-             className="flex items-center justify-center gap-1.5 bg-[#0088cc] hover:bg-[#007cbd] active:bg-[#0070ab] text-white font-sans font-black text-xs uppercase tracking-wider py-2.5 px-3 border border-gray-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition transform active:translate-x-[0.5px] active:translate-y-[0.5px] cursor-pointer text-center select-none"
+             className="flex items-center justify-center gap-2 bg-[#0088cc] hover:bg-[#007cbd] text-white font-sans font-black text-xs uppercase tracking-widest py-3 px-4 rounded-full shadow-sm transition-colors cursor-pointer select-none text-center"
            >
              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 shrink-0">
                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.136-.954l11.566-4.458c.538-.196 1.006.128.832.939z" />
@@ -1513,15 +1515,17 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
        </div>
        
        {/* 2. ONLINE CANDIDATE HELP TOOLS BANNER */}
-       <div className="bg-white dark:bg-zinc-900 border-2 border-gray-900 dark:border-zinc-700 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)]">
-         <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-gray-950 dark:text-neutral-200 mb-2.5 border-b-2 border-gray-900 dark:border-zinc-700 pb-2 flex items-center justify-between font-bold">
-           <span>🛠️ STUDENT HELP CENTER</span>
-           <span className="font-mono text-[9px] bg-red-800 text-white px-2 py-0.5 uppercase tracking-wide">Free Tools</span>
+       <div className="bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+         {/* Soft Colored Bloom */}
+         <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-500/5 dark:bg-indigo-500/10 blur-2xl pointer-events-none"></div>
+         <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-[#1e293b] dark:text-zinc-100 border-b border-neutral-100 dark:border-neutral-800 pb-3 mb-3 flex items-center justify-between">
+           <span className="flex items-center gap-1.5"><span className="text-indigo-500">🛠️</span> STUDENT HELP CENTER</span>
+           <span className="font-mono text-[9px] font-black bg-indigo-505 bg-indigo-500 text-white px-2.5 py-1 rounded-full uppercase tracking-wider">Free Tools</span>
          </h3>
-         <p className="text-[11px] text-gray-500 dark:text-zinc-400 mb-3.5 leading-relaxed font-bold font-sans">
+         <p className="text-[11px] text-neutral-500 dark:text-zinc-400 mb-4 leading-relaxed font-bold font-sans">
            परीक्षा फॉर्म भरने से पहले फोटो, सिग्नेचर को रिसाइज करें, सही आयु की गणना करें या बायोडाटा बनाएं:
          </p>
-         <div className="flex flex-col gap-1.5 font-sans">
+         <div className="flex flex-col gap-2 relative z-10 font-sans">
            {[
              { label: "📷 Photo Resizer Tool", key: "resizer" },
              { label: "🔄 PNG to JPG Converter", key: "converter" },
@@ -1535,9 +1539,10 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
                  navigate('/tools');
                  setStore({ currentView: 'tools' });
                }}
-               className="w-full text-left py-1.5 px-2.5 border border-gray-400 dark:border-zinc-700 hover:border-red-800 dark:hover:border-red-400 font-bold text-[11px] uppercase tracking-wide transition-all bg-neutral-50 dark:bg-zinc-800/50 hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-900 dark:text-zinc-200 select-none cursor-pointer"
+               className="w-full text-left py-2.5 px-4 border border-neutral-200 dark:border-neutral-800 rounded-xl font-bold text-xs uppercase tracking-wider transition-colors bg-neutral-50 dark:bg-zinc-800/30 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 text-neutral-800 dark:text-zinc-200 select-none cursor-pointer flex items-center justify-between group"
              >
-               {t.label} ➔
+               <span>{t.label}</span>
+               <span className="text-indigo-500 group-hover:translate-x-1.5 transition-transform">➔</span>
              </button>
            ))}
          </div>
@@ -1545,18 +1550,20 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
        {/* 3. LATEST RELATED NOTICES BULLETINS */}
        {relatedPosts && relatedPosts.length > 0 && (
-         <div className="bg-white dark:bg-zinc-900 border-2 border-gray-900 dark:border-zinc-700 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)]">
-           <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-gray-950 dark:text-neutral-200 mb-3 border-b-2 border-gray-900 dark:border-zinc-700 pb-2 flex items-center justify-between font-bold">
-             <span>📌 RELATED NOTICES / संबंधित सरकारी नौकरी</span>
-             <span className="font-mono text-[9px] bg-amber-600 text-white px-2 py-0.5 uppercase tracking-wide">Jobs</span>
+         <div className="bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+           {/* Soft Colored Bloom */}
+           <div className="absolute right-0 top-0 w-32 h-32 bg-orange-500/5 dark:bg-orange-500/10 blur-2xl pointer-events-none"></div>
+           <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-[#1e293b] dark:text-zinc-100 border-b border-neutral-100 dark:border-neutral-800 pb-3 mb-3.5 flex items-center justify-between">
+             <span className="flex items-center gap-1.5"><span className="text-orange-500">📌</span> RELATED NOTICES</span>
+             <span className="font-mono text-[9px] font-black bg-orange-500 text-white px-2.5 py-1 rounded-full uppercase tracking-wider">Jobs</span>
            </h3>
-           <ul className="space-y-3 font-sans">
+           <ul className="space-y-3.5 relative z-10 font-sans">
              {relatedPosts.map((r, idx) => (
-               <li key={idx} className="border-b border-gray-250 dark:border-zinc-800 last:border-b-0 pb-2.5 last:pb-0 flex items-start gap-2">
-                 <span className="text-red-800 dark:text-red-400 mt-0.5 font-bold shrink-0">⚡</span>
+               <li key={idx} className="border-b border-neutral-100 dark:border-zinc-800 last:border-b-0 pb-3 last:pb-0 flex items-start gap-2.5">
+                 <span className="text-orange-500 mt-0.5 font-bold shrink-0">⚡</span>
                  <a
                    href={r.url || `#`}
-                   className="text-gray-950 dark:text-zinc-100 hover:text-red-800 dark:hover:text-red-400 font-bold text-xs leading-snug tracking-tight hover:underline block"
+                   className="text-neutral-800 dark:text-zinc-100 hover:text-indigo-600 dark:hover:text-indigo-400 font-bold text-xs leading-snug tracking-tight hover:underline block font-sans"
                  >
                    {r.title}
                  </a>
@@ -1567,11 +1574,13 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
        )}
 
        {/* 4. POPULAR FILTERS / CAREER PILLS */}
-       <div className="bg-[#FAF9F5] dark:bg-zinc-900/40 border-2 border-gray-900 dark:border-zinc-700 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)]">
-         <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-[#1e293b] dark:text-zinc-100 border-b-2 border-gray-900 dark:border-zinc-700 pb-2 mb-3 font-bold">
-           🏷️ QUICK JOB FILTERS / नौकरी फ़िल्टर
+       <div className="bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+         {/* Soft Colored Bloom */}
+         <div className="absolute right-0 top-0 w-32 h-32 bg-fuchsia-500/5 dark:bg-fuchsia-500/10 blur-2xl pointer-events-none"></div>
+         <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-[#1e293b] dark:text-zinc-100 border-b border-neutral-100 dark:border-neutral-800 pb-3 mb-3.5 font-bold flex items-center gap-1.5">
+           <span className="text-fuchsia-500">🏷️</span> QUICK JOB FILTERS / नौकरी फ़िल्टर
          </h3>
-         <div className="flex flex-wrap gap-1.5">
+         <div className="flex flex-wrap gap-2 relative z-10 font-sans">
            {[
              { label: "10th Pass Jobs", filter: { selectedQualification: "10th Pass", selectedState: "all", searchKeyword: "" } },
              { label: "12th Pass Jobs", filter: { selectedQualification: "12th Pass", selectedState: "all", searchKeyword: "" } },
@@ -1588,7 +1597,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
                  setStore(pill.filter);
                  onBack?.();
                }}
-               className="px-2 py-1 border border-gray-900 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-950 dark:text-zinc-200 hover:bg-red-800 hover:text-white dark:hover:bg-red-900 transition-colors cursor-pointer select-none text-[10px] uppercase font-bold tracking-wide"
+               className="px-3 py-1.5 border border-neutral-200 dark:border-neutral-800 rounded-full bg-neutral-50 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-350 hover:bg-fuchsia-500 hover:text-white dark:hover:bg-fuchsia-600 dark:hover:text-white transition-colors cursor-pointer select-none text-[10px] uppercase font-bold tracking-wider"
              >
                {pill.label}
              </button>
@@ -1597,12 +1606,14 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
        </div>
 
        {/* 5. IMPORTANT CITIZEN SERVICES TABLE BOX */}
-       <div className="bg-white dark:bg-zinc-900 border-2 border-gray-900 dark:border-zinc-700 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)]">
-         <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-[#1e293b] dark:text-neutral-200 mb-2.5 border-b-2 border-gray-900 dark:border-zinc-700 pb-2 flex items-center justify-between font-bold">
-           <span>💼 PUBLIC SERVICES / जन सेवाएं</span>
-           <span className="font-mono text-[9px] bg-red-800 text-white px-2 py-0.5 uppercase tracking-wide">Govt Links</span>
+       <div className="bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+         {/* Soft Colored Bloom */}
+         <div className="absolute right-0 top-0 w-32 h-32 bg-emerald-500/5 dark:bg-emerald-500/10 blur-2xl pointer-events-none"></div>
+         <h3 className="font-sans font-black text-xs sm:text-sm uppercase tracking-widest text-[#1e293b] dark:text-neutral-200 border-b border-neutral-100 dark:border-neutral-800 pb-3 mb-3.5 flex items-center justify-between font-bold" id="public-services-header">
+           <span className="flex items-center gap-1.5"><span className="text-emerald-500">💼</span> PUBLIC SERVICES / जन सेवाएं</span>
+           <span className="font-mono text-[9px] font-black bg-emerald-500 text-white px-2.5 py-1 rounded-full uppercase tracking-wider">Govt Links</span>
          </h3>
-         <div className="flex flex-col gap-2 font-sans text-xs">
+         <div className="flex flex-col gap-2 relative z-10 font-sans">
            {[
              { title: "Download Aadhaar Card", url: "https://uidai.gov.in" },
              { title: "Check PAN Card Status", url: "https://www.pan.utiitsl.com" },
@@ -1615,18 +1626,18 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
                href={srv.url}
                target="_blank"
                rel="noopener noreferrer"
-               className="flex items-center justify-between py-1 px-1 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-colors border-b border-gray-200 dark:border-zinc-850 last:border-0"
+               className="flex items-center justify-between py-2.5 px-1 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors border-b border-neutral-100 dark:border-neutral-800 last:border-0"
              >
-               <span className="font-bold text-gray-900 dark:text-zinc-300 truncate text-[11px] uppercase tracking-wide">
+               <span className="font-bold text-neutral-850 dark:text-zinc-300 truncate text-[11px] uppercase tracking-wide">
                  {srv.title}
                </span>
-               <span className="text-red-800 dark:text-red-400 font-bold shrink-0 font-mono text-[10px] ml-2">➔ VISIT</span>
+               <span className="text-emerald-500 hover:text-emerald-600 font-bold shrink-0 font-mono text-[10px] ml-2">➔ VISIT</span>
              </a>
            ))}
          </div>
        </div>
 
-    </aside> {/* End Sidebar Column */}
+     </aside> {/* End Sidebar Column */}
 
   </div> {/* End Grid */}
 </div> {/* End Core Container max-w-1580px */}

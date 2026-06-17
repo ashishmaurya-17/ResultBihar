@@ -13,6 +13,7 @@ import Breadcrumbs from './components/Breadcrumbs';
 import { useTranslation } from 'react-i18next';
 import { usePortalStore } from './store';
 import { fetchMarkdownPosts } from './lib/contentFetcher';
+import { Post } from './types';
 import { safeLocalStorage } from './lib/storage';
 import SarkariSaathi from './components/SarkariSaathi';
 import StructuredData from './components/StructuredData';
@@ -150,7 +151,30 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const allPosts = useMemo(() => fetchMarkdownPosts(), []);
+  const [allPosts, setAllPosts] = useState<Post[]>(() => fetchMarkdownPosts());
+
+  useEffect(() => {
+    const syncLivePosts = async () => {
+      try {
+        const response = await fetch("/api/posts");
+        if (response.ok) {
+          const livePosts = await response.json();
+          if (Array.isArray(livePosts) && livePosts.length > 0) {
+            setAllPosts((prevPosts) => {
+              const mergedMap = new Map<string, Post>();
+              prevPosts.forEach(p => mergedMap.set(p.id, p));
+              livePosts.forEach(p => mergedMap.set(p.id, p));
+              const list = Array.from(mergedMap.values());
+              return list.sort((a, b) => new Date(b.postDate).getTime() - new Date(a.postDate).getTime());
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("[App] Dynamic background post synchronization failed:", err);
+      }
+    };
+    syncLivePosts();
+  }, []);
 
   // Sync route with store (basic sync for existing UI logic)
   useEffect(() => {
