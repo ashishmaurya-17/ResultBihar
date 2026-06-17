@@ -203,38 +203,45 @@ export default function Header({
 
   return (
     <header
-      className="relative z-40 w-full shadow-md bg-white dark:bg-zinc-950 pattern-boxes pattern-blue-900 pattern-bg-blue-900 pattern-size-4 pattern-opacity-5"
+      className="relative z-40 w-full bg-white dark:bg-zinc-950 shadow-sm"
       id="portal-header"
     >
-      {/* Main Blue Brand Header */}
-      <div
-        className="text-white shadow-xl px-4 py-3 sm:py-5 relative overflow-hidden group"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"), linear-gradient(110deg, #1a365d 0%, #1e40af 40%, #0f172a 100%)`,
-          backgroundBlendMode: "overlay, normal",
-        }}
-      >
-        {/* Subtle glow orb in background */}
-        <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px] -translate-y-1/2 -z-0 pointer-events-none group-hover:bg-blue-400/20 transition-all duration-1000"></div>
+      {/* Top Black Strip */}
+      <div className="h-1.5 w-full bg-neutral-900 dark:bg-black"></div>
 
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5 relative z-10">
-          {/* Logo Brand */}
-          <div
-            onClick={() => {
-              setCurrentView("home");
-              setSelectedCollection("all");
-            }}
-            className="cursor-pointer shrink-0"
-          >
-            <Logo variant="horizontal" isDarkBackground={true} iconSize={64} />
+      {/* Main Details and Search Row */}
+      <div className="bg-white dark:bg-zinc-950 px-4 py-4 relative overflow-hidden flex items-center justify-between">
+        {/* Soft Colored Bloom behind Logo */}
+        <div className="absolute left-4 md:left-20 top-1/2 -translate-y-1/2 w-48 h-32 bg-indigo-500/15 blur-[50px] rounded-full pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto w-full flex items-center gap-4 md:gap-8 relative z-10 flex-wrap md:flex-nowrap">
+          {/* Logo Brand Section */}
+          <div className="flex items-center gap-6 w-full md:w-auto shrink-0 justify-center md:justify-start">
+            <div
+              onClick={() => {
+                setCurrentView("home");
+                setSelectedCollection("all");
+              }}
+              className="cursor-pointer shrink-0"
+            >
+              <Logo variant="horizontal" isDarkBackground={false} iconSize={44} />
+            </div>
+
+            <div className="hidden md:flex items-center gap-5 shrink-0">
+              <div className="w-[1px] h-9 bg-neutral-200 dark:bg-neutral-800"></div>
+              <div className="flex flex-col select-none">
+                <span className="text-sm font-black text-neutral-900 dark:text-zinc-100 tracking-tight leading-none mb-1">SARKARIBOARD</span>
+                <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 tracking-widest uppercase leading-none">MODERN RECRUITMENT HUB</span>
+              </div>
+            </div>
           </div>
 
-          {/* Search container & Theme toggle area */}
-          <div className="flex items-center gap-3 w-full md:max-w-xl grow justify-end mx-0 md:mx-4">
-            {/* Premium Highly Visible Dynamic Search Box (Specially optimized for quick touch & find) */}
-            <div className="w-full md:max-w-md relative grow" ref={searchContainerRef}>
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-neutral-900 dark:text-zinc-100" strokeWidth={2.5} />
+          {/* Search container & Theme Toggle */}
+          <div className="flex items-center gap-4 w-full justify-end mt-2 md:mt-0">
+            {/* Search Box */}
+            <div className="w-full md:max-w-[36rem] relative" ref={searchContainerRef}>
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 text-neutral-400" strokeWidth={2.5} />
               </div>
               <input
                 type="text"
@@ -252,29 +259,45 @@ export default function Header({
                     setCurrentView("home");
                   }
                 }}
-                placeholder="Search jobs, results, admit cards, BPSC, SSC..."
-                className="w-full bg-white dark:bg-zinc-950 text-gray-900 dark:text-zinc-100 placeholder-gray-500/80 border-2 border-gray-950 dark:border-zinc-700 rounded-none py-2.5 pl-11 pr-10 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-black transition-all font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.05)]"
+                placeholder="QUERY NODES: BPSC, SSC, RESULTS..."
+                className="w-full bg-white dark:bg-zinc-900 text-neutral-900 dark:text-zinc-100 placeholder-neutral-400 border border-neutral-200 dark:border-neutral-800 rounded-full py-3.5 pl-12 pr-14 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all font-bold uppercase tracking-wider shadow-sm"
               />
               
+              {searchKeyword && (
+                <button
+                  onClick={() => setSearchKeyword("")}
+                  className="absolute inset-y-0 right-10 pr-3 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+
+              <button
+                onClick={toggleListening}
+                className={`absolute inset-y-0 right-0 pr-5 flex items-center cursor-pointer ${isListening ? 'text-red-500 animate-pulse' : 'text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200'}`}
+              >
+                <Mic className="h-4 w-4" />
+              </button>
+
               {/* Recent Searches dropdown under Search Box */}
               {isRecentOpen && searchKeyword.length <= 1 && recentSearches.length > 0 && (
-                <div className="absolute top-full left-0 mt-2 w-full bg-[#FAF9F5] dark:bg-zinc-900 border-2 border-gray-950 dark:border-zinc-700 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-[60] overflow-hidden p-3.5 text-neutral-800 dark:text-neutral-200 font-sans">
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b-2 border-gray-950 dark:border-zinc-800 select-none">
-                    <span className="text-[10px] uppercase font-black tracking-wider text-gray-950 dark:text-zinc-200 flex items-center gap-1.5 font-mono">
-                      <Search className="w-3 text-red-800" size={12} /> Recent Searches
+                <div className="absolute top-full left-0 mt-3 w-full bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-lg z-[60] overflow-hidden p-4">
+                  <div className="flex items-center justify-between pb-3 mb-3 border-b border-neutral-100 dark:border-neutral-800 select-none">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-500 dark:text-zinc-400 flex items-center gap-1.5">
+                      <Search className="w-3 text-neutral-400" size={12} /> Recent Searches
                     </span>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation();
-                        setRecentSearches([]);
-                        localStorage.removeItem("sarkariboard_recent_searches");
+                         e.stopPropagation();
+                         setRecentSearches([]);
+                         localStorage.removeItem("sarkariboard_recent_searches");
                       }}
-                      className="text-[10px] uppercase font-black text-red-100 hover:text-red-950 cursor-pointer font-mono"
+                      className="text-[10px] uppercase font-bold text-red-400 hover:text-red-500 transition-colors"
                     >
                       Clear All
                     </button>
                   </div>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-2">
                     {recentSearches.map((term, sidx) => (
                       <button
                         key={sidx}
@@ -286,7 +309,7 @@ export default function Header({
                             setCurrentView("home");
                           }
                         }}
-                        className="px-2.5 py-1.5 bg-white hover:bg-red-800 hover:text-white dark:bg-zinc-950 dark:hover:bg-red-900 border border-gray-950 dark:border-zinc-705 transition rounded-none text-xs font-black cursor-pointer shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                        className="px-3 py-1.5 bg-neutral-50 hover:bg-neutral-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-neutral-700 dark:text-neutral-300 transition rounded-full text-xs font-bold cursor-pointer border border-neutral-200 dark:border-zinc-700"
                       >
                         {term}
                       </button>
@@ -296,9 +319,9 @@ export default function Header({
               )}
 
               {(filteredPostsSuggestions.length > 0 || filteredCategorySuggestions.length > 0) && (
-                <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-zinc-950 border-2 border-gray-950 dark:border-zinc-750 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-[60] overflow-hidden divide-y divide-gray-300 dark:divide-zinc-800">
+                <div className="absolute top-full left-0 mt-3 w-full bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-lg z-[60] overflow-hidden divide-y divide-neutral-100 dark:divide-zinc-800">
                   {filteredCategorySuggestions.length > 0 && (
-                      <div className="px-4 py-2 bg-gray-100 dark:bg-zinc-800 text-[10px] font-bold uppercase text-gray-500">Categories</div>
+                      <div className="px-5 py-2.5 bg-neutral-50 dark:bg-zinc-800/50 text-[10px] font-bold uppercase text-neutral-400">Categories</div>
                   )}
                   {filteredCategorySuggestions.map((cat) => (
                     <button
@@ -312,14 +335,14 @@ export default function Header({
                           setCurrentView("home");
                         }
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-[#FAF9F5] dark:hover:bg-zinc-900 text-xs text-neutral-800 dark:text-neutral-200 font-bold transition-all"
+                      className="w-full text-left px-5 py-3 hover:bg-neutral-50 dark:hover:bg-zinc-800 text-xs text-neutral-700 dark:text-neutral-300 font-bold transition-all"
                     >
                       {cat}
                     </button>
                   ))}
                   
                   {filteredPostsSuggestions.length > 0 && (
-                      <div className="px-4 py-2 bg-gray-100 dark:bg-zinc-800 text-[10px] font-bold uppercase text-gray-500">Jobs</div>
+                      <div className="px-5 py-2.5 bg-neutral-50 dark:bg-zinc-800/50 text-[10px] font-bold uppercase text-neutral-400">Jump to Post</div>
                   )}
                   {filteredPostsSuggestions.map((post) => (
                     <Link
@@ -333,94 +356,50 @@ export default function Header({
                         setFilteredPostsSuggestions([]);
                         setFilteredCategorySuggestions([]);
                       }}
-                      className="block w-full text-left px-4 py-3 hover:bg-[#FAF9F5] dark:hover:bg-zinc-900 text-xs text-neutral-800 dark:text-neutral-200 font-bold transition-all"
+                      className="block w-full text-left px-5 py-3 hover:bg-neutral-50 dark:hover:bg-zinc-800 text-xs text-neutral-700 dark:text-neutral-300 font-bold transition-all"
                     >
                       {post.title}
                     </Link>
                   ))}
                 </div>
               )}
-              {searchKeyword && (
-                <button
-                  onClick={() => setSearchKeyword("")}
-                  className="absolute inset-y-0 right-8 pr-3 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-              <button
-                onClick={toggleListening}
-                className={`absolute inset-y-0 right-0 pr-3 flex items-center ${isListening ? 'text-red-500 animate-pulse' : 'text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200'}`}
-              >
-                <Mic className="h-4 w-4" />
-              </button>
             </div>
 
-            {/* Persistent UI Theme Toggle Switch */}
+            {/* Theme Toggle Button */}
             <button
-              onClick={toggleTheme}
-              className="relative shrink-0 overflow-hidden cursor-pointer select-none border-2 border-white/80 dark:border-zinc-700 bg-white/10 dark:bg-zinc-900/40 hover:bg-white/20 dark:hover:bg-zinc-900 transition-all rounded-none py-2 px-3 flex items-center gap-2 shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.15)] group"
-              aria-label="Toggle Theme"
-              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+               onClick={toggleTheme}
+               className="shrink-0 flex items-center justify-center w-11 h-11 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-zinc-900 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-colors shadow-sm cursor-pointer"
+               title={`Toggle Theme`}
             >
-              <motion.div 
-                key={theme} 
-                initial={{ rotate: -180, opacity: 0 }} 
-                animate={{ rotate: 0, opacity: 1 }} 
-                transition={{ duration: 0.3 }}
-                className="flex items-center justify-center"
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-4 h-4 text-amber-300 fill-amber-300" />
-                ) : (
-                  <Moon className="w-4 h-4 text-blue-200 fill-blue-200" />
-                )}
-              </motion.div>
-              <div className="flex flex-col items-start leading-none text-left">
-                <span className="text-[8px] uppercase font-bold text-blue-200/90 font-mono tracking-widest leading-none">Style</span>
-                <span className="text-[10px] uppercase font-black text-white font-sans tracking-wide leading-none mt-0.5 whitespace-nowrap">
-                  {theme === 'dark' ? 'Light' : 'Dark'}
-                </span>
-              </div>
+              {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-4 h-4 text-blue-600" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Navigation Sub-Strip for Quick Filters */}
-      <div
-        className="border-b border-white/5 px-4 py-2.5 text-xs sm:text-sm overflow-x-auto md:overflow-x-visible scrollbar-none z-50 w-full shadow-md relative"
-        id="portal-sub-strip"
-        style={{
-          backgroundColor: '#0f172a'
-        }}
-      >
-        <div className="max-w-7xl mx-auto w-full flex flex-nowrap items-center justify-between gap-2 overflow-y-visible">
-          <div className="flex flex-nowrap items-center gap-2 sm:gap-3 py-0.5 shrink-0">
-            {/* Simple Elegant Home Link Button */}
-            <button
-              onClick={() => {
-                setCurrentView("home");
-                setSelectedCollection("all");
-                setStore({ currentFilter: 'all' });
-              }}
-              className={`px-3.5 py-1.5 rounded-none transition-all text-xs font-black uppercase tracking-wider border-2 border-black cursor-pointer flex items-center gap-1.5 select-none ${
-                currentView === "home" && selectedCollection === "all"
-                  ? "bg-amber-300 text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                  : "bg-white text-gray-950 hover:bg-gray-100 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
-              }`}
-            >
-              <span>Home</span>
-            </button>
-          </div>
+      {/* Bottom Category Bar */}
+      <div className="border-t border-b border-neutral-200/80 dark:border-neutral-800 bg-[#fbfbfb] dark:bg-zinc-900/40 px-4 py-3 sm:py-4 overflow-x-auto scrollbar-none z-30 relative">
+        <div className="max-w-7xl mx-auto w-full flex items-center gap-6 sm:gap-8">
+          <button
+            onClick={() => {
+              setCurrentView("home");
+              setSelectedCollection("all");
+              setStore({ currentFilter: 'all' });
+            }}
+            className="text-[11px] sm:text-xs font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300 whitespace-nowrap shrink-0 transition-colors cursor-pointer select-none"
+          >
+            System Home
+          </button>
+          
+          <div className="w-[1px] h-5 bg-neutral-200 dark:bg-neutral-800 shrink-0"></div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-nowrap overflow-x-auto scrollbar-none pb-0.5 max-w-full">
+          <div className="flex items-center gap-6 lg:gap-10 shrink-0 flex-nowrap pb-0.5 select-none">
             {[
-              { id: 'jobs', label: 'Jobs' },
-              { id: 'results', label: 'Results' },
-              { id: 'admit-cards', label: 'Admit Card' },
-              { id: 'answer-keys', label: 'Answer Key' },
-              { id: 'syllabus', label: 'Syllabus' }
+              { id: 'jobs', label: 'Jobs', colorClass: 'text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300' },
+              { id: 'results', label: 'Results', colorClass: 'text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300' },
+              { id: 'admit-cards', label: 'Admit Cards', colorClass: 'text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300' },
+              { id: 'answer-keys', label: 'Answer Keys', colorClass: 'text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300' },
+              { id: 'syllabus', label: 'Exam Syllabus', colorClass: 'text-fuchsia-500 hover:text-fuchsia-600 dark:text-fuchsia-400 dark:hover:text-fuchsia-300' }
             ].map(cat => (
               <button
                 key={cat.id}
@@ -429,24 +408,19 @@ export default function Header({
                   setSelectedCollection(cat.id);
                   setStore({ currentFilter: 'all' });
                 }}
-                className={`px-3 py-1 rounded-none transition-colors text-[10px] sm:text-xs font-bold uppercase tracking-wider whitespace-nowrap ${
-                  selectedCollection === cat.id
-                    ? "bg-slate-700 text-white shadow-sm"
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                className={`text-[11px] sm:text-xs font-black uppercase tracking-widest whitespace-nowrap transition-colors cursor-pointer ${cat.colorClass} ${
+                  selectedCollection === cat.id ? 'opacity-100' : 'opacity-80 hover:opacity-100'
                 }`}
               >
                 {cat.label}
               </button>
             ))}
-            
           </div>
         </div>
       </div>
-
-      {/* Quick Tools Drawer rendered globally */}
       
       {error && (
-        <div className="fixed bottom-4 right-4 bg-red-600 text-white p-4 rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-[100] text-xs font-bold uppercase">
+        <div className="fixed bottom-4 right-4 bg-red-600 text-white p-4 rounded-xl shadow-lg z-[100] text-xs font-bold uppercase">
           {error}
         </div>
       )}

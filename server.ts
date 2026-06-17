@@ -181,6 +181,136 @@ function warmPostIndexing() {
   }
 }
 
+// Global System Notification Tracking (Broadcast)
+interface SystemNotification {
+  message: string;
+  type: string;
+  id: number;
+  timestamp: number;
+}
+let globalNotification: SystemNotification | null = null;
+let notificationHistory: SystemNotification[] = [];
+const NOTIFICATION_EXPIRY_MS = 60 * 60 * 1000; // 1 hour persistence
+
+// Helper to cleanup expired notifications
+const cleanupNotifications = () => {
+  if (globalNotification && Date.now() - globalNotification.timestamp > NOTIFICATION_EXPIRY_MS) {
+    globalNotification = null;
+  }
+};
+
+app.get("/api/notifications", (req, res) => {
+  cleanupNotifications();
+  res.json({ notification: globalNotification, history: notificationHistory });
+});
+
+app.post("/api/notifications", express.json(), (req, res) => {
+  const { message, type } = req.body;
+  if (!message) return res.status(400).json({ error: "Message is required" });
+  
+  const notif = {
+    message,
+    type: type || 'info',
+    id: Date.now(),
+    timestamp: Date.now()
+  };
+  globalNotification = notif;
+  
+  // Update history
+  notificationHistory.unshift(notif);
+  if (notificationHistory.length > 50) {
+    notificationHistory.pop();
+  }
+  
+  res.json({ success: true, notification: globalNotification });
+});
+
+app.get("/api/notifications/digest", async (req, res) => {
+  try {
+    const alertsToSummarize = notificationHistory;
+    
+    // Check if we have recent active posts to enrich the digest if alerts are sparse
+    const recentWarmed = warmedPostSummaries.slice(0, 5);
+    
+    // Create a beautifully formatted, highly informative fallback bulletin
+    let fallbackDigest = "";
+    if (!alertsToSummarize || alertsToSummarize.length === 0) {
+      fallbackDigest = "### 📋 Daily Notification Digest & Summary\n\n" +
+        "**Status**: All sync pipelines are fully operational and active.\n\n" +
+        "No high-volume alert surges have been registered in the last 24 hours. The portal remains highly secure and in continuous sync with official state commissions, public service boards, and railway boards.\n\n" +
+        "#### 🔍 Key Updates & Recommendations:\n" +
+        "- **Verify and Check**: Recent main board postings in *Latest Jobs* or *Govt Yojana* tab.\n" +
+        "- **Alert Stream Status**: Ready to broadcast instant push notifications upon detecting heavy vacancy releases or mass result publishes.\n" +
+        "- **Pre-Requisites Reminder**: Make sure to pre-validate your registration documents like family details, reservation certificate files, and marksheets so you can apply instantly when big listings come live.";
+    } else {
+      const count = alertsToSummarize.length;
+      fallbackDigest = `### 📋 Daily Notification Digest (${new Date().toLocaleDateString('en-IN', { dateStyle: 'medium' })})\n\n` +
+        `**Summary**: Detected **${count} strategic alert/sync update(s)** on the platform today. Here is the curated curation of the key alerts structured for ultra-fast ingestion:\n\n`;
+      
+      alertsToSummarize.forEach((item, index) => {
+        const timeStr = new Date(item.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        fallbackDigest += `${index + 1}. **[${timeStr}]**: ${item.message}\n`;
+      });
+      
+      fallbackDigest += "\n#### 💡 SarkariBoard Actionable Insights:\n" +
+        "- **Target Areas**: If the bulk updates point to specific boards (e.g., UPSC, Staff Selection, Railways), direct your attention to those application gateways immediately.\n" +
+        "- **Application Tip**: Use Sarkari Saathi chat helper (located on bottom-right corner) to generate eligibility answers for any of these active listings instantly.";
+    }
+
+    // Try generating dynamic digest via Gemini if the key is available
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const ai = getGeminiClient();
+        
+        // Feed alerts and recent active post context to make the AI digest super high value
+        const alertsText = alertsToSummarize.length > 0 
+          ? alertsToSummarize.map(a => `- [${new Date(a.timestamp).toLocaleString('en-IN')}] ${a.message}`).join("\n")
+          : "None. No surge events recorded today.";
+
+        const recentPostList = recentWarmed.length > 0
+          ? recentWarmed.map(p => `- [${p.category.toUpperCase()}] "${p.title}"`).join("\n")
+          : "None currently listed.";
+
+        const prompt = `You are the chief content editor and expert curator for SarkariBoard (sarkariboard.com), a trusted government job info hub. 
+Analyze the recent system update alerts and recently published posts below, and draft a prestigious daily digest bulletin for our candidates.
+
+--- SYSTEM ALERTS TRIGGERED TODAY ---
+${alertsText}
+
+--- RECENT PORTAL JOBS/POSTS ---
+${recentPostList}
+
+--- INSTRUCTIONS ---
+1. Begin with a professional, encouraging title like "### 📋 Daily Notification Digest & Critical Sync Summary".
+2. Synthesize and group the alerts into logical, high-impact bulleted sectors. Emphasize target commissions, vacancy volumes, and application deadlines.
+3. If there are NO system alerts, write a warm, beautifully composed "Daily Scanner Status" explaining that sync agents are listening normally, and provide 3 high-value tips or updates based on the recent portal jobs/posts.
+4. Keep the output extremely polished, clean, and in standard markdown. NEVER use conversational chat filler like "Here is your summary". Skip intros/outros and directly present the markdown content of the digest.
+5. Max 180 words. Focus strictly on facts, clarity, and bold accents.
+
+Begin compiling:`;
+
+        const response = await ai.models.generateContent({
+          model: "gemini-3.1-flash-lite",
+          contents: prompt,
+        });
+
+        if (response.text) {
+          return res.json({ digest: response.text.trim(), isAiPowered: true });
+        }
+      } catch (geminiError) {
+        console.warn("Gemini Digest generation failed, reverting to strict fallback.", geminiError);
+      }
+    }
+
+    // Return the high-quality fallback if Gemini failed or wasn't specified
+    return res.json({ digest: fallbackDigest, isAiPowered: false });
+
+  } catch (error: any) {
+    console.error("Digest API handler error:", error);
+    res.status(500).json({ error: "Failed to generate digest summary" });
+  }
+});
+
 // Low-latency chat assistant with local database context using gemini-3.1-flash-lite
 app.post("/api/assistant", async (req, res) => {
   const { messages, currentUrl } = req.body;

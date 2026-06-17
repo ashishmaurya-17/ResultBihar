@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import metadata from '../../metadata.json';
-import { getBaseSEO, generateOrganizationSchema, generateWebSiteSchema, getDynamicImage } from '../lib/seoHelper';
+import { getBaseSEO, getDynamicImage } from '../lib/seoHelper';
 import { SarkariPost } from '../types';
 
 interface SEOProps {
@@ -34,26 +34,8 @@ export const SEO: React.FC<SEOProps> = ({
   const { title: seoTitle, description: seoDescription, url: seoUrl } = getBaseSEO(finalTitle, finalDescription, url, finalCollection);
   const seoImage = getDynamicImage(image, finalCollection, finalTitle, seoUrl);
 
-  // Breadcrumb Schema
-  let breadcrumbSchema = null;
-  if (breadcrumbItems && breadcrumbItems.length > 0) {
-    breadcrumbSchema = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": breadcrumbItems.map((item, index) => ({
-        "@type": "ListItem",
-        "position": index + 1,
-        "name": item.label,
-        "item": item.url ? (item.url.startsWith('http') ? item.url : `https://sarkariboard.com${item.url}`) : undefined
-      }))
-    };
-  }
-
   // Compile JSON LD schemas
-  const schemasToRender: any[] = [generateOrganizationSchema(), generateWebSiteSchema()];
-  if (breadcrumbSchema) {
-    schemasToRender.push(breadcrumbSchema);
-  }
+  const schemasToRender: any[] = [];
   if (jsonLd) {
     if (Array.isArray(jsonLd)) {
       schemasToRender.push(...jsonLd);

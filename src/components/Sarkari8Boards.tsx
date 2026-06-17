@@ -33,15 +33,96 @@ const iconMap: Record<string, any> = {
 
 const getCategoryThemeColors = (catId: CollectionType) => {
   switch (catId) {
-    case 'jobs': return { headerBg: 'bg-red-50 dark:bg-red-950/20', headerBorder: 'border-red-900', titleText: 'text-red-900 dark:text-red-400', badge: 'bg-red-600', dot: 'bg-red-600', text: 'text-red-700/70', iconBg: 'bg-red-100 dark:bg-red-900' };
-    case 'results': return { headerBg: 'bg-emerald-50 dark:bg-emerald-950/20', headerBorder: 'border-emerald-900', titleText: 'text-emerald-900 dark:text-emerald-400', badge: 'bg-emerald-600', dot: 'bg-emerald-600', text: 'text-emerald-700/70', iconBg: 'bg-emerald-100 dark:bg-emerald-900' };
-    case 'admit-cards': return { headerBg: 'bg-indigo-50 dark:bg-indigo-950/20', headerBorder: 'border-indigo-900', titleText: 'text-indigo-900 dark:text-indigo-400', badge: 'bg-indigo-600', dot: 'bg-indigo-600', text: 'text-indigo-700/70', iconBg: 'bg-indigo-100 dark:bg-indigo-900' };
-    case 'answer-keys': return { headerBg: 'bg-amber-50 dark:bg-amber-950/20', headerBorder: 'border-amber-900', titleText: 'text-amber-900 dark:text-amber-400', badge: 'bg-amber-600', dot: 'bg-amber-600', text: 'text-amber-700/70', iconBg: 'bg-amber-100 dark:bg-amber-900' };
-    case 'admissions': return { headerBg: 'bg-cyan-50 dark:bg-cyan-950/20', headerBorder: 'border-cyan-900', titleText: 'text-cyan-900 dark:text-cyan-400', badge: 'bg-cyan-600', dot: 'bg-cyan-600', text: 'text-cyan-700/70', iconBg: 'bg-cyan-100 dark:bg-cyan-900' };
-    case 'syllabus': return { headerBg: 'bg-fuchsia-50 dark:bg-fuchsia-950/20', headerBorder: 'border-fuchsia-900', titleText: 'text-fuchsia-900 dark:text-fuchsia-400', badge: 'bg-fuchsia-600', dot: 'bg-fuchsia-600', text: 'text-fuchsia-700/70', iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-900' };
-    case 'scholarships': return { headerBg: 'bg-pink-50 dark:bg-pink-950/20', headerBorder: 'border-pink-900', titleText: 'text-pink-900 dark:text-pink-400', badge: 'bg-pink-600', dot: 'bg-pink-600', text: 'text-pink-700/70', iconBg: 'bg-pink-100 dark:bg-pink-900' };
-    case 'yojana': return { headerBg: 'bg-teal-50 dark:bg-teal-950/20', headerBorder: 'border-teal-900', titleText: 'text-teal-900 dark:text-teal-400', badge: 'bg-teal-600', dot: 'bg-teal-600', text: 'text-teal-700/70', iconBg: 'bg-teal-100 dark:bg-teal-900' };
-    default: return { headerBg: '', headerBorder: '', titleText: '', badge: '', dot: '', text: '', iconBg: '' };
+    case 'jobs': return { 
+      headerBg: 'bg-red-500', 
+      headerBorder: 'border-red-600', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-red-600', 
+      dot: 'bg-red-500', 
+      text: 'text-red-500/70', 
+      iconBg: 'bg-white/20',
+      glow: 'group-hover:shadow-[0_0_25px_-5px_rgba(239,68,68,0.3)]'
+    };
+    case 'results': return { 
+      headerBg: 'bg-emerald-500', 
+      headerBorder: 'border-emerald-600', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-emerald-600', 
+      dot: 'bg-emerald-500', 
+      text: 'text-emerald-500/70', 
+      iconBg: 'bg-white/20',
+      glow: 'group-hover:shadow-[0_0_25px_-5px_rgba(16,185,129,0.3)]'
+    };
+    case 'admit-cards': return { 
+      headerBg: 'bg-blue-500', 
+      headerBorder: 'border-blue-600', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-blue-600', 
+      dot: 'bg-blue-500', 
+      text: 'text-blue-500/70', 
+      iconBg: 'bg-white/20',
+      glow: 'group-hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)]'
+    };
+    case 'answer-keys': return { 
+      headerBg: 'bg-amber-500', 
+      headerBorder: 'border-amber-600', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-amber-600', 
+      dot: 'bg-amber-500', 
+      text: 'text-amber-500/70', 
+      iconBg: 'bg-white/20',
+      glow: 'group-hover:shadow-[0_0_25px_-5px_rgba(245,158,11,0.3)]'
+    };
+    case 'admissions': return { 
+      headerBg: 'bg-cyan-500', 
+      headerBorder: 'border-cyan-600', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-cyan-600', 
+      dot: 'bg-cyan-500', 
+      text: 'text-cyan-500/70', 
+      iconBg: 'bg-white/20',
+      glow: 'group-hover:shadow-[0_0_25px_-5px_rgba(6,182,212,0.3)]'
+    };
+    case 'syllabus': return { 
+      headerBg: 'bg-purple-500', 
+      headerBorder: 'border-purple-600', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-purple-600', 
+      dot: 'bg-purple-500', 
+      text: 'text-purple-500/70', 
+      iconBg: 'bg-white/20',
+      glow: 'group-hover:shadow-[0_0_25px_-5px_rgba(168,85,247,0.3)]'
+    };
+    case 'scholarships': return { 
+      headerBg: 'bg-pink-500', 
+      headerBorder: 'border-pink-600', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-pink-600', 
+      dot: 'bg-pink-500', 
+      text: 'text-pink-500/70', 
+      iconBg: 'bg-white/20',
+      glow: 'group-hover:shadow-[0_0_25px_-5px_rgba(236,72,153,0.3)]'
+    };
+    case 'yojana': return { 
+      headerBg: 'bg-teal-500', 
+      headerBorder: 'border-teal-600', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-teal-600', 
+      dot: 'bg-teal-500', 
+      text: 'text-teal-500/70', 
+      iconBg: 'bg-white/20',
+      glow: 'group-hover:shadow-[0_0_25px_-5px_rgba(20,184,166,0.3)]'
+    };
+    default: return { 
+      headerBg: 'bg-neutral-800', 
+      headerBorder: 'border-neutral-900', 
+      titleText: 'text-white', 
+      badge: 'bg-white text-black', 
+      dot: 'bg-neutral-500', 
+      text: 'text-neutral-500', 
+      iconBg: 'bg-white/10',
+      glow: ''
+    };
   }
 };
 
@@ -107,39 +188,37 @@ export default function Sarkari8Boards({ posts = [], onSelectPost }: Sarkari8Boa
             <div 
               key={cat.id}
               id={`board-${cat.id}`}
-              className={`bg-white dark:bg-neutral-900 border-2 rounded-none flex flex-col h-auto transition-all duration-300 ease-out sm:hover:-translate-y-1 sm:hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:sm:hover:shadow-[6px_6px_0px_0px_rgba(39,39,42,1)] relative overflow-hidden group/board w-full ${
+              className={`bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 rounded-2xl flex flex-col h-auto transition-all duration-300 ease-out sm:hover:-translate-y-1.5 relative overflow-hidden group/board w-full ${
                 isHighlighted
-                  ? "border-amber-400 dark:border-amber-400 ring-4 ring-amber-500/50 dark:ring-amber-500/50 scale-[1.01] shadow-[0_0_15px_10px_rgba(251,191,36,0.4)]"
-                  : "border-gray-900 dark:border-zinc-700 shadow-none sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:sm:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)]"
+                  ? "ring-4 ring-amber-500/50 scale-[1.02] shadow-2xl"
+                  : `shadow-md ${colors.glow}`
               }`}
             >
-              <div className={`${colors.headerBg || 'bg-[#FAF9F5] dark:bg-zinc-800'} border-b-2 ${colors.headerBorder || 'border-gray-900 dark:border-zinc-700'} text-gray-900 dark:text-zinc-100 px-2 py-1.5 sm:px-3 sm:py-2 flex items-center justify-between relative overflow-hidden`}>
-                <div className="flex items-center gap-1.5 z-10 w-full min-w-0">
-                  <div className={`p-1 ${colors.iconBg || 'bg-gray-250 dark:bg-zinc-700 text-gray-900 dark:text-zinc-100'} border border-gray-950 shrink-0 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center w-7 h-7 rounded-none`}>
+              <div className={`${colors.headerBg} border-b ${colors.headerBorder} text-white px-3 py-2.5 sm:px-4 sm:py-3 flex items-center justify-between relative overflow-hidden`}>
+                <div className="flex items-center gap-2.5 z-10 w-full min-w-0">
+                  <div className={`p-1.5 ${colors.iconBg} backdrop-blur-md rounded-lg shrink-0 flex items-center justify-center w-8 h-8`}>
                     {(() => {
                       const IconComp = iconMap[cat.id] || Sparkles;
-                      return <IconComp className="w-3.5 h-3.5" />;
+                      return <IconComp className="w-4 h-4" />;
                     })()}
                   </div>
-                  <div className="min-w-0 leading-tight">
-                    <h2 className={`font-mono font-black text-xs sm:text-sm uppercase tracking-tight ${colors.titleText || 'text-gray-900 dark:text-zinc-100'} truncate`}>
+                  <div className="min-w-0 leading-none">
+                    <h2 className={`font-sans font-black text-xs sm:text-sm uppercase tracking-tight ${colors.titleText} truncate`}>
                       {cat.title}
                     </h2>
-                    <span className={`font-mono text-[8px] sm:text-[9px] uppercase tracking-widest ${colors.text} block -mt-0.5 font-bold truncate`}>
+                    <span className="font-sans text-[8px] sm:text-[9px] uppercase tracking-widest text-white/70 block mt-0.5 font-bold truncate">
                       {cat.bilingualTitle}
                     </span>
                   </div>
                 </div>
-                <span className={`font-mono text-[6.5px] sm:text-[7.5px] uppercase ${colors.badge} text-white px-1.5 py-0.5 shrink-0 tracking-widest font-black select-none border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]`}>
+                <span className={`font-mono text-[7px] sm:text-[8px] uppercase ${colors.badge} px-2 py-0.5 shrink-0 tracking-widest font-black rounded-full shadow-sm`}>
                   LIVE
                 </span>
               </div>
               
-              <div className="flex-grow p-1.5 sm:p-4 flex flex-col justify-between bg-[#FDFDFB] dark:bg-neutral-900/40 relative overflow-hidden border-t-0">
-                 <div 
-                  className="absolute inset-0 z-0 opacity-[0.025] dark:opacity-[0.06] pointer-events-none mix-blend-overlay"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }}
-                />
+              <div className="flex-grow p-2 sm:p-5 flex flex-col justify-between bg-white dark:bg-zinc-900/40 relative overflow-hidden">
+                {/* Subtle mesh gradient overlay */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-from)_0%,_transparent_50%)] from-neutral-200 dark:from-neutral-700" />
 
                 {catPosts.length === 0 ? (
                   <div className="flex-grow flex flex-col items-center justify-center p-6 text-center text-xs text-neutral-400 dark:text-neutral-400 gap-1.5 z-10 relative">

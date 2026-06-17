@@ -12,6 +12,21 @@ export interface StoreType {
   selectedSector?: string;
   currentFilter?: 'all' | 'saved';
   showVacancyGauge?: boolean;
+  systemNotification?: {
+    message: string;
+    type: 'info' | 'success' | 'warning';
+    id: number;
+    timestamp?: number;
+  } | null;
+  notificationHistory?: Array<{
+    message: string;
+    type: 'info' | 'success' | 'warning';
+    id: number;
+    timestamp: number;
+  }>;
+  unreadNotificationCount?: number;
+  lastViewedNotificationId?: number;
+  isNotificationPanelOpen?: boolean;
   // Dynamic design elements for the H1 Logo heading
   logoFont?: string;
   logoWeight1?: string; // Font weight for 'Sarkari'
@@ -32,6 +47,11 @@ let storeState: StoreType = {
   selectedSector: 'all',
   currentFilter: 'all',
   showVacancyGauge: false,
+  systemNotification: null,
+  notificationHistory: [],
+  unreadNotificationCount: 0,
+  lastViewedNotificationId: parseInt(localStorage.getItem('lastViewedNotificationId') || '0', 10),
+  isNotificationPanelOpen: false,
   // Default design values matching the original government board logo-type
   logoFont: 'Inter',
   logoWeight1: 'font-medium',

@@ -6,6 +6,7 @@ import { Post } from '../types';
 import { usePortalStore } from '../store';
 import { safeLocalStorage } from '../lib/storage';
 import Sarkari8Boards from './Sarkari8Boards';
+import HomeSections from './HomeSections';
 import Breadcrumbs from './Breadcrumbs';
 import PostCard from './PostCard';
 import { 
@@ -264,13 +265,16 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
 
         {/* 2. Main Boards */}
         {!store.searchKeyword && store.selectedCollection === 'all' && (
-          <Sarkari8Boards 
-            posts={posts}
-            onSelectPost={(post) => {
-              setStore({ currentView: 'detail', selectedPost: post });
-              navigate(`/post/${post.id}`);
-            }}
-          />
+          <>
+            <Sarkari8Boards 
+              posts={posts}
+              onSelectPost={(post) => {
+                setStore({ currentView: 'detail', selectedPost: post });
+                navigate(`/post/${post.id}`);
+              }}
+            />
+            <HomeSections posts={posts} />
+          </>
         )}
 
         {/* 3. Results Feed Section */}

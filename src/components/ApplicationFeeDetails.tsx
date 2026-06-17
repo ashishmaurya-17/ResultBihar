@@ -199,29 +199,37 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
     <div id="portal-expense-estimator" className="space-y-5 my-6 p-1 sm:p-2 bg-transparent">
       
       {/* 1. Official Board Application Fee Details Grid */}
-      <div className="bg-neutral-50 dark:bg-zinc-900 border-2 border-gray-950 dark:border-zinc-800 p-4 relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_rgba(255,255,255,0.08)]">
-        <div className="absolute right-3 top-3 select-none">
-          <span className="text-[9px] font-mono bg-emerald-600 text-white font-bold px-1.5 py-0.5 uppercase tracking-widest">
-            OFFICIAL FEES
+      <div className="bg-white dark:bg-zinc-950 border-2 border-neutral-900 dark:border-zinc-800 p-0 relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_rgba(39,39,42,1)] rounded-none">
+        <div className="bg-emerald-600 px-4 py-2 border-b-2 border-neutral-900 dark:border-zinc-800 flex justify-between items-center">
+          <h3 className="text-[11px] font-black uppercase text-white tracking-widest flex items-center gap-2 select-none">
+            <CreditCard className="w-4 h-4 text-emerald-100" />
+            <span>Application Fees / आवेदन शुल्क</span>
+          </h3>
+          <span className="text-[9px] font-mono bg-white text-emerald-700 font-black px-1.5 py-0.5 uppercase tracking-tighter shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+            OFFICIAL
           </span>
         </div>
         
-        <h3 className="text-xs sm:text-sm font-black uppercase text-gray-950 dark:text-white pb-2 mb-4 border-b border-gray-200 dark:border-zinc-800 flex items-center gap-2 select-none">
-          <CreditCard className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          <span>Category-Wise Application Fees</span>
-        </h3>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {feeItems.map((item, index) => (
-            <div key={index} className="bg-white dark:bg-neutral-950 p-3 border border-gray-200 dark:border-zinc-800 flex flex-col justify-between">
-              <span className="text-[9.5px] text-neutral-500 dark:text-neutral-400 font-bold uppercase tracking-wider mb-1">
+            <div key={index} className="flex flex-col border-b sm:border-b-0 sm:border-r last:border-b-0 sm:last:border-r-0 border-neutral-100 dark:border-zinc-900/50 pb-3 sm:pb-0 sm:pr-3 last:pb-0 sm:last:pr-0 group">
+              <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-black uppercase tracking-tight mb-1 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-none shrink-0" />
                 {item.label}
               </span>
-              <span className="text-xs sm:text-sm font-extrabold text-neutral-950 dark:text-white font-mono break-words">
+              <span className="text-sm font-black text-neutral-900 dark:text-zinc-200 font-mono break-words leading-tight group-hover:text-emerald-600 transition-colors">
                 {item.value}
               </span>
             </div>
           ))}
+        </div>
+        
+        {/* Subtle decorative "secure" footer */}
+        <div className="bg-neutral-50 dark:bg-zinc-900/50 px-4 py-1.5 border-t border-neutral-100 dark:border-zinc-900 flex justify-end gap-3">
+           <div className="flex items-center gap-1 opacity-50">
+             <span className="text-[8px] font-mono font-bold text-neutral-400 uppercase">Verified Sources</span>
+             <Award className="w-2.5 h-2.5 text-neutral-300" />
+           </div>
         </div>
       </div>
 

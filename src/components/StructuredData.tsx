@@ -1,6 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function StructuredData() {
+  const location = useLocation();
+
+  const generateBreadcrumbList = () => {
+    const paths = location.pathname.split('/').filter(p => p !== '');
+    const baseUrl = 'https://sarkariboard.com';
+
+    const itemListElement: any[] = [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${baseUrl}/`
+      }
+    ];
+
+    let currentPath = '';
+    paths.forEach((path, index) => {
+      currentPath += `/${path}`;
+      itemListElement.push({
+        "@type": "ListItem",
+        "position": index + 2,
+        "name": path.charAt(0).toUpperCase() + path.slice(1).replace(/-/g, ' '),
+        "item": `${baseUrl}${currentPath}`
+      });
+    });
+
+    return {
+      "@type": "BreadcrumbList",
+      "@id": `${baseUrl}${location.pathname}#breadcrumb`,
+      "itemListElement": itemListElement
+    };
+  };
+
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -22,9 +56,16 @@ export default function StructuredData() {
           "target": "https://sarkariboard.com/search?q={search_term_string}",
           "query-input": "required name=search_term_string"
         }
-      }
+      },
+      generateBreadcrumbList()
     ]
   };
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Generated Structured Data (JSON-LD):', schema);
+    }
+  }, [location.pathname]);
 
   return (
     <script

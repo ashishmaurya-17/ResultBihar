@@ -584,6 +584,32 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
       }
     }
 
+    const isNewsArticle = [JobCategory.RESULT, JobCategory.ADMIT_CARD, JobCategory.ANSWER_KEY, JobCategory.ADMISSION].includes(post.category);
+
+    if (isNewsArticle) {
+      return JSON.stringify({
+        "@context": "https://schema.org/",
+        "@type": "NewsArticle",
+        "headline": post.a1_postName,
+        "description": post.a7_postOverview || post.a3_seoDescription || "Government exam update notification.",
+        "datePublished": post.a2_postDateTime || new Date().toISOString(),
+        "dateModified": post.a2_postDateTime || new Date().toISOString(),
+        "author": {
+          "@type": "Organization",
+          "name": "SarkariBoard",
+          "url": window.location.origin
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SarkariBoard",
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${window.location.origin}/icon.png`
+          }
+        }
+      });
+    }
+
     return JSON.stringify({
       "@context": "https://schema.org/",
       "@type": "JobPosting",

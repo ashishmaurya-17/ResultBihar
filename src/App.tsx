@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Home, FileText, HelpCircle, Wifi, WifiOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Header from './components/Header';
+import NotificationToast from './components/NotificationToast';
 import Footer from './components/Footer';
 import SEO from './components/SEO';
 import ScrollProgressBar from './components/ScrollProgressBar';
@@ -21,6 +22,7 @@ const ContactPortal = lazy(() => import('./components/ContactPortal'));
 const StateHubPage = lazy(() => import('./components/StateHubPage'));
 const FAQs = lazy(() => import('./components/FAQs'));
 const IndexingDashboard = lazy(() => import('./components/IndexingDashboard'));
+const NotificationsPage = lazy(() => import('./components/NotificationsPage'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -432,6 +434,7 @@ export default function App() {
                 } />
                 <Route path="/contact" element={<main className="max-w-7xl mx-auto px-4 py-8 grow w-full"><Suspense fallback={<LoadingFallback />}><ContactPortal /></Suspense></main>} />
                 <Route path="/indexing" element={<main className="max-w-7xl mx-auto px-4 py-8 grow w-full"><Suspense fallback={<LoadingFallback />}><IndexingDashboard /></Suspense></main>} />
+                <Route path="/notifications" element={<main className="max-w-7xl mx-auto px-4 py-8 grow w-full"><Suspense fallback={<LoadingFallback />}><NotificationsPage /></Suspense></main>} />
                 <Route path="/:state" element={<Suspense fallback={<LoadingFallback />}><StateHubPage /></Suspense>} />
                 <Route path="/faqs" element={<Suspense fallback={<LoadingFallback />}><FAQs onBackToHome={() => navigate('/')} /></Suspense>} />
                 <Route path="/about" element={<Suspense fallback={<LoadingFallback />}><StaticPages view="about" onBackToHome={() => navigate('/')} /></Suspense>} />
@@ -480,6 +483,8 @@ export default function App() {
         </button>
 
         <SarkariSaathi />
+
+        <NotificationToast />
 
         {/* Connection Status Toast */}
         <AnimatePresence>
