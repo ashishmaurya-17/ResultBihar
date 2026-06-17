@@ -139,6 +139,7 @@ export default function PostDetailWrapper({ allPosts }: { allPosts: Post[] }) {
             />
             <SarkariPostLayout
                 post={sarkariPost}
+                rawContent={post.content}
                 relatedPosts={relatedPostsList}
                 siloGroup={siloGroup}
                 onBack={() => navigate('/')}

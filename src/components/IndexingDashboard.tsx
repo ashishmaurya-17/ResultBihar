@@ -1024,7 +1024,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                   </span>
                   
                   <div className="flex items-center gap-2 mb-3">
-                    <div className={`w-2.5 h-2.5 rounded-full ${testResult.success ? "bg-emerald-500 animate-ping" : "bg-red-500"}`} />
+                    <div className={`w-2.5 h-2.5 rounded-none ${testResult.success ? "bg-emerald-500 animate-ping" : "bg-red-500"}`} />
                     <span className="font-sans text-xs font-bold text-white">
                       Status: {testResult.success ? (testResult.demoMode ? "SUCCESS (DEMO EMULATED)" : "SUCCESS (GOOGLE REAL PING)") : "FAILED RESPONSE"}
                     </span>
@@ -1061,7 +1061,7 @@ Candidates are requested to review standard trade guidelines before submitting d
               <div className="space-y-4 text-xs font-medium text-neutral-700 dark:text-zinc-300 leading-relaxed">
                 <div>
                   <h4 className="font-extrabold text-neutral-900 dark:text-zinc-100 flex items-center gap-1.5">
-                    <span className="w-5 h-5 bg-neutral-900 text-white dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-black rounded-full flex items-center justify-center">1</span>
+                    <span className="w-5 h-5 bg-neutral-900 text-white dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-black rounded-none flex items-center justify-center">1</span>
                     Enable Google Indexing API in Private Console
                   </h4>
                   <p className="pl-6 mt-1">
@@ -1071,7 +1071,7 @@ Candidates are requested to review standard trade guidelines before submitting d
 
                 <div>
                   <h4 className="font-extrabold text-neutral-900 dark:text-zinc-100 flex items-center gap-1.5">
-                    <span className="w-5 h-5 bg-neutral-900 text-white dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-black rounded-full flex items-center justify-center">2</span>
+                    <span className="w-5 h-5 bg-neutral-900 text-white dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-black rounded-none flex items-center justify-center">2</span>
                     Generate Service Account Key File
                   </h4>
                   <p className="pl-6 mt-1">
@@ -1081,7 +1081,7 @@ Candidates are requested to review standard trade guidelines before submitting d
 
                 <div>
                   <h4 className="font-extrabold text-neutral-900 dark:text-zinc-100 flex items-center gap-1.5">
-                    <span className="w-5 h-5 bg-neutral-900 text-white dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-black rounded-full flex items-center justify-center">3</span>
+                    <span className="w-5 h-5 bg-neutral-900 text-white dark:bg-zinc-800 dark:text-zinc-200 text-[10px] font-black rounded-none flex items-center justify-center">3</span>
                     Authorize Ownership in Google Search Console
                   </h4>
                   <p className="pl-6 mt-1">
@@ -1529,7 +1529,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                   <Zap size={18} className="text-amber-500 fill-amber-500 animate-pulse" />
                   CWV Speed Engine & Sarkari Saver Pocket
                 </span>
-                <span className="text-[10px] font-mono font-extrabold uppercase bg-amber-50 dark:bg-amber-950/40 text-amber-850 dark:text-amber-400 border border-amber-300 dark:border-amber-805 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-amber-50 dark:bg-amber-950/40 text-amber-850 dark:text-amber-400 border border-amber-300 dark:border-amber-805 px-2 py-0.5 rounded-none">
                   Metrics Active
                 </span>
               </h2>
@@ -1628,7 +1628,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                   <Layers size={18} className="text-blue-650 dark:text-blue-400" />
                   Link Building & Internal Link Siloing Lab
                 </span>
-                <span className="text-[10px] font-mono font-extrabold uppercase bg-blue-50 dark:bg-zinc-850 text-blue-850 dark:text-blue-400 border border-blue-300 dark:border-zinc-700 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-blue-50 dark:bg-zinc-850 text-blue-850 dark:text-blue-400 border border-blue-300 dark:border-zinc-700 px-2 py-0.5 rounded-none">
                   SEO Architecture
                 </span>
               </h2>
@@ -2004,7 +2004,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                             <div className="space-y-3.5 text-xs text-left">
                               <div className="space-y-1">
                                 <span className="text-[9px] font-black uppercase tracking-wider text-green-400 block">A. Full Trailed Destination URL:</span>
-                                <div className="p-2 bg-neutral-900 border border-neutral-800 rounded font-mono text-[10.5px] text-zinc-300 break-all select-all select-none flex justify-between items-center gap-1.5">
+                                <div className="p-2 bg-neutral-900 border border-neutral-800 rounded-none font-mono text-[10.5px] text-zinc-300 break-all select-all select-none flex justify-between items-center gap-1.5">
                                   <span className="truncate">{trackingUrl}</span>
                                   <button
                                     onClick={() => handleCopy(trackingUrl, "tracking-url")}
@@ -2017,12 +2017,12 @@ Candidates are requested to review standard trade guidelines before submitting d
 
                               <div className="space-y-1">
                                 <span className="text-[9px] font-black uppercase tracking-wider text-green-400 block">B. Compliant HTML Link (dofollow):</span>
-                                <div className="p-2 bg-neutral-900 border border-neutral-800 rounded font-mono text-[10.5px] text-emerald-400 break-all select-all relative group flex flex-col gap-1.5">
+                                <div className="p-2 bg-neutral-900 border border-neutral-800 rounded-none font-mono text-[10.5px] text-emerald-400 break-all select-all relative group flex flex-col gap-1.5">
                                   <span className="select-all block leading-tight font-bold">{htmlCode}</span>
                                   <div className="flex justify-end">
                                     <button
                                       onClick={() => handleCopy(htmlCode, "html-anchor")}
-                                      className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 rounded hover:bg-emerald-900 text-[10px] font-black uppercase"
+                                      className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 rounded-none hover:bg-emerald-900 text-[10px] font-black uppercase"
                                     >
                                       {copiedText === 'html-anchor' ? "✓ Snippet Copied" : "Copy HTML Snippet"}
                                     </button>
@@ -2032,7 +2032,7 @@ Candidates are requested to review standard trade guidelines before submitting d
 
                               <div className="space-y-1">
                                 <span className="text-[9px] font-black uppercase tracking-wider text-green-400 block">C. vBulletin/BBCode Forum Link:</span>
-                                <div className="p-2 bg-neutral-900 border border-neutral-800 rounded font-mono text-[10.5px] text-zinc-350 break-all select-all flex justify-between items-center gap-1.5">
+                                <div className="p-2 bg-neutral-900 border border-neutral-800 rounded-none font-mono text-[10.5px] text-zinc-350 break-all select-all flex justify-between items-center gap-1.5">
                                   <span className="truncate font-bold">{forumCode}</span>
                                   <button
                                     onClick={() => handleCopy(forumCode, "bbcode-anchor")}
@@ -2043,10 +2043,10 @@ Candidates are requested to review standard trade guidelines before submitting d
                                 </div>
                               </div>
 
-                              <div className="p-2 bg-neutral-900/50 border border-neutral-850 rounded text-[10px] text-zinc-400 leading-normal space-y-1">
+                              <div className="p-2 bg-neutral-900/50 border border-neutral-850 rounded-none text-[10px] text-zinc-400 leading-normal space-y-1">
                                 <div className="font-extrabold text-zinc-200">🔍 CRAWLER BENEFIT METRIC:</div>
                                 <p>
-                                  Appending clean UTM trails helps isolate organic backlink indexing events inside SarkariBoard analytics modules, while the explicit <code className="bg-neutral-800 text-zinc-300 px-1 py-0.1 font-mono text-[9px] rounded">rel="dofollow"</code> signals maximum flow weight to deep search spiders.
+                                  Appending clean UTM trails helps isolate organic backlink indexing events inside SarkariBoard analytics modules, while the explicit <code className="bg-neutral-800 text-zinc-300 px-1 py-0.1 font-mono text-[9px] rounded-none">rel="dofollow"</code> signals maximum flow weight to deep search spiders.
                                 </p>
                               </div>
                             </div>
@@ -2082,7 +2082,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                       <div className="p-4 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-800 shadow-[3px_3px_0px_rgba(0,0,0,1)] space-y-3.5 text-xs">
                         <div className="flex border-b border-neutral-200 dark:border-zinc-800 pb-2.5 justify-between items-center">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                            <div className="w-6 h-6 bg-blue-600 text-white rounded-none flex items-center justify-center font-bold">
                               <Mail size={12} />
                             </div>
                             <div>
@@ -2094,7 +2094,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                           <button
                             type="button"
                             onClick={() => handleCopy(fullOutreachMail, "outreach-full")}
-                            className="bg-black hover:bg-neutral-850 text-white border border-neutral-700 px-3 py-1 font-mono text-[10px] font-black uppercase shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] rounded flex items-center gap-1 cursor-pointer"
+                            className="bg-black hover:bg-neutral-850 text-white border border-neutral-700 px-3 py-1 font-mono text-[10px] font-black uppercase shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] rounded-none flex items-center gap-1 cursor-pointer"
                           >
                             <Copy size={12} />
                             {copiedText === 'outreach-full' ? "✓ Email Placed in Clipboard!" : "Copy Full Pitch Body"}
@@ -2103,21 +2103,21 @@ Candidates are requested to review standard trade guidelines before submitting d
 
                         {/* Strategy Info tag */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-0.5">
-                          <div className="p-2 bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 rounded">
+                          <div className="p-2 bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 rounded-none">
                             <span className="text-[9px] text-neutral-400 uppercase tracking-widest block font-bold">Strategy Theme</span>
                             <span className="font-bold text-neutral-850 dark:text-zinc-200">
                               {backlinkCampaign === 'broken' ? "Broken substitution Fix" : backlinkCampaign === 'guest' ? "News Syndicate Alliance" : "Academic Resource Pitch"}
                             </span>
                           </div>
 
-                          <div className="p-2 bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 rounded">
+                          <div className="p-2 bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 rounded-none">
                             <span className="text-[9px] text-neutral-400 uppercase tracking-widest block font-bold">Estimated Success Rate</span>
                             <span className="font-mono font-bold text-emerald-600">
                               {backlinkCampaign === 'broken' ? "18.4% (Critical Need)" : backlinkCampaign === 'guest' ? "11.2% (Thematic Match)" : "14.5% (Aspirant Aid)"}
                             </span>
                           </div>
 
-                          <div className="p-2 bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 rounded">
+                          <div className="p-2 bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 rounded-none">
                             <span className="text-[9px] text-neutral-400 uppercase tracking-widest block font-bold">SEO Trust Weight</span>
                             <span className="font-sans font-extrabold text-blue-600">
                               {backlinkCampaign === 'broken' ? "High Domain Juice" : backlinkCampaign === 'guest' ? "Fast Crawler Index" : "Durable Authority Weight"}
@@ -2126,7 +2126,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                         </div>
 
                         {/* Mail Viewer box */}
-                        <div className="bg-neutral-50 dark:bg-zinc-950/45 p-4 border border-neutral-200 dark:border-zinc-850 rounded font-mono text-neutral-800 dark:text-zinc-200 space-y-2 leading-relaxed">
+                        <div className="bg-neutral-50 dark:bg-zinc-950/45 p-4 border border-neutral-200 dark:border-zinc-850 rounded-none font-mono text-neutral-800 dark:text-zinc-200 space-y-2 leading-relaxed">
                           <div className="pb-2 border-b border-neutral-200 dark:border-zinc-850 font-bold text-neutral-900 dark:text-zinc-100 flex flex-col gap-1">
                             <div className="flex gap-1.5"><span className="text-neutral-400 font-sans">To:</span> <span className="text-blue-650 dark:text-blue-400 font-mono font-bold">{outreachPartnerContact}</span></div>
                             <div className="flex gap-1.5"><span className="text-neutral-400 font-sans">Subject:</span> <span>{mailSubject}</span></div>
@@ -2302,7 +2302,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                        <div className="space-y-1.5 p-2 bg-black border border-neutral-900 rounded">
+                        <div className="space-y-1.5 p-2 bg-black border border-neutral-900 rounded-none">
                           <span className="text-[10px] font-black uppercase tracking-wider text-neutral-500 block">1. Static URL & Sitemap syndication</span>
                           <p className="font-mono text-[11px] text-zinc-300 break-all">{publishResult.targetUrl || `https://sarkariboard.com/post/${publishId}`}</p>
                           <p className="text-[10px] text-zinc-400 leading-normal">
@@ -2310,7 +2310,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                           </p>
                         </div>
 
-                        <div className="space-y-1.5 p-2 bg-black border border-neutral-900 rounded">
+                        <div className="space-y-1.5 p-2 bg-black border border-neutral-900 rounded-none">
                           <span className="text-[10px] font-black uppercase tracking-wider text-neutral-500 block">2. Google Indexing / IndexNow Hook Response</span>
                           <div className="font-mono text-[10.5px] text-emerald-400 space-y-1">
                             <p><strong>Google Bot API:</strong> {publishResult.googleIndexing || "Dispatched."}</p>
@@ -2335,7 +2335,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                       🛡️ Directory Leakage Prevention Protocol
                     </p>
                     <p className="leading-relaxed">
-                      Search engine crawler bots assign a strict thematic weight (Topical Authority) to each directory. Under our <strong>Zero-Leakage Directory Architecture</strong>, link equity is kept inside strict categorical folders (<code className="bg-neutral-100 dark:bg-zinc-850 px-1 py-0.2 rounded font-mono text-[11px]">/jobs/</code>, <code className="bg-neutral-100 dark:bg-zinc-850 px-1 py-0.2 rounded font-mono text-[11px]">/results/</code>) to maximize relevance scoring and secure fast index listings.
+                      Search engine crawler bots assign a strict thematic weight (Topical Authority) to each directory. Under our <strong>Zero-Leakage Directory Architecture</strong>, link equity is kept inside strict categorical folders (<code className="bg-neutral-100 dark:bg-zinc-850 px-1 py-0.2 rounded-none font-mono text-[11px]">/jobs/</code>, <code className="bg-neutral-100 dark:bg-zinc-850 px-1 py-0.2 rounded-none font-mono text-[11px]">/results/</code>) to maximize relevance scoring and secure fast index listings.
                     </p>
                   </div>
 
@@ -2348,39 +2348,39 @@ Candidates are requested to review standard trade guidelines before submitting d
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                       <div className="p-3 bg-white dark:bg-zinc-900 border border-neutral-300 dark:border-zinc-805 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_rgba(255,255,255,0.15)] space-y-2">
                         <div className="flex items-center gap-1.5">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#0284c7]" />
+                          <span className="w-2.5 h-2.5 rounded-none bg-[#0284c7]" />
                           <span className="text-xs font-mono font-black text-neutral-900 dark:text-zinc-150 uppercase">/jobs/* Folder</span>
                         </div>
                         <p className="text-[10px] text-neutral-500 dark:text-zinc-400 leading-normal">
                           Strictly isolated parent hub for recruitment applications. Crawlers are channeled recursively down to regional post subsets via nested breadcrumbs.
                         </p>
-                        <div className="text-[9px] font-mono text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/20 px-1 py-0.5 rounded-sm inline-block">
+                        <div className="text-[9px] font-mono text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/20 px-1 py-0.5 rounded-none inline-block">
                           Primary Authority: 100% Isolated
                         </div>
                       </div>
 
                       <div className="p-3 bg-white dark:bg-zinc-900 border border-neutral-300 dark:border-zinc-805 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_rgba(255,255,255,0.15)] space-y-2">
                         <div className="flex items-center gap-1.5">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#059669]" />
+                          <span className="w-2.5 h-2.5 rounded-none bg-[#059669]" />
                           <span className="text-xs font-mono font-black text-neutral-900 dark:text-zinc-150 uppercase">/results/* Folder</span>
                         </div>
                         <p className="text-[10px] text-neutral-500 dark:text-zinc-400 leading-normal">
                           Contains official government release merit sheets. No lateral links to unrelated syllabus pages are allowed to avoid diluting key merit phrases.
                         </p>
-                        <div className="text-[9px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 px-1 py-0.5 rounded-sm inline-block">
+                        <div className="text-[9px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 px-1 py-0.5 rounded-none inline-block">
                           Primary Authority: 100% Isolated
                         </div>
                       </div>
 
                       <div className="p-3 bg-white dark:bg-zinc-900 border border-neutral-300 dark:border-zinc-805 shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_rgba(255,255,255,0.15)] space-y-2">
                         <div className="flex items-center gap-1.5">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#d97706]" />
+                          <span className="w-2.5 h-2.5 rounded-none bg-[#d97706]" />
                           <span className="text-xs font-mono font-black text-neutral-900 dark:text-zinc-150 uppercase">/admit-cards/* Folder</span>
                         </div>
                         <p className="text-[10px] text-neutral-500 dark:text-zinc-400 leading-normal">
                           Fastest-decaying URLs. Googlebot is triggered to recheck daily via Indexed News feeds. Canonical points exclusively to the current active cycle.
                         </p>
-                        <div className="text-[9px] font-mono text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 px-1 py-0.5 rounded-sm inline-block">
+                        <div className="text-[9px] font-mono text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 px-1 py-0.5 rounded-none inline-block">
                           Primary Authority: 100% Isolated
                         </div>
                       </div>
@@ -2478,14 +2478,14 @@ Candidates are requested to review standard trade guidelines before submitting d
                           }`}>
                             {leakageAuditResult.leakageFound ? "🚨 DIRECTORY LEAKAGE DETECTED!" : "⭐ ZERO LEAKAGE PATH SECURED!"}
                           </span>
-                          <span className="text-[10px] font-mono font-extrabold bg-black text-white px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-mono font-extrabold bg-black text-white px-2 py-0.5 rounded-none">
                             COGNITIVE INDEX SCORE: {leakageAuditResult.score}/100
                           </span>
                         </div>
 
                         <div className="text-xs space-y-2">
                           <p className="font-mono text-[10px] text-neutral-500">
-                             <strong>Flow Logic Check:</strong> <code className="bg-neutral-100 dark:bg-zinc-800 px-1.5 py-0.5 font-mono text-[9.5px] rounded border border-neutral-200 dark:border-zinc-800 text-neutral-800 dark:text-zinc-250">{leakageAuditResult.path}</code>
+                             <strong>Flow Logic Check:</strong> <code className="bg-neutral-100 dark:bg-zinc-800 px-1.5 py-0.5 font-mono text-[9.5px] rounded-none border border-neutral-200 dark:border-zinc-800 text-neutral-800 dark:text-zinc-250">{leakageAuditResult.path}</code>
                           </p>
                           <p className="leading-relaxed text-neutral-700 dark:text-zinc-350">
                             <strong>Audit Assessment:</strong> {leakageAuditResult.reason}
@@ -2517,7 +2517,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                         />
                       </div>
 
-                      <div className="p-2.5 bg-black text-[#5eead4] border border-neutral-900 font-mono text-xs rounded space-y-1.5 break-all">
+                      <div className="p-2.5 bg-black text-[#5eead4] border border-neutral-900 font-mono text-xs rounded-none space-y-1.5 break-all">
                         <span className="text-[9px] uppercase tracking-wider text-neutral-500 block">DURABLE CANONICAL OUTPUT HEADER:</span>
                         <p className="text-[10.5px] select-all">
                           {(() => {
@@ -2590,7 +2590,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                         </label>
                       </div>
 
-                      <div className="p-2.5 bg-black text-[#60a5fa] border border-neutral-900 font-mono text-[10.5px] rounded space-y-1">
+                      <div className="p-2.5 bg-black text-[#60a5fa] border border-neutral-900 font-mono text-[10.5px] rounded-none space-y-1">
                         <span className="text-[9px] uppercase tracking-wider text-neutral-500 block">CRAWLER BINDING HEAD DIRECTIVE:</span>
                         
                         {selectedFolderDirective === 'search' ? (
@@ -2683,8 +2683,8 @@ Candidates are requested to review standard trade guidelines before submitting d
                             {anchorSuggestions.map((suggestion, idx) => (
                                <div key={idx} className="p-3 bg-neutral-50 dark:bg-zinc-950 border border-neutral-200 dark:border-zinc-800 space-y-2">
                                   <div className="flex justify-between items-start">
-                                     <span className="font-extrabold text-neutral-900 dark:text-zinc-100 bg-yellow-200 dark:bg-yellow-900/50 px-1 py-0.5 rounded text-[11px]">"{suggestion.keyword}"</span>
-                                     <span className="text-[8px] bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">{suggestion.type}</span>
+                                     <span className="font-extrabold text-neutral-900 dark:text-zinc-100 bg-yellow-200 dark:bg-yellow-900/50 px-1 py-0.5 rounded-none text-[11px]">"{suggestion.keyword}"</span>
+                                     <span className="text-[8px] bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded-none uppercase font-bold tracking-wider">{suggestion.type}</span>
                                   </div>
                                   <div className="text-[10px] text-neutral-600 dark:text-zinc-400 font-mono">
                                      Recommended Target: <span className="text-blue-500 font-bold">{suggestion.link}</span>
@@ -2782,7 +2782,7 @@ Candidates are requested to review standard trade guidelines before submitting d
                            </button>
                         </div>
                         
-                        <div className="bg-neutral-900 p-2.5 rounded border border-neutral-800 font-mono text-[9px] text-zinc-300 whitespace-pre-wrap overflow-y-auto max-h-[250px]">
+                        <div className="bg-neutral-900 p-2.5 rounded-none border border-neutral-800 font-mono text-[9px] text-zinc-300 whitespace-pre-wrap overflow-y-auto max-h-[250px]">
 {`<script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -2815,7 +2815,7 @@ ${faqQuestions.map(fq => `    {
                       📄 Dynamic XML Sitemap Router & schema-rich PDF generator
                     </p>
                     <p className="leading-relaxed">
-                      Two essential tools. A real-time <code className="bg-neutral-100 dark:bg-neutral-800 px-1 py-0.2 rounded font-mono text-[11px]">/sitemap.xml</code> router is now live on our Express backend. Additionally, this module generates highly formatted, SEO-branded PDF printouts for your job listings containing QR codes.
+                      Two essential tools. A real-time <code className="bg-neutral-100 dark:bg-neutral-800 px-1 py-0.2 rounded-none font-mono text-[11px]">/sitemap.xml</code> router is now live on our Express backend. Additionally, this module generates highly formatted, SEO-branded PDF printouts for your job listings containing QR codes.
                     </p>
                   </div>
                   
@@ -2828,7 +2828,7 @@ ${faqQuestions.map(fq => `    {
                         <div className="space-y-2">
                            <div className="flex justify-between items-center text-xs">
                               <span className="font-extrabold text-neutral-800 dark:text-zinc-200">Sitemap Engine Status:</span>
-                              <span className="text-green-600 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded font-bold uppercase text-[9px]">Online & Routing</span>
+                              <span className="text-green-600 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded-none font-bold uppercase text-[9px]">Online & Routing</span>
                            </div>
                            <div className="flex justify-between items-center text-xs">
                               <span className="font-extrabold text-neutral-800 dark:text-zinc-200">Express Endpoint:</span>
@@ -2895,7 +2895,7 @@ ${faqQuestions.map(fq => `    {
                   <Rss size={18} className="text-orange-650 dark:text-orange-500" />
                   Google News Publisher Sandbox & XML RSS Feed
                 </span>
-                <span className="text-[10px] font-mono font-extrabold uppercase bg-orange-50 dark:bg-orange-950/40 text-orange-850 dark:text-orange-400 border border-orange-300 dark:border-orange-800 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-orange-50 dark:bg-orange-950/40 text-orange-850 dark:text-orange-400 border border-orange-300 dark:border-orange-800 px-2 py-0.5 rounded-none">
                   Sandbox Active
                 </span>
               </h2>
@@ -2937,7 +2937,7 @@ ${faqQuestions.map(fq => `    {
               {/* Validation Sandbox diagnostics */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* News validation console output */}
-                <div className="p-3 bg-neutral-950 border border-neutral-850 text-neutral-300 font-mono text-[10px] min-h-[160px] flex flex-col justify-between rounded">
+                <div className="p-3 bg-neutral-950 border border-neutral-850 text-neutral-300 font-mono text-[10px] min-h-[160px] flex flex-col justify-between rounded-none">
                   <div>
                     <div className="flex justify-between text-[9px] font-bold text-neutral-500 border-b border-neutral-800 pb-1 mb-2.5 uppercase">
                       <span>Publisher Engine XML Validation Terminal</span>
@@ -2966,10 +2966,10 @@ ${faqQuestions.map(fq => `    {
                 </div>
 
                 {/* Google Discover carousel simulator card */}
-                <div className="p-3 bg-neutral-50 dark:bg-zinc-950/50 border border-neutral-200 dark:border-zinc-800 rounded">
+                <div className="p-3 bg-neutral-50 dark:bg-zinc-950/50 border border-neutral-200 dark:border-zinc-800 rounded-none">
                   <div className="flex justify-between items-center text-[9px] font-bold text-neutral-400 uppercase border-b border-neutral-200 dark:border-zinc-800 pb-1.5 mb-3">
                     <span className="flex items-center gap-1.5 text-neutral-700 dark:text-zinc-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#EA4335]" />
+                      <span className="w-1.5 h-1.5 rounded-none bg-[#EA4335]" />
                       Google News Feed / Discover Preview
                     </span>
                     <span>Seconds Precision Live</span>
@@ -2979,7 +2979,7 @@ ${faqQuestions.map(fq => `    {
                     <div className="space-y-3 max-h-48 overflow-y-auto pr-1">
                       <div className="text-[10px] font-bold text-neutral-500 mb-1 flex items-center justify-between">
                         <span>Top Search Crawl Carousel Cards:</span>
-                        <span className="font-mono text-[9px] bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-300 dark:border-emerald-800 px-1 py-0.5 rounded text-emerald-800 dark:text-emerald-400 font-extrabold">
+                        <span className="font-mono text-[9px] bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-300 dark:border-emerald-800 px-1 py-0.5 rounded-none text-emerald-800 dark:text-emerald-400 font-extrabold">
                           ✓ Verified (RFC 822 UTC compliant)
                         </span>
                       </div>
@@ -3025,7 +3025,7 @@ ${faqQuestions.map(fq => `    {
                   <Globe size={18} className="text-cyan-600 dark:text-cyan-400" />
                   IndexNow Instant Protocol (Bing / Yandex)
                 </span>
-                <span className="text-[10px] font-mono font-extrabold uppercase bg-cyan-50 dark:bg-cyan-950/40 text-cyan-800 dark:text-cyan-400 border border-cyan-300 dark:border-cyan-800 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-mono font-extrabold uppercase bg-cyan-50 dark:bg-cyan-950/40 text-cyan-800 dark:text-cyan-400 border border-cyan-300 dark:border-cyan-800 px-2 py-0.5 rounded-none">
                   IndexNow Active
                 </span>
               </h2>
@@ -3057,7 +3057,7 @@ ${faqQuestions.map(fq => `    {
                       required
                       value={indexNowKey}
                       onChange={(e) => setIndexNowKey(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
-                      className="w-full text-xs font-mono p-2 border border-neutral-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded font-bold"
+                      className="w-full text-xs font-mono p-2 border border-neutral-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-none font-bold"
                       placeholder="e.g. 7eb0b5ee2e604ba0ad8f615822eeebf4"
                     />
                   </div>
@@ -3069,19 +3069,19 @@ ${faqQuestions.map(fq => `    {
                       required
                       value={indexNowHost}
                       onChange={(e) => setIndexNowHost(e.target.value.replace(/https?:\/\//i, ''))}
-                      className="w-full text-xs font-mono p-2 border border-neutral-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded font-bold"
+                      className="w-full text-xs font-mono p-2 border border-neutral-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-none font-bold"
                       placeholder="sarkariboard.com"
                     />
                   </div>
 
                   {/* Verification file verification URL */}
-                  <div className="p-2 border border-dashed border-neutral-300 dark:border-zinc-800 bg-[#fcfbf7] dark:bg-zinc-950 rounded text-[10px]">
+                  <div className="p-2 border border-dashed border-neutral-300 dark:border-zinc-800 bg-[#fcfbf7] dark:bg-zinc-950 rounded-none text-[10px]">
                     <div className="flex justify-between font-bold text-neutral-500 mb-1">
                       <span>VERIFICATION FILE ON LOCAL HOST:</span>
                       <span className="text-emerald-600 font-mono">Dynamic API Active</span>
                     </div>
                     <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <code className="text-[10px] font-mono break-all font-black text-emerald-700 select-all bg-emerald-50 dark:bg-emerald-950/20 px-1 py-0.5 rounded">
+                      <code className="text-[10px] font-mono break-all font-black text-emerald-700 select-all bg-emerald-50 dark:bg-emerald-950/20 px-1 py-0.5 rounded-none">
                         /{indexNowKey ? indexNowKey : "key"}.txt
                       </code>
                       <a 
@@ -3105,7 +3105,7 @@ ${faqQuestions.map(fq => `    {
                   </button>
 
                   {indexNowConfigSuccess && (
-                    <div className="p-1 px-2 border border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded text-center animate-fade-in">
+                    <div className="p-1 px-2 border border-emerald-300 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded-none text-center animate-fade-in">
                       ✓ IndexNow parameters persistently bound & served!
                     </div>
                   )}
@@ -3125,7 +3125,7 @@ ${faqQuestions.map(fq => `    {
                         <select 
                           value={indexNowEngine} 
                           onChange={(e) => setIndexNowEngine(e.target.value as any)}
-                          className="bg-white dark:bg-zinc-900 border border-neutral-300 dark:border-zinc-800 text-[10px] font-bold px-1 rounded cursor-pointer"
+                          className="bg-white dark:bg-zinc-900 border border-neutral-300 dark:border-zinc-800 text-[10px] font-bold px-1 rounded-none cursor-pointer"
                         >
                           <option value="bing">Bing Engine</option>
                           <option value="yandex">Yandex Engine</option>
@@ -3137,7 +3137,7 @@ ${faqQuestions.map(fq => `    {
                       value={indexNowUrls}
                       onChange={(e) => setIndexNowUrls(e.target.value)}
                       rows={5}
-                      className="w-full text-xs font-mono p-2 border border-neutral-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded font-semibold leading-relaxed focus:ring-1 focus:ring-cyan-500"
+                      className="w-full text-xs font-mono p-2 border border-neutral-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-none font-semibold leading-relaxed focus:ring-1 focus:ring-cyan-500"
                       placeholder="https://sarkariboard.com/post/your-slug"
                     />
                   </div>
@@ -3156,7 +3156,7 @@ ${faqQuestions.map(fq => `    {
               {/* Console logs for IndexNow and history */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Console readout */}
-                <div className="p-3 bg-neutral-950 border border-neutral-800 text-neutral-300 font-mono text-[10px] min-h-[140px] flex flex-col justify-between rounded">
+                <div className="p-3 bg-neutral-950 border border-neutral-800 text-neutral-300 font-mono text-[10px] min-h-[140px] flex flex-col justify-between rounded-none">
                   <div>
                     <div className="flex justify-between text-[9px] font-bold text-neutral-500 border-b border-neutral-800 pb-1 mb-2.5 uppercase">
                       <span>IndexNow Engine Consolidation Readout</span>
@@ -3175,7 +3175,7 @@ ${faqQuestions.map(fq => `    {
                 </div>
 
                 {/* History Logs */}
-                <div className="p-3 bg-neutral-50 dark:bg-zinc-950/50 border border-neutral-200 dark:border-zinc-800 flex flex-col justify-between rounded">
+                <div className="p-3 bg-neutral-50 dark:bg-zinc-950/50 border border-neutral-200 dark:border-zinc-800 flex flex-col justify-between rounded-none">
                   <div>
                     <span className="text-[10px] font-black uppercase text-neutral-400 tracking-wider block border-b border-neutral-200 dark:border-zinc-800 pb-1 mb-2.5">
                       Submittal Telemetry Log
@@ -3184,7 +3184,7 @@ ${faqQuestions.map(fq => `    {
                     {indexNowLogs && indexNowLogs.length > 0 ? (
                       <div className="space-y-2 max-h-32 overflow-y-auto pr-1">
                         {indexNowLogs.map((logItem, index) => (
-                          <div key={index} className="text-[10px] p-2 border border-neutral-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded flex justify-between items-center gap-1.5">
+                          <div key={index} className="text-[10px] p-2 border border-neutral-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-none flex justify-between items-center gap-1.5">
                             <div className="flex flex-col">
                               <span className="font-bold text-neutral-700 dark:text-zinc-300">
                                 {logItem.urls?.length || 0} URL{logItem.urls?.length === 1 ? "" : "s"} submitted to <strong className="text-cyan-600 dark:text-cyan-400">{logItem.engine}</strong>
@@ -3194,7 +3194,7 @@ ${faqQuestions.map(fq => `    {
                               </span>
                             </div>
 
-                            <span className={`text-[8px] font-bold px-1 py-0.5 rounded border ${
+                            <span className={`text-[8px] font-bold px-1 py-0.5 rounded-none border ${
                               logItem.success 
                               ? 'bg-emerald-50 border-emerald-300 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400' 
                               : 'bg-red-50 border-red-300 text-red-800 dark:bg-red-950/40 dark:text-red-400'
@@ -3223,7 +3223,7 @@ ${faqQuestions.map(fq => `    {
                 </h2>
                 <button 
                   onClick={fetchStatus}
-                  className="p-1 hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-transparent hover:border-black rounded transition-colors"
+                  className="p-1 hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-transparent hover:border-black rounded-none transition-colors"
                 >
                   <RefreshCw size={13} />
                 </button>

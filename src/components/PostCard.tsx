@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Post } from '../types';
+import { getRelativeTime } from '../lib/dateUtils';
 import { BadgeCheck, Briefcase, FileText, Calendar, Clock, Building2, ChevronRight, AlertCircle, Bookmark } from 'lucide-react';
 
 interface PostCardProps {
@@ -188,6 +189,7 @@ export default function PostCard({ post, onClick, viewMode = 'list' }: PostCardP
 
   const vacancyCount = useMemo(() => getVacancyCount(post), [post]);
   const formattedPostDate = useMemo(() => formatDate(post.postDate), [post.postDate]);
+  const relativePostDate = useMemo(() => getRelativeTime(post.postDate), [post.postDate]);
   const formattedEndDate = useMemo(() => formatDate(post.lastDateToApply), [post.lastDateToApply]);
 
   if (viewMode === 'list') {
@@ -220,7 +222,7 @@ export default function PostCard({ post, onClick, viewMode = 'list' }: PostCardP
                 </span>
               )}
 
-              <span className={`text-[9px] font-extrabold uppercase tracking-widest px-1.5 py-0.5 border rounded-sm ${railColorAndLabel.indicatorColor}`}>
+              <span className={`text-[9px] font-extrabold uppercase tracking-widest px-1.5 py-0.5 border rounded-none ${railColorAndLabel.indicatorColor}`}>
                 {railColorAndLabel.indicator}
               </span>
             </div>
@@ -247,6 +249,7 @@ export default function PostCard({ post, onClick, viewMode = 'list' }: PostCardP
               <div className="flex items-center gap-1 text-neutral-500 dark:text-zinc-400 font-mono">
                 <Clock className="w-3.5 h-3.5 text-neutral-400" />
                 <span>Pub: {formattedPostDate}</span>
+                {relativePostDate && <span className="opacity-60 text-[10px] ml-1 bg-neutral-100 dark:bg-zinc-800 px-1.5 rounded">{relativePostDate}</span>}
               </div>
             </div>
           </div>
@@ -299,7 +302,7 @@ export default function PostCard({ post, onClick, viewMode = 'list' }: PostCardP
               {config.label}
             </span>
             
-            <span className={`text-[9px] font-extrabold uppercase tracking-widest px-1.5 py-0.5 border rounded-sm ${railColorAndLabel.indicatorColor}`}>
+            <span className={`text-[9px] font-extrabold uppercase tracking-widest px-1.5 py-0.5 border rounded-none ${railColorAndLabel.indicatorColor}`}>
               {railColorAndLabel.indicator}
             </span>
           </div>
@@ -335,6 +338,7 @@ export default function PostCard({ post, onClick, viewMode = 'list' }: PostCardP
             <div className="flex items-center gap-1 text-neutral-500 dark:text-zinc-400 font-mono">
               <Clock className="w-3.5 h-3.5" />
               <span>{formattedPostDate}</span>
+              {relativePostDate && <span className="opacity-60 text-[9px] ml-1">{relativePostDate}</span>}
             </div>
 
             {post.lastDateToApply ? (

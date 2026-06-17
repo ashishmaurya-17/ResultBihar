@@ -2,10 +2,12 @@ import React, { useRef, useState, useMemo, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { usePortalStore } from "../store";
 import { JobCategory, SarkariPost, ImportantDate, UsefulLink, VacancyDetail } from "../types";
+import { getRelativeTime } from "../lib/dateUtils";
 import { ImportantDatesTimeline } from "./ImportantDatesTimeline";
 import { ApplicationFeeDetails } from "./ApplicationFeeDetails";
 import { SarkariDataTable } from "./SarkariDataTable";
 import { CommentSection } from "./CommentSection";
+import { InteractiveLinkHub } from "./InteractiveLinkHub";
 import AuthorCard from "./AuthorCard";
 import SourceCitation from "./SourceCitation";
 import { authors } from "./Authors";
@@ -20,21 +22,26 @@ import {
   AlertTriangle,
   UserCheck,
   Award,
+  Search,
   HelpCircle,
   Wrench,
   Printer,
   Info,
   Share2,
   Bookmark,
-  BookmarkCheck
+  BookmarkCheck,
+  Sparkles
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { safeLocalStorage } from "../lib/storage";
 
 const InfoTooltip: React.FC<{ content: string; align?: "right" | "center" }> = ({ content, align = "center" }) => {
   return (
     <div className={`relative group/tooltip inline-flex items-center ${align === 'right' ? 'ml-auto' : 'ml-1.5'} no-print`} style={{ verticalAlign: 'middle' }}>
-      <Info className="w-3.5 h-3.5 text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200 cursor-help transition-colors inline-block" />
-      <div className={`absolute bottom-full mb-2 w-58 p-2 bg-neutral-900 dark:bg-zinc-800 text-neutral-100 dark:text-neutral-200 text-[10.5px] rounded border border-neutral-800 dark:border-zinc-700 shadow-xl opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:pointer-events-auto transition-opacity duration-200 z-50 font-sans tracking-normal font-medium normal-case leading-snug ${
+      <button className="p-1.5 bg-black border border-zinc-800 rounded shadow-lg hover:bg-zinc-900 transition-all cursor-help flex items-center justify-center active:scale-95 group-hover/tooltip:ring-2 ring-blue-500/50">
+        <Search className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+      </button>
+      <div className={`absolute bottom-full mb-2 w-58 p-2 bg-neutral-900 dark:bg-zinc-800 text-neutral-100 dark:text-neutral-200 text-[10.5px] rounded-none border border-neutral-800 dark:border-zinc-700 shadow-xl opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:pointer-events-auto transition-opacity duration-200 z-50 font-sans tracking-normal font-medium normal-case leading-snug ${
         align === 'right' ? 'right-0' : 'left-0 sm:left-1/2 sm:-translate-x-1/2'
       }`}>
         {content}
@@ -54,10 +61,15 @@ export interface SiloGroup {
 
 interface SarkariPostLayoutProps {
   post: SarkariPost;
+  rawContent?: string;
   onBack?: () => void;
   relatedPosts?: { title: string; url: string; id?: string }[];
   siloGroup?: SiloGroup | null;
 }
+
+const SpectrumBorder: React.FC = () => (
+  <div className="h-1.5 w-full bg-gradient-to-r from-[#e41e26] via-[#f37021] via-[#ffc20e] via-[#00a651] to-[#006837] select-none no-print" />
+);
 
 const CyberCafeChecklist: React.FC = () => {
   const documents = [
@@ -69,23 +81,26 @@ const CyberCafeChecklist: React.FC = () => {
   ];
 
   return (
-    <div className="mb-6 bg-white border border-neutral-300 p-4 shadow-sm">
-      <h3 className="text-sm font-bold uppercase text-neutral-800 border-b-2 border-neutral-200 pb-2 mb-3 flex items-center justify-between">
-        <span>📋 Documents Needed</span>
-        <span className="text-[10px] bg-red-800 text-white px-2 py-0.5 rounded">CYBER CAFE</span>
-      </h3>
-      <div className="space-y-3">
-        {documents.map((doc, idx) => (
-          <div key={idx} className="flex gap-3 items-start">
-            <div className="w-5 h-5 flex items-center justify-center bg-green-50 text-green-700 border border-green-200 mt-0.5">
-              ✓
+    <div className="mb-8 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl relative shadow-[0_4px_25px_rgba(0,0,0,0.03)] overflow-hidden">
+      <SpectrumBorder />
+      <div className="p-6">
+        <h3 className="text-xs sm:text-sm font-sans font-black uppercase tracking-wider text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-3 mb-4 flex items-center justify-between select-none">
+          <span>📋 Documents Needed for Form Fillup</span>
+          <span className="text-[9px] bg-zinc-950 dark:bg-zinc-100 text-white dark:text-zinc-950 px-2.5 py-1 rounded-lg font-black uppercase tracking-wider shadow-sm">CYBER CAFE CHECKLIST</span>
+        </h3>
+        <div className="space-y-4 font-sans">
+          {documents.map((doc, idx) => (
+            <div key={idx} className="flex gap-3 items-start">
+              <div className="w-6 h-6 flex items-center justify-center bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 rounded-lg border border-emerald-100 dark:border-emerald-900/40 mt-0.5 shadow-xs shrink-0 font-extrabold text-xs">
+                ✓
+              </div>
+              <div>
+                <div className="text-sm font-black text-neutral-900 dark:text-zinc-50 leading-tight">{doc.name}</div>
+                <div className="text-[11.5px] text-neutral-500 dark:text-zinc-400 font-bold leading-snug mt-0.5">{doc.hindiName}</div>
+              </div>
             </div>
-            <div>
-              <div className="text-sm font-bold text-neutral-900 leading-tight">{doc.name}</div>
-              <div className="text-[11px] text-neutral-500 font-medium leading-snug">{doc.hindiName}</div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -93,6 +108,7 @@ const CyberCafeChecklist: React.FC = () => {
 
 export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
   post,
+  rawContent,
   onBack,
   relatedPosts = [],
   siloGroup = null
@@ -105,6 +121,72 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
+
+  // States for automated Gemini post summary
+  const [summary, setSummary] = useState<string>("");
+  const [summaryLoading, setSummaryLoading] = useState<boolean>(false);
+  const [summaryError, setSummaryError] = useState<string>("");
+
+  useEffect(() => {
+    if (!post.id) return;
+
+    const cacheKey = `sarkari_ai_summary_v3_${post.id}`;
+    const cached = safeLocalStorage.getItem(cacheKey);
+    if (cached) {
+      setSummary(cached);
+      setSummaryLoading(false);
+      setSummaryError("");
+      return;
+    }
+
+    setSummaryLoading(true);
+    setSummaryError("");
+    setSummary("");
+
+    let active = true;
+
+    fetch("/api/post/summary", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: post.id,
+        title: post.a1_postName,
+        content: rawContent || post.a7_postOverview || post.a3_seoDescription || "",
+        collection: post.category,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!active) return;
+        if (data && data.success && data.summary) {
+          setSummary(data.summary);
+          safeLocalStorage.setItem(cacheKey, data.summary);
+        } else {
+          throw new Error(data?.error || "Invalid response format from server");
+        }
+      })
+      .catch((err) => {
+        if (!active) return;
+        console.error("Failed to generate AI eligibility summary:", err);
+        setSummaryError("Could not retrieve AI summary at this moment. Please check database details below.");
+      })
+      .finally(() => {
+        if (active) {
+          setSummaryLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [post.id, post.a1_postName, rawContent, post.category, post.a7_postOverview, post.a3_seoDescription]);
 
   // Quick inline age check states
   const [eligibilityDob, setEligibilityDob] = useState("");
@@ -300,7 +382,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
           handleCopyText(text, label);
         }}
         title={`Copy ${label}`}
-        className="ml-1 px-1 py-0.5 rounded border border-neutral-300 dark:border-zinc-700 bg-neutral-50 dark:bg-zinc-850 hover:bg-neutral-150 dark:hover:bg-zinc-805 text-gray-500 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-100 transition duration-150 cursor-pointer inline-flex items-center justify-center align-middle"
+        className="ml-1 px-1 py-0.5 rounded-none border border-neutral-300 dark:border-zinc-700 bg-neutral-50 dark:bg-zinc-850 hover:bg-neutral-150 dark:hover:bg-zinc-805 text-gray-500 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-100 transition duration-150 cursor-pointer inline-flex items-center justify-center align-middle"
       >
         <Copy className="w-3 h-3" />
       </button>
@@ -454,7 +536,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
             handleCopyText(link.url, link.label || "Link URL");
           }}
           title="Copy Link URL"
-          className="p-1 rounded border border-neutral-300 dark:border-zinc-700 bg-neutral-50 dark:bg-zinc-850 hover:bg-neutral-150 dark:hover:bg-zinc-805 text-gray-500 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-100 transition duration-150 cursor-pointer flex items-center justify-center h-7 w-7"
+          className="p-1 rounded-none border border-neutral-300 dark:border-zinc-700 bg-neutral-50 dark:bg-zinc-850 hover:bg-neutral-150 dark:hover:bg-zinc-805 text-gray-500 hover:text-black dark:text-zinc-400 dark:hover:text-zinc-100 transition duration-150 cursor-pointer flex items-center justify-center h-7 w-7"
         >
           <Copy className="w-3.5 h-3.5" />
         </button>
@@ -551,7 +633,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
             transition={{ type: "spring", stiffness: 350, damping: 25 }}
             className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 bg-gray-900 text-white border-2 border-gray-950 px-5 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] select-none no-print min-w-[300px]"
           >
-            <div className="bg-green-500 text-black rounded-full p-1 flex items-center justify-center">
+            <div className="bg-green-500 text-black rounded-none p-1 flex items-center justify-center">
               <Check size={16} strokeWidth={3} />
             </div>
             <div className="flex-1">
@@ -572,7 +654,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
             transition={{ type: "spring", stiffness: 350, damping: 25 }}
             className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 bg-neutral-900 text-white border-2 border-red-500 px-5 py-3.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] select-none no-print w-[90%] max-w-[450px]"
           >
-            <div className="bg-amber-500 text-black rounded-full p-1.5 flex items-center justify-center shrink-0">
+            <div className="bg-amber-500 text-black rounded-none p-1.5 flex items-center justify-center shrink-0">
               <Info size={18} strokeWidth={3} />
             </div>
             <div className="flex-1 text-left">
@@ -589,14 +671,14 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
       <div className="max-w-[1580px] mx-auto w-full px-0 sm:px-2 md:px-4 py-2">
         
         {/* Custom Premium Breadcrumbs */}
-        <div className="flex items-center gap-2 mb-6 text-[10px] sm:text-xs font-mono uppercase bg-gray-100 dark:bg-zinc-855 border border-gray-300 dark:border-zinc-750 p-2 sm:p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider select-none">
-          <Link to="/" onClick={onBack} className="hover:text-red-800 dark:hover:text-red-400 font-extrabold transition-colors uppercase">
+        <div className="flex flex-wrap items-center gap-2 mb-6 text-[10px] sm:text-xs font-sans uppercase bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 p-3 px-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.01)] tracking-wide select-none">
+          <Link to="/" onClick={onBack} className="hover:text-red-600 dark:hover:text-red-400 font-black transition-colors uppercase">
             HOME
           </Link>
-          <span className="text-gray-400">➔</span>
-          <span className="text-gray-500 dark:text-zinc-400">{post.category.replace("-", " ")}</span>
-          <span className="text-gray-400">➔</span>
-          <span className="text-gray-900 dark:text-gray-200 font-bold truncate max-w-[150px] sm:max-w-md">
+          <span className="text-neutral-300 dark:text-zinc-700">➔</span>
+          <span className="text-neutral-500 dark:text-zinc-400 font-extrabold">{post.category.replace("-", " ")}</span>
+          <span className="text-neutral-300 dark:text-zinc-700">➔</span>
+          <span className="text-neutral-900 dark:text-zinc-200 font-black truncate max-w-[150px] sm:max-w-md">
             {post.a1_postName}
           </span>
         </div>
@@ -605,114 +687,183 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
         <div className="grid grid-cols-12 gap-6 lg:gap-8 items-start">
           
           {/* Main Paper Content Container (col-span-12 lg:col-span-8 xl:col-span-9) */}
-          <div className="col-span-12 lg:col-span-8 xl:col-span-9 w-full min-w-0 overflow-hidden">
-            <div className="border-2 border-gray-900 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-2.5 xs:p-3 sm:p-6 md:p-8 relative shadow-[6px_6px_0px_0px_rgba(31,41,55,1)] dark:shadow-[6px_6px_0px_0px_rgba(39,39,42,1)] transition-colors duration-305">
+          <div className="col-span-12 lg:col-span-8 xl:col-span-9 w-full min-w-0">
+            <div className="bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-[32px] overflow-hidden shadow-[0_12px_40px_rgb(0,0,0,0.05)] dark:shadow-[0_12px_40px_rgb(0,0,0,0.3)] transition-all duration-300">
+              <SpectrumBorder />
+              
+              <div className="p-4 xs:p-5 sm:p-8 md:p-10 relative">
         
         {/* PRINTABLE CONTENT */}
         <div ref={printableAreaRef} className="text-sm transition-all duration-300">
 
-          {/* BLOCK 1: Post Name (Premium government serif gaze font) */}
-          <section className="mb-6 relative">
-            <span className="absolute right-0 top-0 text-[10px] text-gray-200 select-none font-mono opacity-20">A1_POST</span>
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-950 dark:text-zinc-100 uppercase tracking-tight leading-tight pb-2">
-              {post.a1_postName}
-            </h1>
+          {/* BLOCK 1: Title & Core Metadata Card */}
+          <div className="mb-8 p-5 sm:p-6 bg-neutral-50 dark:bg-zinc-950/60 border border-neutral-150 dark:border-zinc-800/85 rounded-2xl relative shadow-sm overflow-hidden group">
+            {/* Ambient background glows */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-red-550/5 dark:bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-550/5 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
-            {/* BLOCK 2: Date, Time & Read Badge (Placed directly under H1 title) */}
-            <motion.section
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="mt-3 mb-4 flex flex-wrap items-center gap-3 text-xs font-mono text-gray-750 dark:text-zinc-300 bg-gray-100 dark:bg-zinc-800/80 p-2.5 border border-gray-350 dark:border-zinc-700 relative select-none"
-            >
-              <span className="absolute right-2 top-2 text-[8px] text-gray-300 select-none opacity-20">A2</span>
-              <div>
-                <span className="font-bold">PUBLISHED DATE:</span> {new Date(post.a2_postDateTime).toLocaleString('en-IN')}
-              </div>
-              <div className="sm:inline hidden text-gray-400 border-r border-gray-300 dark:border-zinc-700 h-4" />
-              <div>
-                <span className="font-bold">STATUS:</span> Verified Official Notice
-              </div>
-              <div className="sm:inline hidden text-gray-450 border-r border-gray-300 dark:border-zinc-700 h-4" />
-              <div className="bg-amber-100 dark:bg-amber-950 text-amber-950 dark:text-amber-100 px-2.5 py-0.5 font-bold uppercase text-[10px] tracking-wide inline-flex items-center gap-1 border border-amber-300 dark:border-amber-800 rounded-sm">
-                ⏱️ {computedReadTime}
+            <div className="relative flex flex-col gap-4">
+              {/* Category, Status badge row */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-red-600 to-red-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-[0_4px_12px_rgba(220,38,38,0.25)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    {post.category.replace("-", " ").toUpperCase()}
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-350 text-[10px] font-extrabold tracking-wide rounded-md border border-emerald-200/50 dark:border-emerald-900/40">
+                    ✓ Verified Notice
+                  </span>
+                </div>
+                <span className="font-mono text-[9px] text-neutral-400 dark:text-zinc-500 uppercase tracking-widest select-none">
+                  A1_POST_DESK
+                </span>
               </div>
 
-              {/* Info Icon with Hover Tooltip */}
-              <InfoTooltip align="right" content="This section provides the officially released notification timestamp, formal verification status, and dynamic processing metrics." />
-            </motion.section>
-          </section>
+              {/* Majestic title heading */}
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-neutral-950 dark:text-zinc-50 leading-tight tracking-tight uppercase transition-colors">
+                {post.a1_postName}
+              </h1>
 
-          {/* Gazette banner (Placed under Post Name) */}
-          <div className="border-b-4 border-double border-gray-900 dark:border-zinc-700 pb-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <span className="bg-red-800 text-white font-mono text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 border border-gray-900 dark:border-zinc-850">
-                OFFICIAL SARKARI UPDATE
-              </span>
-              <div className="text-gray-650 dark:text-zinc-400 text-xs font-mono mt-1 flex flex-wrap items-center gap-x-2">
-                <span>CATEGORY: {post.category.toUpperCase()}</span>
-                <span>•</span>
-                <span className="text-green-800 dark:text-green-400 font-sans font-black italic tracking-wide">✓ Curated & Verified by Ashish Maurya</span>
+              {/* Meta Details Row */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-4 border-t border-dashed border-neutral-200 dark:border-zinc-800 text-xs text-neutral-600 dark:text-zinc-400 font-sans">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold text-[9.5px] uppercase font-mono tracking-wider">Date Published:</span>
+                  <span className="font-black text-neutral-800 dark:text-zinc-200 font-mono">
+                    {new Date(post.a2_postDateTime).toLocaleDateString('en-IN', {day: 'numeric', month: 'short', year: 'numeric'})}
+                    <span className="ml-2 opacity-60 text-[11px] font-mono tracking-tight bg-blue-100/50 dark:bg-zinc-800/60 px-1.5 py-0.5 rounded">
+                      {getRelativeTime(post.a2_postDateTime)}
+                    </span>
+                  </span>
+                </div>
+                <div className="h-3 w-[1px] bg-neutral-200 dark:bg-zinc-850 hidden sm:block" />
+                <div className="flex items-center gap-1.5">
+                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold text-[9.5px] uppercase font-mono tracking-wider">Estimate:</span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-950/40 text-amber-850 dark:text-amber-300 font-black font-mono text-[10px] rounded border border-amber-200/50 dark:border-amber-900/30">
+                    ⏱️ {computedReadTime}
+                  </span>
+                </div>
+                <div className="h-3 w-[1px] bg-neutral-200 dark:bg-zinc-855 hidden sm:block" />
+                <div className="flex items-center gap-1.5">
+                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold text-[9.5px] uppercase font-mono tracking-wider">Checked By:</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-bold italic">Ashish Maurya</span>
+                </div>
               </div>
             </div>
-            <div className="flex flex-nowrap items-center gap-1 sm:gap-1.5 no-print mt-2 md:mt-0">
+          </div>
+
+          {/* Gazette banner / Actions Panel */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-4 mb-8 bg-neutral-50 dark:bg-zinc-950/40 border border-neutral-150 dark:border-zinc-800 rounded-3xl no-print shadow-xs">
+            <span className="text-xs font-black uppercase text-neutral-400 dark:text-zinc-500 tracking-wider font-sans select-none px-1">
+              Notice Actions
+            </span>
+            
+            <div className="flex flex-wrap items-center gap-2">
               {onBack && (
-                <Link
-                  to="/"
+                <button
                   onClick={onBack}
-                  className="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 bg-white hover:bg-gray-50 text-gray-900 border border-gray-950 font-sans text-[9px] sm:text-[10px] uppercase font-black tracking-wider transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer select-none shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:shadow-md hover:translate-x-[0.5px] hover:translate-y-[0.5px]"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-neutral-50 dark:bg-zinc-800 dark:hover:bg-zinc-755 text-neutral-800 dark:text-zinc-200 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-neutral-200/80 dark:border-zinc-700 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
                   title="Go back to dashboard"
                 >
-                  <ArrowLeft className="w-2.5 h-2.5 sm:w-3 sm:h-3" strokeWidth={3} />
+                  <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
                   <span>Home</span>
-                </Link>
+                </button>
               )}
+              
               <button
                 onClick={handleCopyLink}
-                className="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 bg-blue-50 text-blue-950 border border-blue-950 hover:bg-blue-100 font-sans text-[9px] sm:text-[10px] uppercase font-black tracking-wider transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer select-none shadow-[1px_1px_0px_0px_rgba(29,78,216,1)] hover:shadow-md hover:translate-x-[0.5px] hover:translate-y-[0.5px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/30 dark:hover:bg-blue-950/55 text-blue-950 dark:text-blue-300 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-blue-200/50 dark:border-blue-900/40 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
                 title="Copy shareable post link to clipboard"
               >
-                {copied ? <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-600" strokeWidth={3} /> : <Copy className="w-2.5 h-2.5 sm:w-3 sm:h-3" strokeWidth={3} />}
+                {copied ? <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" strokeWidth={3} /> : <Copy className="w-3.5 h-3.5" strokeWidth={2.5} />}
                 <span>{copied ? "Copied!" : "Copy Link"}</span>
               </button>
 
               <button
                 onClick={handleShare}
-                className="flex-shrink-0 flex items-center gap-1 px-1 py-0.5 sm:px-1.5 sm:py-0.5 bg-emerald-50 text-emerald-950 border border-emerald-950 hover:bg-emerald-100 font-sans text-[8px] sm:text-[9px] uppercase font-black tracking-wider transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer select-none shadow-[1px_1px_0px_0px_rgba(16,185,129,1)] hover:shadow-md hover:translate-x-[0.5px] hover:translate-y-[0.5px]"
-                title="Share this job update via social media or messaging apps"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/55 text-emerald-950 dark:text-emerald-300 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-emerald-200/50 dark:border-emerald-900/40 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
+                title="Share this job update via social media or messaging"
               >
-                <Share2 className="w-2 h-2 sm:w-2.5 sm:h-2.5" strokeWidth={3} />
+                <Share2 className="w-3.5 h-3.5" strokeWidth={2.5} />
                 <span>Share</span>
               </button>
               
               <button
                 onClick={toggleBookmark}
-                className={`flex-shrink-0 flex items-center gap-1 px-1 py-0.5 sm:px-1.5 sm:py-0.5 font-sans text-[8px] sm:text-[9px] uppercase font-black tracking-wider transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer select-none border hover:shadow-md hover:translate-x-[0.5px] hover:translate-y-[0.5px] ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border shadow-3xs hover:scale-[1.02] active:scale-[0.98] ${
                   isSaved 
-                    ? "bg-amber-100 dark:bg-amber-950 text-amber-950 dark:text-amber-300 border-amber-950 shadow-[1px_1px_0px_0px_rgba(245,158,11,1)]"
-                    : "bg-amber-50 dark:bg-zinc-900 text-amber-900 dark:text-zinc-200 border-amber-805 shadow-[1px_1px_0px_0px_rgba(180,83,9,1)]"
+                    ? "bg-amber-100 dark:bg-amber-950 text-amber-950 dark:text-amber-300 border-amber-350 dark:border-amber-900"
+                    : "bg-amber-50 hover:bg-amber-100/80 dark:bg-zinc-800 dark:hover:bg-zinc-750 text-amber-900 dark:text-zinc-200 border-amber-200 dark:border-zinc-700"
                 }`}
-                title="Save this notice to your offline bookmarked pocket for train/offline viewing"
+                title="Save this notice offline"
               >
-                {isSaved ? <BookmarkCheck className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-amber-655" strokeWidth={3} /> : <Bookmark className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-amber-805" strokeWidth={3} />}
-                <span>{isSaved ? "Saved Saver" : "Save Offline"}</span>
+                {isSaved ? <BookmarkCheck className="w-3.5 h-3.5 text-amber-600" strokeWidth={2.5} /> : <Bookmark className="w-3.5 h-3.5 text-amber-805" strokeWidth={2.5} />}
+                <span>{isSaved ? "Saved" : "Save"}</span>
               </button>
 
               <button
                 onClick={handlePrint}
-                className="flex-shrink-0 flex items-center gap-1 px-1 py-0.5 sm:px-1.5 sm:py-0.5 bg-[#D32F2F] text-white border border-red-950 hover:bg-[#B71C1C] font-sans text-[8px] sm:text-[9px] uppercase font-black tracking-wider transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer select-none shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:shadow-md hover:translate-x-[0.5px] hover:translate-y-[0.5px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white border border-red-700 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
                 title="Print this Page"
               >
-                <Printer className="w-2 h-2 sm:w-2.5 sm:h-2.5" strokeWidth={3} />
+                <Printer className="w-3.5 h-3.5" strokeWidth={2.5} />
                 <span>Print</span>
               </button>
-
             </div>
           </div>
 
+          {/* AUTOMATED AI ELIGIBILITY SUMMARY SECTION */}
+          <div className="no-print">
+            {summaryLoading && (
+              <div className="mb-8 p-6 border border-indigo-100 dark:border-indigo-950/50 bg-indigo-50/20 dark:bg-indigo-950/10 rounded-2xl animate-pulse relative">
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-4 h-4 text-indigo-500 animate-spin" />
+                  <span className="text-xs font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-sans">
+                    Generating Instant AI Eligibility Bullet Summary...
+                  </span>
+                </div>
+                <div className="space-y-3">
+                  <div className="h-4 bg-indigo-100/50 dark:bg-zinc-800 rounded-lg w-3/4"></div>
+                  <div className="h-4 bg-indigo-100/50 dark:bg-zinc-800 rounded-lg w-5/6"></div>
+                  <div className="h-4 bg-indigo-100/50 dark:bg-zinc-800 rounded-lg w-2/3"></div>
+                </div>
+              </div>
+            )}
+
+            {summaryError && (
+              <div className="mb-8 p-4 border border-rose-200 dark:border-rose-955 bg-rose-50/30 dark:bg-rose-950/10 text-xs text-rose-800 dark:text-rose-400 rounded-xl font-sans font-semibold flex items-center gap-2.5 animate-pulse">
+                <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400" />
+                <span>{summaryError}</span>
+              </div>
+            )}
+
+            {!summaryLoading && !summaryError && summary && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="mb-8 p-5 sm:p-6 border border-indigo-100 dark:border-indigo-950/50 bg-indigo-50/25 dark:bg-indigo-950/10 rounded-[24px] relative shadow-xs"
+              >
+                <div className="flex items-center gap-2.5 mb-4 border-b border-indigo-100/60 dark:border-indigo-900/30 pb-3 font-sans">
+                  <div className="bg-indigo-600 p-1.5 text-white rounded-lg">
+                    <Sparkles className="w-3.5 h-3.5 text-neutral-100 animate-pulse" />
+                  </div>
+                  <span className="text-xs font-black uppercase tracking-widest text-indigo-850 dark:text-indigo-300">
+                    Eligibility Summary (पात्रता सारांश)
+                  </span>
+                </div>
+                <div className="markdown-body text-xs sm:text-[13.5px] text-gray-850 dark:text-zinc-250 leading-relaxed font-sans [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-2 [&_strong]:text-indigo-900 dark:[&_strong]:text-indigo-350 [&_strong]:font-black">
+                  <ReactMarkdown>{summary}</ReactMarkdown>
+                </div>
+                <div className="text-[9.5px] text-indigo-600/60 dark:text-indigo-400/50 mt-4 font-mono font-bold flex items-center gap-1 border-t border-indigo-100/40 dark:border-indigo-900/20 pt-2.5 select-none">
+                  <span>* Summarized factually from the original department gazette.</span>
+                </div>
+              </motion.div>
+            )}
+          </div>
+
           {/* FEATURE 3: CURRENT RECRUITMENT PHASE (General Process Viewer - Elevated Modern Sleek Stepper) */}
-          <section className="mb-4 py-1.5 px-2 bg-neutral-50 dark:bg-[#1a1a1e] border-y border-neutral-200 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 text-xs font-sans">
-            <div className="flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 font-extrabold uppercase tracking-widest text-[9.5px] select-none">
+          <section className="mb-8 py-3 px-4 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-x-6 gap-y-3 text-xs font-sans shadow-xs">
+            <div className="flex items-center gap-1.5 text-neutral-500 dark:text-zinc-400 font-extrabold uppercase tracking-widest text-[9.5px] select-none">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
@@ -763,7 +914,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
                 return (
                   <React.Fragment key={ph.step}>
                     <div className="flex items-center gap-1 relative group">
-                      <div className={`w-2 h-2 rounded-full transition-all duration-300 shrink-0 ${
+                      <div className={`w-2 h-2 rounded-none transition-all duration-300 shrink-0 ${
                         isActive 
                           ? "bg-green-600 scale-125 ring-2 ring-green-100 dark:ring-green-950/40" 
                           : isPassed 
@@ -782,7 +933,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
                     </div>
                     {idx < 4 && (
                       <div className={`h-[1px] grow min-w-[8px] transition-all duration-300 ${
-                        isPassed ? "bg-neutral-850 dark:bg-neutral-400" : "bg-neutral-200 dark:bg-neutral-700"
+                        isPassed ? "bg-neutral-800 dark:bg-neutral-400" : "bg-neutral-200 dark:bg-neutral-750"
                       }`} />
                     )}
                   </React.Fragment>
@@ -793,57 +944,45 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 3: Simple Description */}
           {post.a3_seoDescription && (
-            <section className="mb-7 p-4 sm:p-5 border-2 border-gray-900 bg-[#FAF9F5] text-sm sm:text-[14.5px] text-gray-900 tracking-wide leading-loose font-serif relative shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-              <span className="absolute right-2 top-2 text-[8px] text-gray-300 select-none opacity-20">A3</span>
-              <span className="font-mono text-xs font-bold text-red-800 mb-1 flex items-center gap-1 select-none">
+            <section className="mb-8 p-5 sm:p-6 border border-neutral-150 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-950/20 text-neutral-800 dark:text-zinc-250 rounded-3xl relative">
+              <span className="font-sans text-[11px] font-black text-rose-650 dark:text-rose-400 mb-2.5 flex items-center gap-1 select-none uppercase tracking-widest">
                 <span>DESCRIPTION DETAILS & INFO:</span>
                 <InfoTooltip content="Official summarized brief of the department recruitment announcement and core eligibility highlights." />
               </span>
-              {post.a3_seoDescription}
+              <div className="text-sm sm:text-[14.5px] leading-relaxed font-sans">{post.a3_seoDescription}</div>
             </section>
           )}
 
           {/* BLOCK 4: Important Dates */}
-          <section className="mb-5 relative">
-            <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A4_DATES</span>
-            <ImportantDatesTimeline dates={post.a4_importantDates || []} />
+          <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+            <SpectrumBorder />
+            <section className="p-6 relative">
+              <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A4_DATES</span>
+              <ImportantDatesTimeline dates={post.a4_importantDates || []} />
 
-            {/* Disclaimer below dates */}
-            <div className="mt-2 text-[10.5px] font-mono leading-normal text-amber-900 bg-amber-50 p-2.5 border border-amber-300">
-              <span className="font-extrabold uppercase flex items-center gap-1.5 mb-1 text-amber-955">
-                <AlertTriangle size={13} className="shrink-0 text-amber-600 animate-pulse" /> IMPORTANT NOTICE
-              </span>
-              Please confirm all dates and details from the official website of the department before applying.
-            </div>
-          </section>
+              {/* Disclaimer below dates */}
+              <div className="mt-3 text-xs font-sans leading-relaxed text-amber-900 dark:text-amber-305 bg-amber-50/40 dark:bg-amber-950/20 p-4 rounded-2xl border border-amber-200/50 dark:border-amber-900/30">
+                <span className="font-sans font-black uppercase flex items-center gap-1.5 mb-1.5 text-amber-950 dark:text-amber-200 text-[10.5px] tracking-wider">
+                  <AlertTriangle size={14} className="shrink-0 text-amber-605 animate-pulse" /> IMPORTANT NOTICE
+                </span>
+                Please confirm all dates and details from the official website of the department before applying.
+              </div>
+            </section>
+          </div>
 
           {/* BLOCK 5: Fee Details */}
-          <section className="mb-5 relative">
-            <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A5_FEE</span>
-            <ApplicationFeeDetails fee={post.a5_applicationFee} />
-          </section>
-
-          {/* BLOCK 12: Useful links */}
-          <section className="mb-6 relative">
-            <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A12_LINKS</span>
-            <h2 className="text-xs sm:text-sm font-mono font-black uppercase text-gray-900 dark:text-zinc-100 border-l-4 border-red-800 pl-2 bg-gray-100 dark:bg-zinc-800 py-1.5 tracking-wide mb-2.5 flex items-center gap-1 select-none">
-              <span>Important Notification & Apply Links</span>
-              <InfoTooltip content="Fast track links to register, log in, download the official notification PDF, or visit the department's home portal." />
-            </h2>
-            <div className="overflow-x-auto w-full">
-              <SarkariDataTable
-                headers={["Link Name", "Official link"]}
-                rows={usefulLinksRows}
-                colWidths={["60%", "40%"]}
-              />
-            </div>
-
-          </section>
+          <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+            <SpectrumBorder />
+            <section className="p-6 relative">
+              <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A5_FEE</span>
+              <ApplicationFeeDetails fee={post.a5_applicationFee} post={post} />
+            </section>
+          </div>
 
           {/* BLOCK 6: Age Details */}
-          <section className="mb-5 relative">
+          <section className="mb-8 relative">
             <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A6_AGE</span>
-            <h2 className="text-xs sm:text-sm font-sans font-extrabold uppercase text-gray-900 dark:text-zinc-100 border-b border-gray-900 pb-2 mb-4 tracking-tight flex items-center gap-1 select-none">
+            <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
               <span>Age Limits & Rules</span>
               <InfoTooltip content="Min/max age requirements, crucial cutoff dates, and state/central age relaxation provisions for categories." />
             </h2>
@@ -855,99 +994,101 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
             </div>
 
             {/* Interactive "Am I Eligible?" custom tool */}
-            <div className="bg-red-50/10 dark:bg-zinc-800/20 p-4 border border-dashed border-red-800/40 dark:border-zinc-700 rounded-xl mt-4">
-              <h4 className="text-xs font-black uppercase text-red-800 dark:text-red-400 flex items-center gap-1.5 mb-3 select-none">
-                <span>⚡ Am I Eligible? (आयु पात्रता जांच)</span>
-                <span className="text-[9px] bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300 px-1.5 py-0.5 rounded font-mono">AUTOMATED CHECK</span>
-              </h4>
+            <div className="bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl mt-5 overflow-hidden shadow-sm">
+              <SpectrumBorder />
+              <div className="p-5">
+                <h4 className="text-xs font-black uppercase text-red-700 dark:text-red-400 flex items-center gap-1.5 mb-3 select-none tracking-wider">
+                  <span>⚡ Am I Eligible? (आयु पात्रता जांच)</span>
+                </h4>
 
-              <p className="text-[11px] text-gray-500 dark:text-zinc-400 mb-3 leading-relaxed">
-                Test your age eligibility instantly based on this notification's criteria limits (Min: <b>{parsedMinAge} Yrs</b>, Max: <b>{parsedMaxAge} Yrs</b>).
-              </p>
+                <p className="text-xs text-neutral-500 dark:text-zinc-400 mb-4 leading-relaxed font-medium">
+                  Test your age eligibility instantly based on this notification's criteria limits (Min: <b className="text-neutral-850 dark:text-zinc-200 font-extrabold">{parsedMinAge} Yrs</b>, Max: <b className="text-neutral-850 dark:text-zinc-200 font-extrabold">{parsedMaxAge} Yrs</b>).
+                </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-b border-gray-100 dark:border-zinc-800 py-3 mb-3">
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase mb-1.5 font-mono">
-                    Your Date of Birth (जन्म तिथि)
-                  </label>
-                  <input
-                    type="date"
-                    value={eligibilityDob}
-                    onChange={(e) => setEligibilityDob(e.target.value)}
-                    className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-750 p-2 text-xs rounded text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-red-850 focus:ring-1 focus:ring-red-850"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-b border-neutral-150 dark:border-zinc-800/60 py-4 mb-4">
+                  <div>
+                    <label className="block text-[10px] font-black text-neutral-400 dark:text-zinc-500 uppercase mb-2 font-sans tracking-widest">
+                      Your Date of Birth (जन्म तिथि)
+                    </label>
+                    <input
+                      type="date"
+                      value={eligibilityDob}
+                      onChange={(e) => setEligibilityDob(e.target.value)}
+                      className="w-full bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-750 p-2 text-xs rounded-xl text-gray-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-neutral-400 dark:text-zinc-500 uppercase mb-2 font-sans tracking-widest">
+                      Category (श्रेणी)
+                    </label>
+                    <select
+                      value={eligibilityCategory}
+                      onChange={(e) => setEligibilityCategory(e.target.value)}
+                      className="w-full bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-750 p-2 text-xs rounded-xl text-gray-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    >
+                      <option value="GEN">General / EWS (Standard Limit: {parsedMaxAge} Yrs)</option>
+                      <option value="OBC">OBC (+3 Yrs Relaxation: {parsedMaxAge + 3} Yrs)</option>
+                      <option value="SCST">SC / ST (+5 Yrs Relaxation: {parsedMaxAge + 5} Yrs)</option>
+                      <option value="PH">PH / Divyang (+10 Yrs Relaxation: {parsedMaxAge + 10} Yrs)</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase mb-1.5 font-mono">
-                    Category (श्रेणी)
-                  </label>
-                  <select
-                    value={eligibilityCategory}
-                    onChange={(e) => setEligibilityCategory(e.target.value)}
-                    className="w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-750 p-2 text-xs rounded text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-red-850"
-                  >
-                    <option value="GEN">General / EWS (Standard Limit: {parsedMaxAge} Yrs)</option>
-                    <option value="OBC">OBC (+3 Yrs Relaxation: {parsedMaxAge + 3} Yrs)</option>
-                    <option value="SCST">SC / ST (+5 Yrs Relaxation: {parsedMaxAge + 5} Yrs)</option>
-                    <option value="PH">PH / Divyang (+10 Yrs Relaxation: {parsedMaxAge + 10} Yrs)</option>
-                  </select>
-                </div>
+
+                {ageValidationResult ? (
+                  <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 ${
+                    ageValidationResult.status === 'eligible'
+                      ? 'bg-emerald-50/55 dark:bg-emerald-950/15 border-emerald-250 dark:border-emerald-850 text-emerald-990 dark:text-emerald-200'
+                      : ageValidationResult.status === 'overage'
+                        ? 'bg-rose-50/50 dark:bg-rose-950/15 border-rose-250 dark:border-rose-850 text-rose-950 dark:text-rose-200'
+                        : 'bg-amber-50/50 dark:bg-amber-950/15 border-amber-250 dark:border-amber-850 text-amber-950 dark:text-amber-200'
+                  }`}>
+                    <div className="text-left font-sans">
+                      <div className="text-xs font-black uppercase flex items-center gap-2">
+                        {ageValidationResult.status === 'eligible' && (
+                          <>
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                            <span>Eligible / आप पात्र हैं</span>
+                          </>
+                        )}
+                        {ageValidationResult.status === 'overage' && (
+                          <>
+                            <span className="w-2 h-2 rounded-full bg-rose-500 inline-block animate-pulse"></span>
+                            <span>Overage / अधिकतम उम्र सीमा पार</span>
+                          </>
+                        )}
+                        {ageValidationResult.status === 'underage' && (
+                          <>
+                            <span className="w-2 h-2 rounded-full bg-amber-500 inline-block animate-pulse"></span>
+                            <span>Underage / न्यूनतम उम्र से कम</span>
+                          </>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-neutral-500 dark:text-zinc-400 mt-1 font-mono font-medium">
+                        Your calculated age: <b className="font-black text-neutral-800 dark:text-zinc-200">{ageValidationResult.years} yrs, {ageValidationResult.months} mos, {ageValidationResult.days} days</b>
+                      </div>
+                    </div>
+                    <div className="text-right text-[11px] font-mono shrink-0 font-bold opacity-80">
+                      Max Allowed: {ageValidationResult.adjustedMaxAge} Yrs
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-3.5 bg-neutral-100/50 dark:bg-zinc-950/30 rounded-2xl text-center text-xs text-neutral-400 font-mono font-bold">
+                    Enter Date of Birth to view calculated age & eligibility checklist status.
+                  </div>
+                )}
               </div>
-
-              {ageValidationResult ? (
-                <div className={`p-3 border rounded-xl flex items-center justify-between gap-3 ${
-                  ageValidationResult.status === 'eligible'
-                    ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
-                    : ageValidationResult.status === 'overage'
-                      ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900 text-rose-900 dark:text-rose-200'
-                      : 'bg-amber-50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-900 text-amber-900 dark:text-amber-200'
-                }`}>
-                  <div className="text-left font-sans">
-                    <div className="text-xs font-black uppercase flex items-center gap-1.5">
-                      {ageValidationResult.status === 'eligible' && (
-                        <>
-                          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-                          <span>Eligible / आप पात्र हैं</span>
-                        </>
-                      )}
-                      {ageValidationResult.status === 'overage' && (
-                        <>
-                          <span className="w-2 h-2 rounded-full bg-rose-500 inline-block animate-pulse"></span>
-                          <span>Overage / अधिकतम उम्र सीमा पार</span>
-                        </>
-                      )}
-                      {ageValidationResult.status === 'underage' && (
-                        <>
-                          <span className="w-2 h-2 rounded-full bg-amber-500 inline-block animate-pulse"></span>
-                          <span>Underage / न्यूनतम उम्र से कम</span>
-                        </>
-                      )}
-                    </div>
-                    <div className="text-[10px] text-gray-500 dark:text-zinc-400 mt-1 font-mono">
-                      Your calculated age: <b>{ageValidationResult.years} yrs, {ageValidationResult.months} mos, {ageValidationResult.days} days</b>
-                    </div>
-                  </div>
-                  <div className="text-right text-[10px] font-mono shrink-0 font-bold opacity-80">
-                    Max Allowed: {ageValidationResult.adjustedMaxAge} Yrs
-                  </div>
-                </div>
-              ) : (
-                <div className="p-3 bg-neutral-50 dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800 rounded-xl text-center text-xs text-gray-500 font-mono">
-                  Enter Date of Birth to view calculated age & eligibility checklist status.
-                </div>
-              )}
             </div>
           </section>
 
           {/* BLOCK 7: Post Overview */}
           {post.a7_postOverview && (
-            <section className="mb-7 relative">
+            <section className="mb-8 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A7_INFO</span>
-              <h2 className="text-xs sm:text-sm font-sans font-extrabold uppercase text-gray-900 dark:text-zinc-100 border-b border-gray-900 pb-2 mb-4 tracking-tight flex items-center gap-1 select-none">
+              <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                 <span>About this Post</span>
                 <InfoTooltip content="A synthesized overview detailing the organization, job rules, and basic working profile of this position." />
               </h2>
-              <div className="border-2 border-gray-950 p-4 leading-loose font-mono text-[12px] sm:text-[13px] text-gray-900 bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 transition-colors">
+              <div className="p-5 leading-relaxed font-sans text-[13px] text-neutral-800 dark:text-zinc-200 bg-neutral-50/50 dark:bg-zinc-950/20 border border-neutral-150 dark:border-zinc-800 rounded-3xl">
                 {post.a7_postOverview}
               </div>
             </section>
@@ -955,9 +1096,9 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 8: Vacancy Details */}
           {post.a8_vacancyDetails && post.a8_vacancyDetails.length > 0 && (
-            <section className="mb-5 relative">
+            <section className="mb-8 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A8_SEATS</span>
-              <h2 className="text-xs sm:text-sm font-sans font-extrabold uppercase text-gray-900 dark:text-zinc-100 border-b border-gray-900 pb-2 mb-4 tracking-tight flex items-center gap-1 select-none">
+              <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                 <span>Seats & Vacancy Details</span>
                 <InfoTooltip content="Distribution of available seats by name, category partitions, and vertical/horizontal reservation metrics." />
               </h2>
@@ -973,24 +1114,24 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* FEATURE 2: SALARY / PAY SCALE DECODER */}
           {post.a17_salaryInfo && (
-            <section className="mb-5 relative">
+            <section className="mb-8 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A17_SALARY</span>
-              <h2 className="text-xs sm:text-sm font-sans font-extrabold uppercase text-gray-900 dark:text-zinc-100 border-b border-gray-900 pb-2 mb-4 tracking-tight flex items-center gap-1 select-none">
+              <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                 <span>Monthly Salary & Pay scale (वेतनमान)</span>
                 <InfoTooltip content="Decoded official pay matrix scale level, grade pay, and current approximated cash in-hand cash guidelines." />
               </h2>
-              <div className="border border-gray-955 dark:border-zinc-700 p-3.5 font-mono text-[11px] sm:text-[12px] text-gray-900 dark:text-zinc-100 bg-white dark:bg-zinc-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(39,39,42,1)] flex items-start gap-3 transition-colors">
-                <span className="text-base select-none">💰</span>
-                <div className="w-full">
-                  <div className="font-bold leading-normal text-gray-900 dark:text-zinc-100">
-                    Official Pay scale: <span className="text-red-800 dark:text-red-400 font-extrabold">{post.a17_salaryInfo.officialPay}</span>
+              <div className="border border-neutral-150 dark:border-zinc-800 p-5 font-sans text-xs text-neutral-800 dark:text-zinc-100 bg-emerald-50/15 dark:bg-emerald-950/10 rounded-[24px] flex items-start gap-4 transition-all">
+                <span className="text-2xl select-none bg-emerald-100 dark:bg-emerald-950 p-2.5 rounded-xl">💰</span>
+                <div className="w-full space-y-2">
+                  <div className="font-extrabold leading-normal text-neutral-900 dark:text-zinc-50 text-sm">
+                    Official Pay scale: <span className="text-emerald-700 dark:text-emerald-400 font-black">{post.a17_salaryInfo.officialPay}</span>
                   </div>
-                  <div className="mt-1.5">
-                    <span className="bg-emerald-50 dark:bg-emerald-950 border border-emerald-450 text-emerald-900 dark:text-emerald-200 px-2.5 py-0.5 font-black text-[11px] sm:text-xs shadow-3xs tracking-tight inline-block">
+                  <div>
+                    <span className="bg-emerald-600 text-neutral-50 px-3 py-1 font-black text-xs rounded-xl shadow-xs tracking-wide inline-block">
                       ★ Expected In-Hand Cash: {post.a17_salaryInfo.expectedInHand}
                     </span>
                   </div>
-                  <p className="mt-1.5 text-[9.5px] text-gray-500 dark:text-zinc-400 italic font-medium leading-relaxed">
+                  <p className="text-[10px] text-neutral-450 dark:text-zinc-500 italic font-medium leading-relaxed">
                     *Estimated In-Hand includes Basic Pay + approximate allowances as of 2026 guidelines.
                   </p>
                 </div>
@@ -1000,44 +1141,53 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 9: Eligibility */}
           {post.a9_eligibility && (
-            <section className="mb-7 relative">
-              <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A9_ELIGIBILITY</span>
-              <h2 className="text-xs sm:text-sm font-sans font-extrabold uppercase text-gray-900 dark:text-zinc-100 border-b border-gray-900 pb-2 mb-4 tracking-tight flex items-center gap-1 select-none">
-                <span>Qualifications Needed</span>
-                <InfoTooltip content="Minimum educational benchmarks, professional certificates, training, and physical eligibility conditions." />
-              </h2>
-              <div className="border-2 border-gray-955 dark:border-zinc-700 p-4 font-mono text-[11.5px] sm:text-[13px] text-gray-900 dark:text-zinc-150 bg-[#FAF9F5] dark:bg-zinc-900/40 flex items-start gap-3 transition-colors shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                <div className="shrink-0 bg-red-800 text-white p-2 border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] rounded-none">
-                  <Award size={16} />
+            <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+              <SpectrumBorder />
+              <section className="p-6">
+                <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-neutral-900 dark:text-zinc-50 border-b-2 border-blue-600/30 dark:border-blue-400/30 pb-2 mb-5 tracking-wider flex items-center justify-between select-none">
+                  <span className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 bg-blue-600 rounded-sm rotate-45" />
+                    Qualifications Needed
+                  </span>
+                  <InfoTooltip content="Minimum educational benchmarks, professional certificates, training, and physical eligibility conditions." />
+                </h2>
+                <div className="border border-neutral-150 dark:border-zinc-800 p-5 font-sans text-xs text-neutral-800 dark:text-zinc-150 bg-neutral-50/50 dark:bg-zinc-950/20 flex items-start gap-4 transition-all rounded-[24px]">
+                  <div className="shrink-0 bg-black dark:bg-zinc-100 text-white dark:text-black p-3 rounded-2xl shadow-lg hover:scale-105 transition-transform group">
+                    <Award size={18} strokeWidth={2.5} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <div className="text-[10px] uppercase font-sans font-black tracking-widest text-[#1a1a1a] dark:text-zinc-400">QUALIFICATION BENCHMARK</div>
+                    <div className="font-bold whitespace-pre-wrap leading-relaxed text-neutral-900 dark:text-zinc-100">{post.a9_eligibility}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-[10px] uppercase font-mono font-extrabold tracking-tight text-gray-500 dark:text-zinc-400 mb-1.5">QUALIFICATION BENCHMARK</div>
-                  <div className="font-extrabold whitespace-pre-wrap leading-loose text-neutral-850 dark:text-zinc-250">{post.a9_eligibility}</div>
-                </div>
-              </div>
-            </section>
+              </section>
+            </div>
           )}
 
-            {/* BLOCK 10: How to Fill */}
-            {post.a10_howToFill && (
-              <section className="mb-7 relative">
-                <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A10_STEPS</span>
-                <h2 className="text-xs sm:text-sm font-sans font-extrabold uppercase text-gray-900 dark:text-zinc-100 border-b border-gray-900 pb-2 mb-4 tracking-tight flex items-center gap-1 select-none">
-                  <span>How to Fill Form</span>
+          {/* BLOCK 10: How to Fill */}
+          {post.a10_howToFill && (
+            <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+              <SpectrumBorder />
+              <section className="p-6">
+                <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-neutral-900 dark:text-zinc-50 border-b-2 border-emerald-600/30 dark:border-emerald-400/30 pb-2 mb-5 tracking-wider flex items-center justify-between select-none">
+                  <span className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 bg-emerald-600 rounded-full shadow-sm" />
+                    How to Fill Form
+                  </span>
                   <InfoTooltip content="Explicit directives to successfully register, upload files, verify information, and print application confirmation." />
                 </h2>
-                <div className="border-2 border-gray-955 p-3 sm:p-4 bg-white dark:bg-zinc-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex flex-col gap-3">
+                <div className="flex flex-col gap-3.5">
                   {post.a10_howToFill.split("\n").map(l => l.trim()).filter(l => l.length > 0).map((line, idx) => {
                     const stepMatch = line.match(/^(\d+[\.\)]|Step\s*\d+[:\.]|[-•\*])\s*(.*)$/i);
                     const showNumber = stepMatch ? (isNaN(parseInt(stepMatch[1])) ? `${idx + 1}` : stepMatch[1].replace(/[\.\)]/g, "")) : `${idx + 1}`;
                     const content = stepMatch ? stepMatch[2] : line;
                     
                     return (
-                      <div key={idx} className="flex gap-2.5 items-start p-3 bg-neutral-50 dark:bg-zinc-900/40 border border-gray-950 dark:border-zinc-805 hover:bg-neutral-100/50 transition-colors">
-                        <div className="shrink-0 flex items-center justify-center font-mono font-black text-[10px] bg-red-800 text-white border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] w-5 h-5 select-none mt-0.5">
+                      <div key={idx} className="flex gap-4 items-start p-4 bg-neutral-50 dark:bg-zinc-950/20 border border-neutral-150 dark:border-zinc-850 hover:bg-neutral-100/40 transition-all rounded-[24px] group">
+                        <div className="shrink-0 flex items-center justify-center font-sans font-black text-[12px] bg-black dark:bg-zinc-100 text-white dark:text-black rounded-xl shadow-lg w-8 h-8 select-none mt-0.5 group-hover:scale-110 group-hover:rotate-3 transition-transform">
                           {showNumber}
                         </div>
-                        <div className="text-neutral-800 dark:text-zinc-200 leading-loose font-mono font-semibold text-[12px] sm:text-[13px]">
+                        <div className="text-neutral-800 dark:text-zinc-200 leading-relaxed font-sans font-bold text-xs sm:text-sm">
                           {content}
                         </div>
                       </div>
@@ -1045,72 +1195,69 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
                   })}
                 </div>
               </section>
-            )}
+            </div>
+          )}
 
-            {/* BLOCK 11: Mode of Selection */}
-            {post.a11_selectionMode && (
-              <section className="mb-5 relative">
-                <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A11_SELECTION</span>
-                <h2 className="text-xs sm:text-sm font-sans font-extrabold uppercase text-gray-900 dark:text-zinc-100 border-b border-gray-900 pb-2 mb-4 tracking-tight flex items-center gap-1 select-none">
+          {/* BLOCK 11: Mode of Selection */}
+          {post.a11_selectionMode && (
+            <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+              <SpectrumBorder />
+              <section className="p-6">
+                <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                   <span>How Selection is Done</span>
                   <InfoTooltip content="The multi-tiered screening procedures including exam rounds, skill checks, interviews, and background verifications." />
                 </h2>
-                <div className="border border-gray-950 dark:border-zinc-700 p-3.5 font-mono text-[11px] sm:text-[12px] text-gray-900 dark:text-zinc-100 bg-white dark:bg-zinc-900/40 flex items-start gap-3 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                  <div className="shrink-0 bg-gray-900 text-white p-1.5 border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                    <UserCheck size={14} />
+                <div className="border border-neutral-150 dark:border-zinc-800 p-4 font-sans text-xs text-neutral-800 dark:text-zinc-100 bg-neutral-50/50 dark:bg-zinc-950/20 flex items-start gap-3.5 rounded-[24px]">
+                  <div className="shrink-0 bg-neutral-900 dark:bg-zinc-800 text-white p-3 rounded-2xl shadow-sm">
+                    <UserCheck size={18} />
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase font-mono font-extrabold tracking-tight text-gray-500 dark:text-zinc-400 mb-1">SELECTION PLAN</div>
-                    <div className="font-semibold whitespace-pre-wrap leading-relaxed text-neutral-855 dark:text-zinc-200">{post.a11_selectionMode}</div>
+                    <div className="text-[10px] uppercase font-sans font-black tracking-widest text-[#1a1a1a] dark:text-zinc-400 mb-1">SELECTION PLAN</div>
+                    <div className="font-bold whitespace-pre-wrap leading-relaxed text-neutral-900 dark:text-zinc-100">{post.a11_selectionMode}</div>
                   </div>
                 </div>
               </section>
-            )}
+            </div>
+          )}
 
           {/* BLOCK 12: Useful links */}
-          <section className="mb-6 relative">
+          <section className="mb-8 relative">
             <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A12_LINKS</span>
-            <h2 className="text-xs sm:text-sm font-mono font-black uppercase text-gray-900 dark:text-zinc-100 border-l-4 border-red-800 pl-2 bg-gray-100 dark:bg-zinc-800 py-1.5 tracking-wide mb-2.5 flex items-center gap-1 select-none">
-              <span>Important Notification & Apply Links</span>
-              <InfoTooltip content="Fast track links to register, log in, download the official notification PDF, or visit the department's home portal." />
-            </h2>
-            <div className="overflow-x-auto w-full">
-              <SarkariDataTable
-                headers={["Link Name", "Official link"]}
-                rows={usefulLinksRows}
-                colWidths={["60%", "40%"]}
-              />
-            </div>
-
-            {/* FEATURE 4_1: REPORT BROKEN LINK BUTTON */}
-            {/* Removed Broken Link Report button per user request */}
+            <InteractiveLinkHub
+              usefulLinks={post.a12_usefulLinks || []}
+              postName={post.a1_postName}
+              startDateStr={startDateStr}
+              endDateStr={endDateStr}
+              triggerToast={triggerToast}
+              postCategory={post.category}
+            />
           </section>
 
           {/* BLOCK 13: FAQ Section */}
           {post.a13_faq && post.a13_faq.length > 0 && (
-            <section className="mb-6 relative">
+            <section className="mb-8 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A13_FAQ</span>
-              <h2 className="text-md font-sans font-extrabold uppercase text-gray-900 dark:text-zinc-100 border-b border-gray-900 pb-2 mb-4 tracking-tight flex items-center gap-1 select-none">
+              <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                 <span>Common Questions & Answers (FAQ)</span>
                 <InfoTooltip content="Frequently asked questions concerning eligibility, corrections, age Relaxation, fee payment, and exam dates." />
               </h2>
-              <div className="space-y-2 border border-gray-800 dark:border-zinc-700 p-4 bg-white dark:bg-zinc-900 transition-colors">
+              <div className="space-y-3.5">
                 {post.a13_faq.map((faq, idx) => {
                   const isOpen = activeFaq === idx;
                   return (
-                    <div key={idx} className="border border-gray-300 dark:border-zinc-700">
+                    <div key={idx} className="border border-neutral-150 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-2xs transition-all">
                       <button
                         onClick={() => setActiveFaq(isOpen ? null : idx)}
-                        className="w-full flex justify-between items-center bg-gray-100 dark:bg-zinc-800 p-2.5 text-left text-xs uppercase font-bold tracking-wider hover:bg-gray-200 dark:hover:bg-zinc-750 transition-colors cursor-pointer"
+                        className="w-full flex justify-between items-center bg-neutral-50 hover:bg-neutral-100/60 dark:bg-zinc-950/40 dark:hover:bg-zinc-900/60 p-4 text-left font-sans text-xs uppercase font-black tracking-wide cursor-pointer transition-colors"
                       >
-                        <span className="flex items-center gap-1.5 text-gray-900 dark:text-zinc-150 font-black">
-                          <HelpCircle size={14} className="shrink-0 text-gray-600 dark:text-zinc-400" />
+                        <span className="flex items-center gap-2.5 text-neutral-900 dark:text-zinc-100 font-black">
+                          <HelpCircle size={15} className="shrink-0 text-neutral-400 dark:text-zinc-500" />
                           {faq.question}
                         </span>
-                        {isOpen ? <ChevronUp size={14} className="text-gray-650 dark:text-zinc-400" /> : <ChevronDown size={14} className="text-gray-650 dark:text-zinc-400" />}
+                        {isOpen ? <ChevronUp size={16} className="text-neutral-500" /> : <ChevronDown size={16} className="text-neutral-500" />}
                       </button>
                       {isOpen && (
-                        <div className="p-3 bg-neutral-50 dark:bg-zinc-850 text-xs text-gray-800 dark:text-zinc-300 leading-relaxed font-semibold border-t border-gray-300 dark:border-zinc-700">
+                        <div className="p-4 bg-white dark:bg-zinc-900 text-xs sm:text-[13px] text-neutral-600 dark:text-zinc-300 leading-relaxed font-semibold border-t border-neutral-150 dark:border-zinc-800">
                           {faq.answer}
                         </div>
                       )}
@@ -1168,11 +1315,11 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1.5">
                 {siloGroup.posts.map((item, idx) => (
                   <div key={idx} className="flex items-start gap-2.5 p-3 bg-white dark:bg-zinc-950 border border-neutral-300 dark:border-zinc-800 hover:border-red-800 dark:hover:border-red-400 transition-all shadow-[1.5px_1.5px_0px_rgba(0,0,0,0.1)]">
-                    <span className="shrink-0 flex items-center justify-center font-mono font-bold text-[10px] bg-red-100 text-red-950 dark:bg-red-950/50 dark:text-red-300 w-5.5 h-5.5 rounded-full mt-0.5">
+                    <span className="shrink-0 flex items-center justify-center font-mono font-bold text-[10px] bg-red-100 text-red-950 dark:bg-red-950/50 dark:text-red-300 w-5.5 h-5.5 rounded-none mt-0.5">
                       {idx + 1}
                     </span>
                     <div className="space-y-0.5 min-w-0">
-                      <span className="text-[9px] font-mono font-extrabold text-[#7c2d12] dark:text-[#fdba74] uppercase tracking-wider bg-red-50 dark:bg-red-950/20 px-1 py-0.5 rounded-sm">
+                      <span className="text-[9px] font-mono font-extrabold text-[#7c2d12] dark:text-[#fdba74] uppercase tracking-wider bg-red-50 dark:bg-red-950/20 px-1 py-0.5 rounded-none">
                         {item.categoryName}
                       </span>
                       <Link 
@@ -1192,7 +1339,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
               {/* Crawl-indicator label */}
               <div className="mt-4 pt-3.5 border-t border-neutral-200 dark:border-zinc-800 flex items-center justify-between text-[10.5px] font-mono text-neutral-400 dark:text-zinc-500">
                 <span className="flex items-center gap-1.5 font-semibold">
-                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="inline-block w-2.5 h-2.5 rounded-none bg-emerald-500 animate-pulse" />
                   Crawler-Optimized SILO Hub (2026 Engine Rules)
                 </span>
                 <span className="hidden sm:inline">No irrelevant inter-link pollution</span>
@@ -1204,7 +1351,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
           <section className="mb-6 pt-6 border-t border-neutral-200 dark:border-zinc-800">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xs font-bold uppercase text-neutral-500 tracking-wider">Content Curated & Verified By</h3>
-              <span className="text-[10px] text-neutral-400 font-mono">Last Updated: {post.a2_postDateTime}</span>
+              <span className="text-[10px] text-neutral-400 font-mono">Last Updated: {getRelativeTime(post.a2_postDateTime)} ({post.a2_postDateTime})</span>
             </div>
             <div className="grid gap-4">
                 <AuthorCard {...authors[0]} />
@@ -1298,7 +1445,8 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
         </div> {/* End printableAreaRef */}
       </div> {/* End Paper Inner Container */}
-    </div> {/* End Paper Column (Left) */}
+    </div> {/* End Paper Container (White BG) */}
+  </div> {/* End left col-span-12 column wrapper */}
 
     {/* Sidebar Column (Right) */}
     <aside className="col-span-12 lg:col-span-4 xl:col-span-3 space-y-6 no-print w-full min-w-0 overflow-hidden">

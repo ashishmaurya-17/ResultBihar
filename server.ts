@@ -251,6 +251,53 @@ User's current location on the platform: ${currentUrl || "Home Page"}.`;
   }
 });
 
+// AI eligibility summary powered by gemini-3.5-flash using raw content or structured parameters
+app.post("/api/post/summary", async (req, res) => {
+  const { postId, title, content, collection } = req.body;
+  if (!postId || !title) {
+    return res.status(400).json({ error: "postId and title are required parameters" });
+  }
+
+  try {
+    const ai = getGeminiClient();
+    
+    const systemInstruction = `You are a professional government exam eligibility analyst for SarkariBoard.
+Your task is to analyze the provided government notification details and output an extremely concise, scannable bulleted summary in Markdown.
+You MUST extract and highlight:
+- **Age Criteria**: Min/Max age limits or key relaxation rules
+- **Application Fees**: Flat rates or fees by category (General, OBC, SC/ST, EWS)
+- **Crucial Timelines**: Key registration dates, application deadlines, and exam timings
+
+Rules:
+1. Provide exactly three of four concise, dense, highly factual bullets based strictly on the text.
+2. Keep the output extremely short (under 95 words in total).
+3. Design it to be highly scannable by using bold labels: **Age Criteria**, **Application Fees**, and **Crucial Dates**.
+4. Avoid any conversational greeting, system messages, warnings, or concluding boilerplate. Start directly with the bullet points.`;
+
+    const cleanContent = content ? content.substring(0, 4000) : "No full content details available.";
+    const prompt = `Post Identifier: ${postId}
+Title: ${title}
+Category Area: ${collection || "Recruitment Notice"}
+Main Content Detail:
+${cleanContent}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: prompt,
+      config: {
+        systemInstruction,
+        temperature: 0.1, // low temperature for absolute facts
+      }
+    });
+
+    const summaryText = response.text || "";
+    res.json({ success: true, summary: summaryText.trim() });
+  } catch (err: any) {
+    console.error("Post Summary API Error:", err);
+    res.status(500).json({ error: err.message || "Failed to generate eligibility summary" });
+  }
+});
+
 // Google Instant Indexing API Endpoints
 app.get("/api/indexing/status", (req, res) => {
   try {

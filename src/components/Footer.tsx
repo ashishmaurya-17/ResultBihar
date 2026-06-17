@@ -22,6 +22,7 @@ interface FooterProps {
 }
 
 export default function Footer({ currentView, setCurrentView }: FooterProps) {
+
   return (
     <footer 
       className="border-t border-white/10 text-neutral-400 font-sans relative overflow-hidden mt-auto bg-neutral-950" 
@@ -41,7 +42,7 @@ export default function Footer({ currentView, setCurrentView }: FooterProps) {
             <p className="text-xs sm:text-sm leading-relaxed text-neutral-400">
               SarkariBoard gives you quick updates on government job results, board exams, teacher jobs, admit cards, answer keys, college admissions, and scholarships.
             </p>
-            <div className="flex items-center gap-2 text-[11px] font-mono text-neutral-500 bg-neutral-900 px-3 py-1.5 rounded-md w-fit">
+            <div className="flex items-center gap-2 text-[11px] font-mono text-neutral-500 bg-neutral-900 px-3 py-1.5 rounded-none w-fit">
               <Award className="w-3.5 h-3.5 text-amber-500" />
               <span>Supporting students and job seekers in India</span>
             </div>
@@ -75,7 +76,7 @@ export default function Footer({ currentView, setCurrentView }: FooterProps) {
               </li>
               <li>
                 <Link to="/indexing" className="text-neutral-400 hover:text-emerald-400 transition duration-150 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse inline-block mr-1"></span>
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-none animate-pulse inline-block mr-1"></span>
                   Instant Indexing
                 </Link>
               </li>
@@ -185,14 +186,14 @@ export default function Footer({ currentView, setCurrentView }: FooterProps) {
         <div className="mt-8 pt-8 border-t border-neutral-900 border-opacity-50 flex flex-col md:flex-row items-center justify-between gap-6 flex-wrap">
           
           <div className="flex items-center gap-4 text-xs">
-            <div className="flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-neutral-800 rounded-lg">
+            <div className="flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-neutral-800 rounded-none">
               <Users className="w-4 h-4 text-blue-500" />
               <div>
                 <span className="block font-bold text-neutral-300">50,000+</span>
                 <span className="text-[10px] text-neutral-500 uppercase tracking-widest">Monthly Visitors</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-neutral-800 rounded-lg">
+            <div className="flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-neutral-800 rounded-none">
               <CheckCircle2 className="w-4 h-4 text-emerald-500" />
               <div>
                 <span className="block font-bold text-neutral-300">Since 2024</span>
@@ -203,7 +204,7 @@ export default function Footer({ currentView, setCurrentView }: FooterProps) {
           
           {/* Author Byline */}
           <div className="flex items-center gap-3 text-neutral-400">
-            <div className="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center border border-blue-500/30 text-blue-400 font-serif font-black text-xs">
+            <div className="w-10 h-10 rounded-none bg-blue-900/50 flex items-center justify-center border border-blue-500/30 text-blue-400 font-serif font-black text-xs">
               ✍️
             </div>
             <div className="text-xs">

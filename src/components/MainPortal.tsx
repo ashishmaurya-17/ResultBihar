@@ -8,7 +8,20 @@ import { safeLocalStorage } from '../lib/storage';
 import Sarkari8Boards from './Sarkari8Boards';
 import Breadcrumbs from './Breadcrumbs';
 import PostCard from './PostCard';
-import { Search, Tags, ChevronLeft, ChevronRight, X, Languages, ChevronDown, LayoutGrid, List, Bookmark, Trash2, FolderHeart } from 'lucide-react';
+import { 
+  Search, 
+  Tags, 
+  ChevronLeft, 
+  ChevronRight, 
+  X, 
+  Languages, 
+  ChevronDown, 
+  LayoutGrid, 
+  List, 
+  Bookmark, 
+  Trash2, 
+  FolderHeart 
+} from 'lucide-react';
 
 interface MainPortalProps {
   initialPosts: Post[];
@@ -201,16 +214,15 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
         {/* Visually hidden but SEO important H1 */}
         <h1 className="sr-only">Sarkari Result 2026 - Latest Govt Jobs, Admit Cards & Results</h1>
 
-
         {/* SARKARI SAVER OFFLINE BOOKMARKS POCKET */}
         {savedPocket && savedPocket.length > 0 && (
           <section className="border-2 border-dashed border-amber-500 dark:border-amber-700/60 p-4 bg-amber-50/20 dark:bg-zinc-900/30 relative rounded-none transition-all">
             <div className="flex items-center justify-between mb-3 border-b border-amber-200 dark:border-zinc-800 pb-2">
               <span className="flex items-center gap-1.5 font-sans font-black uppercase text-[11.5px] text-amber-950 dark:text-amber-400">
                 <FolderHeart size={14} className="text-amber-600 dark:text-amber-400" />
-                Sarkari Saver: Your Offline Notice Pocket / आपके सहेजे गए फॉर्म & प्रवेश पत्र
+                Sarkari Saver: Your Offline Notice Pocket / आपके सहेजे गए फॉर्म
               </span>
-              <span className="text-[9.5px] font-mono font-bold uppercase bg-amber-100 dark:bg-zinc-800 px-2 py-0.5 rounded-sm text-amber-800 dark:text-amber-300">
+              <span className="text-[9.5px] font-mono font-bold uppercase bg-amber-100 dark:bg-zinc-800 px-2 py-0.5 rounded-none text-amber-800 dark:text-amber-300">
                 {savedPocket.length} Saved Offline
               </span>
             </div>
@@ -221,16 +233,16 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
               {savedPocket.map((item, idx) => (
-                <div key={idx} className="p-2.5 bg-white dark:bg-zinc-950 border border-amber-200 dark:border-zinc-850 hover:border-amber-650 dark:hover:border-amber-500 transition-all flex flex-col justify-between group relative shadow-xs">
+                <div key={idx} className="p-2.5 bg-white dark:bg-zinc-950 border border-amber-200 dark:border-zinc-850 hover:border-amber-653 dark:hover:border-amber-500 transition-all flex flex-col justify-between group relative shadow-xs">
                   <button 
                     onClick={() => handleRemoveSaved(item.id)}
-                    className="absolute top-1.5 right-1.5 text-neutral-400 hover:text-red-700 dark:hover:text-red-400 hover:bg-neutral-50 dark:hover:bg-zinc-900 p-1 transition-colors rounded-xs cursor-pointer select-none"
+                    className="absolute top-1.5 right-1.5 text-neutral-400 hover:text-red-700 dark:hover:text-red-400 hover:bg-neutral-50 dark:hover:bg-zinc-900 p-1 transition-colors rounded-none cursor-pointer select-none"
                     title="Remove from saved pocket"
                   >
                     <Trash2 size={11} />
                   </button>
                   <div className="space-y-1.5 pr-4 min-w-0">
-                    <span className="inline-block text-[8px] font-mono font-black text-amber-850 dark:text-amber-400 uppercase tracking-wider bg-amber-50 dark:bg-amber-950/20 px-1 py-0.5 select-none rounded-xs">
+                    <span className="inline-block text-[8px] font-mono font-black text-amber-850 dark:text-amber-400 uppercase tracking-wider bg-amber-50 dark:bg-amber-950/20 px-1 py-0.5 select-none rounded-none">
                       {item.category?.toUpperCase() || "JOB ALERT"}
                     </span>
                     <Link 
@@ -264,24 +276,24 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
         {/* 3. Results Feed Section */}
         <section className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 gap-3 relative before:absolute before:bottom-[-1px] before:left-0 before:w-16 before:h-[2px] before:bg-blue-600">
-              <h3 className="font-black text-xl uppercase tracking-tighter text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                <span className="bg-neutral-900 dark:bg-neutral-100 text-white dark:text-black px-2.5 py-0.5 rounded-md italic shadow-sm flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+               <h3 className="font-black text-xl uppercase tracking-tighter text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                <span className="bg-neutral-900 dark:bg-neutral-100 text-white dark:text-black px-2.5 py-0.5 rounded-none italic shadow-sm flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-none bg-red-500 animate-pulse"></span>
                   LIVE
                 </span>
               </h3>
               
-              <div className="hidden sm:flex items-center bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-0.5 shadow-sm">
+              <div className="hidden sm:flex items-center bg-white dark:bg-neutral-900 border-2 border-gray-950 dark:border-zinc-700 rounded-none p-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-1.5 rounded-md ${viewMode === 'grid' ? 'bg-neutral-100 dark:bg-neutral-800 text-blue-600' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'}`}
+                  className={`p-1.5 rounded-none ${viewMode === 'grid' ? 'bg-neutral-100 dark:bg-neutral-800 text-blue-600' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'}`}
                   title="Grid View"
                 >
                   <LayoutGrid className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-1.5 rounded-md ${viewMode === 'list' ? 'bg-neutral-100 dark:bg-neutral-800 text-blue-600' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'}`}
+                  className={`p-1.5 rounded-none ${viewMode === 'list' ? 'bg-neutral-100 dark:bg-neutral-800 text-blue-600' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'}`}
                   title="List View"
                 >
                   <List className="w-4 h-4" />
@@ -303,7 +315,7 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
                 ))}
               </div>
             ) : (
-              <div className="py-12 text-center bg-neutral-100 dark:bg-neutral-900/50 rounded-2xl border-2 border-dashed border-neutral-300 dark:border-neutral-700">
+              <div className="py-12 text-center bg-neutral-100 dark:bg-neutral-900/50 rounded-none border-2 border-dashed border-neutral-300 dark:border-neutral-700">
                 <Search className="w-12 h-12 text-neutral-300 dark:text-neutral-600 mx-auto mb-3" />
                 <h3 className="font-black text-lg text-neutral-500 dark:text-neutral-400 uppercase">No Results Found</h3>
                 <p className="text-neutral-400 text-xs">We couldn't find any results for that. Try searching for something else.</p>
@@ -313,10 +325,10 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
             {itemsToShow < filteredPosts.length && (
               <div className="flex justify-center pt-6 pb-8">
                 {isLoadingMore ? (
-                  <div className="flex items-center justify-center gap-2 text-neutral-500">
-                    <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                    <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                    <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  <div className="flex items-center justify-center gap-2 text-neutral-500 border-none">
+                    <span className="w-2 h-2 bg-blue-600 rounded-none animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-blue-600 rounded-none animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-blue-600 rounded-none animate-bounce" style={{ animationDelay: '300ms' }}></span>
                   </div>
                 ) : (
                   <div className="h-4 border-t-2 border-dashed border-transparent w-full"></div>
@@ -324,7 +336,6 @@ export default function MainPortal({ initialPosts }: MainPortalProps) {
               </div>
             )}
         </section>
-        
       </main>
     </>
   );

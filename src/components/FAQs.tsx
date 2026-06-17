@@ -12,19 +12,19 @@ interface FAQItemProps {
 
 const FAQItem: React.FC<FAQItemProps> = ({ question, answer, isOpen, onToggle }) => {
   return (
-    <div className="border border-neutral-200 rounded-xl overflow-hidden shadow-sm bg-white hover:border-amber-400 transition-colors duration-200">
+    <div className="border-2 border-neutral-900 dark:border-zinc-800 rounded-none overflow-hidden bg-white dark:bg-zinc-900 hover:border-amber-500 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_rgba(255,255,255,0.05)] transition-all duration-150">
       <button
         onClick={onToggle}
-        className="w-full text-left px-5 py-4 flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-neutral-50 transition-colors cursor-pointer"
+        className="w-full text-left px-5 py-4 flex items-center justify-between focus:outline-none focus:bg-neutral-50 dark:focus:bg-zinc-800 transition-colors cursor-pointer"
         aria-expanded={isOpen}
       >
-        <span className="font-semibold text-neutral-800 text-sm sm:text-base leading-snug">{question}</span>
+        <span className="font-extrabold text-neutral-800 dark:text-zinc-150 text-sm sm:text-base leading-snug">{question}</span>
         <motion.div 
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className={`p-1 rounded-full text-neutral-500 ${isOpen ? 'bg-red-100 text-red-600' : 'bg-neutral-100'}`}
+          className={`p-1.5 rounded-none border border-neutral-950 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 ${isOpen ? 'bg-red-100 dark:bg-red-950 text-red-650' : 'bg-neutral-100 dark:bg-zinc-800'}`}
         >
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className="w-3.5 h-3.5" />
         </motion.div>
       </button>
       <AnimatePresence initial={false}>
@@ -34,7 +34,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, isOpen, onToggle })
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-neutral-100 bg-neutral-50 text-neutral-600 text-sm leading-relaxed"
+            className="overflow-hidden border-t-2 border-neutral-200 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950/40 text-neutral-600 dark:text-zinc-400 text-sm leading-relaxed"
           >
             <div className="px-5 py-4">
               {answer}
@@ -119,24 +119,24 @@ export default function FAQs({ onBackToHome }: { onBackToHome: () => void }) {
         jsonLd={faqSchema}
       />
       <main className="max-w-7xl mx-auto px-4 py-8 grow w-full font-sans">
-      <div className="bg-white rounded-2xl border p-6 sm:p-8 space-y-6 max-w-4xl mx-auto shadow-xs">
-        <div className="border-b border-neutral-100 pb-4 mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-zinc-900 rounded-none border-2 border-neutral-900 dark:border-zinc-700 p-6 sm:p-8 space-y-6 max-w-4xl mx-auto shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)]">
+        <div className="border-b-2 border-neutral-200 dark:border-zinc-800 pb-4 mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="bg-red-100 p-2.5 rounded-xl">
+            <div className="bg-red-100 dark:bg-red-950/40 p-2.5 rounded-none border border-red-800">
               <HelpCircle className="w-6 h-6 text-red-600" />
             </div>
             <div>
-              <div className="text-2xl sm:text-3xl font-black text-neutral-900 tracking-tight uppercase">
+              <div className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight uppercase">
                 Frequently Asked Questions
               </div>
-              <p className="text-xs sm:text-sm text-neutral-500 font-medium mt-1">
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-zinc-400 font-medium mt-1">
                 Find quick answers about exams, filling forms, and our tools.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-amber-50 rounded-xl p-4 border border-amber-200 text-xs sm:text-sm text-amber-950 font-medium flex gap-2">
+        <div className="bg-amber-50 dark:bg-amber-950/20 rounded-none p-4 border-2 border-amber-300 dark:border-amber-800 text-xs sm:text-sm text-amber-950 dark:text-amber-250 font-medium flex gap-2">
           <span className="font-bold flex-shrink-0">Tip:</span> 
           <span>Make sure you check all details and fees on the official government website before acting.</span>
         </div>
@@ -151,12 +151,12 @@ export default function FAQs({ onBackToHome }: { onBackToHome: () => void }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search questions or keywords..."
-              className="block w-full pl-10 pr-3 py-3 border border-neutral-200 rounded-xl leading-5 bg-neutral-50 placeholder-neutral-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-amber-400 sm:text-sm transition-colors"
+              className="block w-full pl-10 pr-3 py-3 border-2 border-neutral-900 dark:border-zinc-700 rounded-none leading-5 bg-neutral-100 dark:bg-zinc-800 placeholder-neutral-400 text-gray-900 dark:text-zinc-100 focus:outline-none focus:bg-white dark:focus:bg-zinc-900 sm:text-sm transition-colors"
             />
           </div>
           <button
             onClick={toggleAll}
-            className="flex items-center justify-center gap-2 px-4 py-3 border border-neutral-200 text-neutral-700 bg-white hover:bg-neutral-50 hover:text-neutral-900 font-semibold rounded-xl text-sm transition-colors shrink-0"
+            className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-neutral-950 dark:border-zinc-700 text-neutral-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 hover:bg-neutral-50 dark:hover:bg-zinc-800 font-bold rounded-none text-sm cursor-pointer shadow-[2px_2px_0px_rgba(0,0,0,1)] transition-colors shrink-0"
           >
             {isAllExpanded ? (
               <>
@@ -184,16 +184,16 @@ export default function FAQs({ onBackToHome }: { onBackToHome: () => void }) {
               />
             ))
           ) : (
-            <div className="text-center py-10 bg-neutral-50 rounded-xl border border-dashed border-neutral-300">
-              <p className="text-neutral-500 text-sm">No answers found for "{searchQuery}"</p>
+            <div className="text-center py-10 bg-neutral-50 dark:bg-zinc-900 rounded-none border-2 border-dashed border-neutral-300 dark:border-zinc-800">
+              <p className="text-neutral-500 dark:text-zinc-400 text-sm">No answers found for "{searchQuery}"</p>
             </div>
           )}
         </div>
 
-        <div className="pt-6 border-t border-neutral-100">
+        <div className="pt-6 border-t-2 border-neutral-200 dark:border-zinc-800">
           <button
             onClick={onBackToHome}
-            className="bg-neutral-950 hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm px-6 py-2.5 rounded-xl text-center shadow-md transition inline-flex items-center justify-center gap-2 uppercase tracking-wide cursor-pointer w-full sm:w-auto"
+            className="bg-neutral-950 hover:bg-neutral-800 dark:bg-zinc-800 dark:hover:bg-zinc-700 border-2 border-black text-white font-bold text-xs sm:text-sm px-6 py-2.5 rounded-none text-center shadow-[2px_2px_0px_rgba(0,0,0,1)] transition inline-flex items-center justify-center gap-2 uppercase tracking-wide cursor-pointer w-full sm:w-auto"
           >
             Back To Home
           </button>

@@ -1,6 +1,7 @@
 import yaml from 'yaml';
 import { Post, CollectionType } from '../types';
 import { generateMockPostsForCollection } from './boardMocks';
+import { safeLocalStorage } from './storage';
 
 export const fetchMarkdownPosts = (): Post[] => {
   // Use Vite's glob import to pull all markdown files as raw text
@@ -91,5 +92,25 @@ export const fetchMarkdownPosts = (): Post[] => {
   }
 
   // Sort by date descending
-  return posts.sort((a, b) => new Date(b.postDate).getTime() - new Date(a.postDate).getTime());
+  const sortedPosts = posts.sort((a, b) => new Date(b.postDate).getTime() - new Date(a.postDate).getTime());
+
+  if (sortedPosts.length > 0) {
+    safeLocalStorage.setItem('sarkari_latest_posts_cache_v2', JSON.stringify(sortedPosts));
+  } else {
+    // If empty (e.g. environment issue), load from the offline cache
+    const cachedStr = safeLocalStorage.getItem('sarkari_latest_posts_cache_v2');
+    if (cachedStr) {
+      try {
+        const cachedPosts = JSON.parse(cachedStr);
+        if (cachedPosts && Array.isArray(cachedPosts) && cachedPosts.length > 0) {
+          console.log('[Offline Cache] Loaded', cachedPosts.length, 'posts successfully from localStorage.');
+          return cachedPosts;
+        }
+      } catch (err) {
+        console.error('Failed to parse cached posts from local storage:', err);
+      }
+    }
+  }
+
+  return sortedPosts;
 };

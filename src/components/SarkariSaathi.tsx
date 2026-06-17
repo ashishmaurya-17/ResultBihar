@@ -158,13 +158,13 @@ export default function SarkariSaathi() {
       {/* Absolute Floating Trigger button with dynamic wave notification indicator */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-[88px] md:bottom-8 right-4 md:right-8 z-50 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white p-3.5 md:p-4 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 cursor-pointer group border border-white/20 select-none"
+        className="fixed bottom-[88px] md:bottom-8 right-4 md:right-8 z-50 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-black hover:to-black text-white p-3.5 md:p-4 rounded-none shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.15)] transition-all duration-150 cursor-pointer group border-2 border-black select-none"
         aria-label="Ask Sarkari Saathi"
         id="sarkari-saathi-trigger"
       >
         <div className="relative flex items-center justify-center">
           <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-amber-300 group-hover:animate-pulse transition-transform duration-300 group-hover:rotate-12" />
-          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-indigo-600 animate-pulse"></span>
+          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-none border-2 border-indigo-600 animate-pulse"></span>
         </div>
         <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-500 ease-in-out whitespace-nowrap font-bold text-sm tracking-wide">
           Ask AI
@@ -238,10 +238,10 @@ export default function SarkariSaathi() {
                               console.warn(`[SEO/A11y Warning] Markdown image missing 'alt' text: ${props.src}`);
                             }
                             return (
-                              <img 
+                               <img 
                                 {...props} 
                                 alt={props.alt || "Sarkari post illustration"} 
-                                className="max-w-full h-auto rounded inline-block"
+                                className="max-w-full h-auto rounded-none inline-block border border-black dark:border-zinc-700"
                                 loading="lazy"
                               />
                             );
@@ -251,9 +251,9 @@ export default function SarkariSaathi() {
                     </div>
                   ) : (
                     <div className="flex items-center gap-1.5 py-1">
-                      <span className="w-1.5 h-1.5 bg-black dark:bg-white rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                      <span className="w-1.5 h-1.5 bg-black dark:bg-white rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                      <span className="w-1.5 h-1.5 bg-black dark:bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                      <span className="w-1.5 h-1.5 bg-black dark:bg-white rounded-none animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                      <span className="w-1.5 h-1.5 bg-black dark:bg-white rounded-none animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                      <span className="w-1.5 h-1.5 bg-black dark:bg-white rounded-none animate-bounce" style={{ animationDelay: "300ms" }}></span>
                     </div>
                   )}
                 </div>

@@ -346,6 +346,7 @@ export default function App() {
         <div className="absolute top-0 inset-x-0 h-[500px] pointer-events-none -z-10 bg-gradient-to-b from-blue-200/30 dark:from-blue-950/20 to-transparent opacity-80 blur-3xl" />
         
         <SEO breadcrumbItems={breadcrumbItems} title={seoTitle} description={seoDescription} />
+
         <ScrollProgressBar />
         
         <div className={`sticky top-0 z-40 w-full transition-all duration-300 ease-in-out ${isHeaderVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
@@ -380,8 +381,8 @@ export default function App() {
                       }} 
                       className="cursor-pointer hover:underline"
                     >
-                      {post.isNew && <span className="text-yellow-300 mr-2 border border-yellow-300/30 px-1 py-0.5 rounded text-[9px] animate-pulse">NEW</span>}
-                      {post.urgent && <span className="text-red-200 mr-2 border border-red-200/30 px-1 py-0.5 rounded text-[9px] animate-pulse">URGENT</span>}
+                      {post.isNew && <span className="text-yellow-300 mr-2 border border-yellow-300/30 px-1 py-0.5 rounded-none text-[9px] animate-pulse font-bold">NEW</span>}
+                      {post.urgent && <span className="text-red-200 mr-2 border border-red-200/30 px-1 py-0.5 rounded-none text-[9px] animate-pulse font-bold">URGENT</span>}
                       {post.title}
                     </span>
                     <span>•</span>
@@ -396,8 +397,8 @@ export default function App() {
                       }} 
                       className="cursor-pointer hover:underline"
                     >
-                      {post.isNew && <span className="text-yellow-300 mr-2 border border-yellow-300/30 px-1 py-0.5 rounded text-[9px] animate-pulse">NEW</span>}
-                      {post.urgent && <span className="text-red-200 mr-2 border border-red-200/30 px-1 py-0.5 rounded text-[9px] animate-pulse">URGENT</span>}
+                      {post.isNew && <span className="text-yellow-300 mr-2 border border-yellow-300/30 px-1 py-0.5 rounded-none text-[9px] animate-pulse font-bold">NEW</span>}
+                      {post.urgent && <span className="text-red-200 mr-2 border border-red-200/30 px-1 py-0.5 rounded-none text-[9px] animate-pulse font-bold">URGENT</span>}
                       {post.title}
                     </span>
                     <span>•</span>
@@ -440,7 +441,7 @@ export default function App() {
                 <Route path="/terms" element={<Suspense fallback={<LoadingFallback />}><StaticPages view="terms" onBackToHome={() => navigate('/')} /></Suspense>} />
                 <Route path="*" element={
                   <div className="flex flex-col items-center justify-center py-32 px-4 text-center w-full max-w-2xl mx-auto font-sans grow">
-                    <div className="w-16 h-16 bg-red-100 text-rose-600 rounded-full flex items-center justify-center mb-6 border border-red-200">
+                    <div className="w-16 h-16 bg-red-100 text-rose-600 rounded-none flex items-center justify-center mb-6 border-2 border-red-800 shadow-[3px_3px_0_0_rgba(0,0,0,1)]">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>

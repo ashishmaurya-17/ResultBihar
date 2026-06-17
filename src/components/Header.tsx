@@ -234,7 +234,7 @@ export default function Header({
             {/* Premium Highly Visible Dynamic Search Box (Specially optimized for quick touch & find) */}
             <div className="w-full md:max-w-md relative grow" ref={searchContainerRef}>
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-blue-200" />
+                <Search className="h-4 w-4 text-neutral-900 dark:text-zinc-100" strokeWidth={2.5} />
               </div>
               <input
                 type="text"
@@ -343,14 +343,14 @@ export default function Header({
               {searchKeyword && (
                 <button
                   onClick={() => setSearchKeyword("")}
-                  className="absolute inset-y-0 right-8 pr-3 flex items-center text-blue-100 hover:text-white"
+                  className="absolute inset-y-0 right-8 pr-3 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
                 >
                   <X className="h-4 w-4" />
                 </button>
               )}
               <button
                 onClick={toggleListening}
-                className={`absolute inset-y-0 right-0 pr-3 flex items-center ${isListening ? 'text-red-500 animate-pulse' : 'text-blue-100 hover:text-white'}`}
+                className={`absolute inset-y-0 right-0 pr-3 flex items-center ${isListening ? 'text-red-500 animate-pulse' : 'text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200'}`}
               >
                 <Mic className="h-4 w-4" />
               </button>
@@ -429,7 +429,7 @@ export default function Header({
                   setSelectedCollection(cat.id);
                   setStore({ currentFilter: 'all' });
                 }}
-                className={`px-3 py-1 rounded transition-colors text-[10px] sm:text-xs font-bold uppercase tracking-wider whitespace-nowrap ${
+                className={`px-3 py-1 rounded-none transition-colors text-[10px] sm:text-xs font-bold uppercase tracking-wider whitespace-nowrap ${
                   selectedCollection === cat.id
                     ? "bg-slate-700 text-white shadow-sm"
                     : "text-slate-300 hover:bg-slate-800 hover:text-white"

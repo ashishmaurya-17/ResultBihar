@@ -36,7 +36,7 @@ export default function Countdown({ targetDate }: CountdownProps) {
   if (!timeLeft) return null;
 
   return (
-    <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center justify-between gap-3 shadow-sm">
+    <div className="bg-red-50 dark:bg-zinc-900 border-2 border-red-800 dark:border-red-900 rounded-none p-3 flex items-center justify-between gap-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.05)]">
       <div className="flex items-center gap-2">
         <Clock className="w-5 h-5 text-red-600 animate-pulse" />
         <span className="font-sans font-black text-[10px] sm:text-xs text-red-800 uppercase tracking-tighter">Registration Closes In:</span>

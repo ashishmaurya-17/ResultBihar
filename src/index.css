@@ -88,7 +88,7 @@
     animation-play-state: paused;
   }
   .btn-primary-saffron {
-    @apply text-white font-bold px-5 py-2.5 rounded-lg shadow-md transition-all duration-150 active:scale-95;
+    @apply text-white font-bold px-5 py-2.5 rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.15)] border-2 border-black transition-all duration-150 active:translate-y-0.5 active:shadow-none;
     background: var(--btn-gradient-saffron);
   }
 }

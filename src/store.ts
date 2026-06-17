@@ -11,6 +11,7 @@ export interface StoreType {
   selectedState?: string;
   selectedSector?: string;
   currentFilter?: 'all' | 'saved';
+  showVacancyGauge?: boolean;
   // Dynamic design elements for the H1 Logo heading
   logoFont?: string;
   logoWeight1?: string; // Font weight for 'Sarkari'
@@ -30,6 +31,7 @@ let storeState: StoreType = {
   selectedState: 'all',
   selectedSector: 'all',
   currentFilter: 'all',
+  showVacancyGauge: false,
   // Default design values matching the original government board logo-type
   logoFont: 'Inter',
   logoWeight1: 'font-medium',

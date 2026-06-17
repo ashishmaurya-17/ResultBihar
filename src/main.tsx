@@ -26,12 +26,14 @@ onINP(sendToAnalytics);
 onLCP(sendToAnalytics);
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    for (const registration of registrations) {
-      registration.unregister();
-    }
-  }).catch((err) => {
-    console.warn("Service worker unregistration failed, likely due to environment permissions:", err);
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SarkariBoard ServiceWorker registered successfully with scope:', registration.scope);
+      })
+      .catch((err) => {
+        console.warn('SarkariBoard ServiceWorker registration declined or blocked by frame sandbox environment:', err);
+      });
   });
 }
 

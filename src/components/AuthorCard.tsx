@@ -17,11 +17,11 @@ export default function AuthorCard({ name, role, credentials, qualifications, bi
   return (
     <>
       <div 
-        className="border border-neutral-200 dark:border-zinc-800 rounded-2xl p-6 bg-neutral-50 dark:bg-neutral-900/50 cursor-pointer hover:border-blue-300 transition"
+        className="border border-neutral-200 dark:border-zinc-800 rounded-none p-6 bg-neutral-50 dark:bg-neutral-900/50 cursor-pointer hover:border-blue-300 transition"
         onClick={() => setIsModalOpen(true)}
       >
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-xl text-blue-600">👤</div>
+          <div className="w-12 h-12 rounded-none bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-xl text-blue-600">👤</div>
           <div>
             <h3 className="font-bold text-neutral-900 dark:text-neutral-100">{name}</h3>
             <p className="text-sm text-neutral-500 dark:text-zinc-400">{role}</p>
@@ -41,13 +41,13 @@ export default function AuthorCard({ name, role, credentials, qualifications, bi
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-zinc-900 rounded-2xl p-8 max-w-lg w-full border border-neutral-200 dark:border-zinc-800 shadow-2xl relative overflow-y-auto max-h-[90vh]">
+          <div className="bg-white dark:bg-zinc-900 rounded-none p-8 max-w-lg w-full border border-neutral-200 dark:border-zinc-800 shadow-2xl relative overflow-y-auto max-h-[90vh]">
             <button className="absolute top-4 right-4 text-neutral-500 hover:text-neutral-900 dark:hover:text-white" onClick={() => setIsModalOpen(false)}>
               <X className="w-6 h-6" />
             </button>
             
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-3xl text-blue-600">👤</div>
+              <div className="w-20 h-20 rounded-none bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-3xl text-blue-600">👤</div>
               <div>
                 <h2 className="text-2xl font-bold dark:text-white">{name}</h2>
                 <p className="text-neutral-500 dark:text-zinc-400">{role}</p>
@@ -77,7 +77,7 @@ export default function AuthorCard({ name, role, credentials, qualifications, bi
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {specialization.map((s, i) => (
-                    <span key={i} className="px-3 py-1 bg-neutral-100 dark:bg-zinc-800 rounded-full text-xs font-medium text-neutral-700 dark:text-zinc-300">{s}</span>
+                    <span key={i} className="px-3 py-1 bg-neutral-100 dark:bg-zinc-800 rounded-none text-xs font-medium text-neutral-700 dark:text-zinc-300">{s}</span>
                   ))}
                 </div>
               </div>
