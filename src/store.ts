@@ -50,7 +50,7 @@ let storeState: StoreType = {
   systemNotification: null,
   notificationHistory: [],
   unreadNotificationCount: 0,
-  lastViewedNotificationId: parseInt(localStorage.getItem('lastViewedNotificationId') || '0', 10),
+  lastViewedNotificationId: typeof window !== 'undefined' ? parseInt(localStorage.getItem('lastViewedNotificationId') || '0', 10) : 0,
   isNotificationPanelOpen: false,
   // Default design values matching the original government board logo-type
   logoFont: 'Inter',
