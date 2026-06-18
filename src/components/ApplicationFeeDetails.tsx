@@ -288,7 +288,7 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
           </span>
         </div>
         
-        <div className="p-4 grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {processedFeeItems.map((item, index) => {
             const IconComponent = item.icon;
             const parsed = formatFeeValue(item.value);
@@ -310,10 +310,10 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
                       <IconComponent className="w-3.5 h-3.5" strokeWidth={2.5} />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-[10px] font-sans font-black uppercase text-neutral-400 dark:text-zinc-500 tracking-wider truncate leading-tight">
+                      <span className="text-[10px] font-sans font-black uppercase text-neutral-400 dark:text-zinc-500 tracking-wider leading-tight">
                         {item.label}
                       </span>
-                      <span className="text-[8.5px] font-sans font-bold text-neutral-300 dark:text-zinc-500/80 leading-none truncate block">
+                      <span className="text-[8.5px] font-sans font-bold text-neutral-300 dark:text-zinc-500/80 leading-none block">
                         {item.hindi}
                       </span>
                     </div>
