@@ -18,7 +18,13 @@ import {
   Sparkles,
   Award,
   Wallet,
-  AlertCircle
+  AlertCircle,
+  Users,
+  Receipt,
+  Percent,
+  Heart,
+  Info,
+  Coins
 } from 'lucide-react';
 import { safeLocalStorage } from '../lib/storage';
 
@@ -188,47 +194,176 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
     }
   };
 
-  const feeItems = [
-    { label: 'General / OBC / EWS', value: fee.generalOBC || 'Nil', valueNum: generalCost },
-    { label: 'SC / ST / PH Female', value: fee.ewsSCST || 'Nil', valueNum: scstCost },
-    { label: 'Payment Mode Type', value: fee.mode || 'Online Gateway' },
-    { label: 'Gateway Bank Charges', value: fee.bankCharges || 'As per norms' },
+  const processedFeeItems = [
+    { 
+      label: 'General / OBC / EWS', 
+      hindi: 'सामान्य / ओबीसी / ईडब्ल्यूएस',
+      value: fee.generalOBC || 'Nil', 
+      valueNum: generalCost,
+      sub: 'Open / Creamy-layer category',
+      icon: Users,
+      accentBg: 'bg-blue-500',
+      iconBg: 'bg-blue-100/60 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400',
+      borderClass: 'border-blue-100 dark:border-blue-900/40',
+      bgClass: 'bg-blue-50/10 dark:bg-blue-950/5'
+    },
+    { 
+      label: 'SC / ST / Women', 
+      hindi: 'एससी / एसटी / महिला वर्ग',
+      value: fee.ewsSCST || 'Nil', 
+      valueNum: scstCost,
+      sub: 'Reserved State Categories',
+      icon: Award,
+      accentBg: 'bg-indigo-500',
+      iconBg: 'bg-indigo-100/60 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400',
+      borderClass: 'border-indigo-100 dark:border-indigo-900/40',
+      bgClass: 'bg-indigo-50/10 dark:bg-indigo-950/5'
+    },
+    { 
+      label: 'PH / Handicapped', 
+      hindi: 'दिव्यांगजन (विशेष योग्यजन)',
+      value: fee.ph || 'Nil', 
+      valueNum: phCost,
+      sub: 'Physical disability specs',
+      icon: Heart,
+      accentBg: 'bg-rose-500',
+      iconBg: 'bg-rose-100/60 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400',
+      borderClass: 'border-rose-100 dark:border-rose-900/40',
+      bgClass: 'bg-rose-50/10 dark:bg-rose-950/5'
+    },
+    { 
+      label: 'Payment Mode', 
+      hindi: 'शुल्क भुगतान का माध्यम',
+      value: fee.mode || 'Online Gateway', 
+      sub: 'NetBanking, UPI, Debit Card',
+      icon: CreditCard,
+      accentBg: 'bg-emerald-500',
+      iconBg: 'bg-emerald-100/60 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400',
+      borderClass: 'border-emerald-100 dark:border-emerald-900/40',
+      bgClass: 'bg-emerald-50/10 dark:bg-emerald-950/5'
+    },
+    { 
+      label: 'Bank Charges', 
+      hindi: 'ई-पोर्टल बैंक देय शुल्क',
+      value: fee.bankCharges || 'As per norms', 
+      sub: 'Gateway commission add-on',
+      icon: Receipt,
+      accentBg: 'bg-amber-500',
+      iconBg: 'bg-amber-100/60 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400',
+      borderClass: 'border-amber-100 dark:border-amber-900/40',
+      bgClass: 'bg-amber-50/10 dark:bg-amber-950/5'
+    },
   ];
+
+  const formatFeeValue = (val: string) => {
+    if (!val) return { text: 'Exempt / Nil', isFree: true, detail: 'No application fee' };
+    const clean = val.trim();
+    const lower = clean.toLowerCase();
+    
+    if (lower.includes('no fee') || lower.includes('not applicable') || lower.includes('exempt') || lower.includes('nil') || lower === '0' || lower === '₹0') {
+      return { 
+        text: 'Exempt / ₹0', 
+        isFree: true, 
+        detail: lower.includes('not applicable') ? 'Not Applicable' : 'Fee exemption applied' 
+      };
+    }
+    
+    return { text: clean, isFree: false, detail: '' };
+  };
 
   return (
     <div id="portal-expense-estimator" className="space-y-5 my-6 p-1 sm:p-2 bg-transparent">
       
       {/* 1. Official Board Application Fee Details Grid */}
-      <div className="bg-white dark:bg-zinc-950 border-2 border-neutral-900 dark:border-zinc-800 p-0 relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_rgba(39,39,42,1)] rounded-none">
-        <div className="bg-emerald-600 px-4 py-2 border-b-2 border-neutral-900 dark:border-zinc-800 flex justify-between items-center">
-          <h3 className="text-[11px] font-black uppercase text-white tracking-widest flex items-center gap-2 select-none">
-            <CreditCard className="w-4 h-4 text-emerald-100" />
-            <span>Application Fees / आवेदन शुल्क</span>
-          </h3>
-          <span className="text-[9px] font-mono bg-white text-emerald-700 font-black px-1.5 py-0.5 uppercase tracking-tighter shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+      <div className="bg-white dark:bg-zinc-950 border border-neutral-150 dark:border-zinc-805 rounded-3xl overflow-hidden shadow-sm">
+        <div className="bg-emerald-600 dark:bg-emerald-700/80 px-5 py-3 border-b border-rose-50/10 flex justify-between items-center select-none">
+          <div className="flex items-center gap-2">
+            <CreditCard className="w-4.5 h-4.5 text-emerald-105" />
+            <h3 className="text-xs sm:text-xs.5 font-sans font-black uppercase text-white tracking-widest leading-none">
+              Application Fee Structure (आवेदन शुल्क विवरण)
+            </h3>
+          </div>
+          <span className="text-[9px] font-mono bg-white text-emerald-700 dark:text-emerald-800 font-extrabold px-2 py-0.5 uppercase tracking-widest rounded-full shadow-3xs">
             OFFICIAL
           </span>
         </div>
         
-        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {feeItems.map((item, index) => (
-            <div key={index} className="flex flex-col border-b sm:border-b-0 sm:border-r last:border-b-0 sm:last:border-r-0 border-neutral-100 dark:border-zinc-900/50 pb-3 sm:pb-0 sm:pr-3 last:pb-0 sm:last:pr-0 group">
-              <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-black uppercase tracking-tight mb-1 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-none shrink-0" />
-                {item.label}
-              </span>
-              <span className="text-sm font-black text-neutral-900 dark:text-zinc-200 font-mono break-words leading-tight group-hover:text-emerald-600 transition-colors">
-                {item.value}
-              </span>
-            </div>
-          ))}
+        <div className="p-4 grid grid-cols-2 md:grid-cols-5 gap-3">
+          {processedFeeItems.map((item, index) => {
+            const IconComponent = item.icon;
+            const parsed = formatFeeValue(item.value);
+            
+            return (
+              <div 
+                key={index} 
+                className={`flex flex-col justify-between p-3.5 rounded-2xl border transition-all duration-300 hover:shadow-3xs group relative overflow-hidden ${
+                  index === 4 ? 'col-span-2 md:col-span-1' : 'col-span-1'
+                } ${item.borderClass} ${item.bgClass}`}
+              >
+                {/* Top Accent Line */}
+                <div className={`absolute top-0 left-0 right-0 h-1 opacity-40 group-hover:opacity-70 transition-opacity ${item.accentBg}`} />
+
+                <div>
+                  {/* Meta Label Row */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`p-1 rounded-lg shrink-0 ${item.iconBg}`}>
+                      <IconComponent className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-[10px] font-sans font-black uppercase text-neutral-400 dark:text-zinc-500 tracking-wider truncate leading-tight">
+                        {item.label}
+                      </span>
+                      <span className="text-[8.5px] font-sans font-bold text-neutral-300 dark:text-zinc-500/80 leading-none truncate block">
+                        {item.hindi}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Fee value/Pill */}
+                  <div className="mt-2.5">
+                    {parsed.isFree ? (
+                      <span className="inline-flex flex-col">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/30 font-sans tracking-tight">
+                          {parsed.text}
+                        </span>
+                        {parsed.detail && (
+                          <span className="text-[9px] text-neutral-400 dark:text-zinc-500 mt-1 font-sans leading-none block font-medium">
+                            {parsed.detail}
+                          </span>
+                        )}
+                      </span>
+                    ) : (
+                      <span className="inline-flex flex-col">
+                        <span className="bg-yellow-200 dark:bg-yellow-905/40 text-neutral-900 dark:text-yellow-200 px-2 py-0.5 border border-yellow-300 dark:border-yellow-900/50 text-xs font-black font-mono tracking-tight shadow-3xs inline-block rounded">
+                          {parsed.text}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Optional description note */}
+                {item.sub && !parsed.isFree && (
+                  <div className="mt-3.5 pt-2 border-t border-dashed border-neutral-200/60 dark:border-zinc-800/60 flex items-center justify-between select-none">
+                    <span className="text-[8.5px] font-sans font-medium text-neutral-400 dark:text-zinc-500 leading-tight">
+                      {item.sub}
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
         
         {/* Subtle decorative "secure" footer */}
-        <div className="bg-neutral-50 dark:bg-zinc-900/50 px-4 py-1.5 border-t border-neutral-100 dark:border-zinc-900 flex justify-end gap-3">
-           <div className="flex items-center gap-1 opacity-50">
-             <span className="text-[8px] font-mono font-bold text-neutral-400 uppercase">Verified Sources</span>
-             <Award className="w-2.5 h-2.5 text-neutral-300" />
+        <div className="bg-[#fcfcff] dark:bg-zinc-900/40 px-5 py-2.5 border-t border-neutral-150 dark:border-zinc-800/80 flex flex-col xs:flex-row justify-between items-center gap-2 select-none">
+           <div className="flex items-center gap-1.5 text-[9px] text-neutral-400 dark:text-zinc-500 font-sans">
+             <Info className="w-3.5 h-3.5 text-neutral-300 dark:text-zinc-700" />
+             <span>Filing windows/methods are subjected to respective recruitment board portals.</span>
+           </div>
+           <div className="flex items-center gap-1 opacity-60">
+             <span className="text-[9px] font-mono font-bold text-neutral-400 uppercase">Verified Sources</span>
+             <Award className="w-3 h-3 text-emerald-600 dark:text-emerald-405" />
            </div>
         </div>
       </div>
