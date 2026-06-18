@@ -751,27 +751,25 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
               </h1>
 
               {/* Meta Details Row */}
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-4 border-t border-dashed border-neutral-200 dark:border-zinc-800 text-xs text-neutral-600 dark:text-zinc-400 font-sans">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold text-[9.5px] uppercase font-mono tracking-wider">Date Published:</span>
-                  <span className="font-black text-neutral-800 dark:text-zinc-200 font-mono">
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-4 gap-y-2 pt-4 border-t border-dashed border-neutral-200 dark:border-zinc-800 text-[10px] xs:text-xs text-neutral-600 dark:text-zinc-400 font-sans">
+                <div className="flex items-center gap-1 col-span-2 sm:col-span-1">
+                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold uppercase font-mono tracking-wider">Date:</span>
+                  <span className="font-black text-neutral-800 dark:text-zinc-200 font-mono truncate">
                     {new Date(post.a2_postDateTime).toLocaleDateString('en-IN', {day: 'numeric', month: 'short', year: 'numeric'})}
-                    <span className="ml-2 opacity-60 text-[11px] font-mono tracking-tight bg-blue-100/50 dark:bg-zinc-800/60 px-1.5 py-0.5 rounded">
+                    <span className="ml-1 opacity-70 text-[9px] font-mono tracking-tight bg-blue-50 dark:bg-zinc-800 px-1 py-0.5 rounded">
                       {getRelativeTime(post.a2_postDateTime)}
                     </span>
                   </span>
                 </div>
-                <div className="h-3 w-[1px] bg-neutral-200 dark:bg-zinc-850 hidden sm:block" />
-                <div className="flex items-center gap-1.5">
-                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold text-[9.5px] uppercase font-mono tracking-wider">Estimate:</span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 dark:bg-amber-950/40 text-amber-850 dark:text-amber-300 font-black font-mono text-[10px] rounded border border-amber-200/50 dark:border-amber-900/30">
+                <div className="flex items-center gap-1">
+                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold uppercase font-mono tracking-wider">Time:</span>
+                  <span className="px-1.5 py-0.5 bg-amber-50 dark:bg-amber-950/40 text-amber-850 dark:text-amber-300 font-black font-mono text-[9px] rounded border border-amber-200/50 dark:border-amber-900/30">
                     ⏱️ {computedReadTime}
                   </span>
                 </div>
-                <div className="h-3 w-[1px] bg-neutral-200 dark:bg-zinc-855 hidden sm:block" />
-                <div className="flex items-center gap-1.5">
-                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold text-[9.5px] uppercase font-mono tracking-wider">Checked By:</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-bold italic">Ashish Maurya</span>
+                <div className="flex items-center gap-1 col-span-2 sm:col-span-1">
+                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold uppercase font-mono tracking-wider">By:</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-bold italic truncate">Ashish Maurya</span>
                 </div>
               </div>
             </div>
