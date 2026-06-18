@@ -196,11 +196,11 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
 
   const processedFeeItems = [
     { 
-      label: 'General Category', 
-      hindi: 'सामान्य वर्ग (General)',
+      label: 'General / EWS Category', 
+      hindi: 'सामान्य / आर्थिक पिछड़ा वर्ग',
       value: fee.generalOBC || 'Nil', 
       valueNum: generalCost,
-      sub: 'General / Unreserved category',
+      sub: 'General / EWS / Unreserved',
       icon: Users,
       accentBg: 'bg-blue-500',
       iconBg: 'bg-blue-100/60 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400',
@@ -218,18 +218,6 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
       iconBg: 'bg-indigo-100/60 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400',
       borderClass: 'border-indigo-100 dark:border-indigo-900/40',
       bgClass: 'bg-indigo-50/10 dark:bg-indigo-950/5'
-    },
-    { 
-      label: 'EWS Category', 
-      hindi: 'आर्थिक पिछड़ा वर्ग (EWS)',
-      value: fee.generalOBC || 'Nil', 
-      valueNum: generalCost,
-      sub: 'Economically Weaker Section',
-      icon: Percent,
-      accentBg: 'bg-violet-500',
-      iconBg: 'bg-violet-100/60 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400',
-      borderClass: 'border-violet-100 dark:border-violet-900/40',
-      bgClass: 'bg-violet-50/10 dark:bg-violet-950/5'
     },
     { 
       label: 'SC / ST Category', 
