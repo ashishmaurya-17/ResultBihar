@@ -196,11 +196,11 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
 
   const processedFeeItems = [
     { 
-      label: 'General / OBC / EWS', 
-      hindi: 'सामान्य / ओबीसी / ईडब्ल्यूएस',
+      label: 'General Category', 
+      hindi: 'सामान्य वर्ग (General)',
       value: fee.generalOBC || 'Nil', 
       valueNum: generalCost,
-      sub: 'Open / Creamy-layer category',
+      sub: 'General / Unreserved category',
       icon: Users,
       accentBg: 'bg-blue-500',
       iconBg: 'bg-blue-100/60 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400',
@@ -208,32 +208,68 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
       bgClass: 'bg-blue-50/10 dark:bg-blue-950/5'
     },
     { 
-      label: 'SC / ST / Women', 
-      hindi: 'एससी / एसटी / महिला वर्ग',
-      value: fee.ewsSCST || 'Nil', 
-      valueNum: scstCost,
-      sub: 'Reserved State Categories',
-      icon: Award,
+      label: 'OBC Category', 
+      hindi: 'अन्य पिछड़ा वर्ग (OBC)',
+      value: fee.generalOBC || 'Nil', 
+      valueNum: generalCost,
+      sub: 'Other Backward Classes',
+      icon: Users,
       accentBg: 'bg-indigo-500',
       iconBg: 'bg-indigo-100/60 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400',
       borderClass: 'border-indigo-100 dark:border-indigo-900/40',
       bgClass: 'bg-indigo-50/10 dark:bg-indigo-950/5'
     },
     { 
-      label: 'PH / Handicapped', 
-      hindi: 'दिव्यांगजन (विशेष योग्यजन)',
-      value: fee.ph || 'Nil', 
-      valueNum: phCost,
-      sub: 'Physical disability specs',
-      icon: Heart,
+      label: 'EWS Category', 
+      hindi: 'आर्थिक पिछड़ा वर्ग (EWS)',
+      value: fee.generalOBC || 'Nil', 
+      valueNum: generalCost,
+      sub: 'Economically Weaker Section',
+      icon: Percent,
+      accentBg: 'bg-violet-500',
+      iconBg: 'bg-violet-100/60 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400',
+      borderClass: 'border-violet-100 dark:border-violet-900/40',
+      bgClass: 'bg-violet-50/10 dark:bg-violet-950/5'
+    },
+    { 
+      label: 'SC / ST Category', 
+      hindi: 'अनुसूचित जाति/जनजाति',
+      value: fee.ewsSCST || 'Nil', 
+      valueNum: scstCost,
+      sub: 'SC / ST Reserved categories',
+      icon: Award,
       accentBg: 'bg-rose-500',
       iconBg: 'bg-rose-100/60 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400',
       borderClass: 'border-rose-100 dark:border-rose-900/40',
       bgClass: 'bg-rose-50/10 dark:bg-rose-950/5'
     },
     { 
+      label: 'Women Category', 
+      hindi: 'महिला वर्ग (Women)',
+      value: fee.ewsSCST || 'Nil', 
+      valueNum: scstCost,
+      sub: 'Female candidates (All cat.)',
+      icon: Heart,
+      accentBg: 'bg-fuchsia-500',
+      iconBg: 'bg-fuchsia-100/60 dark:bg-fuchsia-950/40 text-fuchsia-600 dark:text-fuchsia-400',
+      borderClass: 'border-fuchsia-100 dark:border-fuchsia-900/40',
+      bgClass: 'bg-fuchsia-50/10 dark:bg-fuchsia-950/5'
+    },
+    { 
+      label: 'PH / Handicapped', 
+      hindi: 'दिव्यांगजन (PH श्रेणी)',
+      value: fee.ph || 'Nil', 
+      valueNum: phCost,
+      sub: 'Physically Handicapped specs',
+      icon: AlertCircle,
+      accentBg: 'bg-orange-500',
+      iconBg: 'bg-orange-100/60 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400',
+      borderClass: 'border-orange-100 dark:border-orange-900/40',
+      bgClass: 'bg-orange-50/10 dark:bg-orange-950/5'
+    },
+    { 
       label: 'Payment Mode', 
-      hindi: 'शुल्क भुगतान का माध्यम',
+      hindi: 'भुगतान का माध्यम',
       value: fee.mode || 'Online Gateway', 
       sub: 'NetBanking, UPI, Debit Card',
       icon: CreditCard,
@@ -244,7 +280,7 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
     },
     { 
       label: 'Bank Charges', 
-      hindi: 'ई-पोर्टल बैंक देय शुल्क',
+      hindi: 'अतिरिक्त बैंक शुल्क',
       value: fee.bankCharges || 'As per norms', 
       sub: 'Gateway commission add-on',
       icon: Receipt,
@@ -288,17 +324,16 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
           </span>
         </div>
         
-        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {processedFeeItems.map((item, index) => {
             const IconComponent = item.icon;
             const parsed = formatFeeValue(item.value);
+            const isSentence = parsed.text.length > 22 || parsed.text.includes('as per') || parsed.text.includes('rules');
             
             return (
               <div 
                 key={index} 
-                className={`flex flex-col justify-between p-3.5 rounded-2xl border transition-all duration-300 hover:shadow-3xs group relative overflow-hidden ${
-                  index === 4 ? 'col-span-2 md:col-span-1' : 'col-span-1'
-                } ${item.borderClass} ${item.bgClass}`}
+                className={`flex flex-col justify-between p-3.5 rounded-2xl border transition-all duration-300 hover:shadow-3xs group relative overflow-hidden ${item.borderClass} ${item.bgClass}`}
               >
                 {/* Top Accent Line */}
                 <div className={`absolute top-0 left-0 right-0 h-1 opacity-40 group-hover:opacity-70 transition-opacity ${item.accentBg}`} />
@@ -334,9 +369,15 @@ Expected Base Pay: ₹${expectedSalary.toLocaleString('en-IN')}/month
                       </span>
                     ) : (
                       <span className="inline-flex flex-col">
-                        <span className="bg-yellow-200 dark:bg-yellow-905/40 text-neutral-900 dark:text-yellow-200 px-2 py-0.5 border border-yellow-300 dark:border-yellow-900/50 text-xs font-black font-mono tracking-tight shadow-3xs inline-block rounded">
-                          {parsed.text}
-                        </span>
+                        {isSentence ? (
+                          <span className="text-xs font-bold text-neutral-850 dark:text-zinc-200 leading-relaxed block break-words select-all">
+                            {parsed.text}
+                          </span>
+                        ) : (
+                          <span className="bg-yellow-100 dark:bg-yellow-950/40 text-neutral-900 dark:text-yellow-250 px-2 py-0.5 border border-yellow-300 dark:border-yellow-900/50 text-xs font-black font-mono tracking-tight shadow-3xs inline-block rounded">
+                            {parsed.text}
+                          </span>
+                        )}
                       </span>
                     )}
                   </div>
