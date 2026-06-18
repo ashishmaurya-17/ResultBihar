@@ -751,23 +751,25 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
               </h1>
 
               {/* Meta Details Row */}
-              <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-4 gap-y-2 pt-4 border-t border-dashed border-neutral-200 dark:border-zinc-800 text-[10px] xs:text-xs text-neutral-600 dark:text-zinc-400 font-sans">
-                <div className="flex items-center gap-1 col-span-2 sm:col-span-1">
-                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold uppercase font-mono tracking-wider">Date:</span>
-                  <span className="font-black text-neutral-800 dark:text-zinc-200 font-mono truncate">
-                    {new Date(post.a2_postDateTime).toLocaleDateString('en-IN', {day: 'numeric', month: 'short', year: 'numeric'})}
-                    <span className="ml-1 opacity-70 text-[9px] font-mono tracking-tight bg-blue-50 dark:bg-zinc-800 px-1 py-0.5 rounded">
-                      {getRelativeTime(post.a2_postDateTime)}
+              <div className="flex flex-col gap-2 pt-4 border-t border-dashed border-neutral-200 dark:border-zinc-800 text-[10px] xs:text-xs text-neutral-600 dark:text-zinc-400 font-sans">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                  <div className="flex items-center gap-1">
+                    <span className="text-neutral-400 dark:text-zinc-500 font-extrabold uppercase font-mono tracking-wider">Date:</span>
+                    <span className="font-black text-neutral-800 dark:text-zinc-200 font-mono truncate">
+                      {new Date(post.a2_postDateTime).toLocaleDateString('en-IN', {day: 'numeric', month: 'short', year: 'numeric'})}
+                      <span className="ml-1 opacity-70 text-[9px] font-mono tracking-tight bg-blue-50 dark:bg-zinc-800 px-1 py-0.5 rounded">
+                        {getRelativeTime(post.a2_postDateTime)}
+                      </span>
                     </span>
-                  </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-neutral-400 dark:text-zinc-500 font-extrabold uppercase font-mono tracking-wider">Time:</span>
+                    <span className="px-1.5 py-0.5 bg-amber-50 dark:bg-amber-950/40 text-amber-850 dark:text-amber-300 font-black font-mono text-[9px] rounded border border-amber-200/50 dark:border-amber-900/30">
+                      ⏱️ {computedReadTime}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-neutral-400 dark:text-zinc-500 font-extrabold uppercase font-mono tracking-wider">Time:</span>
-                  <span className="px-1.5 py-0.5 bg-amber-50 dark:bg-amber-950/40 text-amber-850 dark:text-amber-300 font-black font-mono text-[9px] rounded border border-amber-200/50 dark:border-amber-900/30">
-                    ⏱️ {computedReadTime}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1 col-span-2 sm:col-span-1">
                   <span className="text-neutral-400 dark:text-zinc-500 font-extrabold uppercase font-mono tracking-wider">By:</span>
                   <span className="text-emerald-700 dark:text-emerald-400 font-bold italic truncate">Ashish Maurya</span>
                 </div>
@@ -776,41 +778,45 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
           </div>
 
           {/* Gazette banner / Actions Panel */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-4 mb-8 bg-neutral-50 dark:bg-zinc-950/40 border border-neutral-150 dark:border-zinc-800 rounded-3xl no-print shadow-xs">
-            <span className="text-xs font-black uppercase text-neutral-400 dark:text-zinc-500 tracking-wider font-sans select-none px-1">
-              Notice Actions
-            </span>
-            
-            <div className="flex flex-wrap items-center gap-2">
-              {onBack && (
+          <div className="flex flex-col gap-3 p-4 mb-8 bg-neutral-50 dark:bg-zinc-950/40 border border-neutral-150 dark:border-zinc-800 rounded-3xl no-print shadow-xs">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-xs font-black uppercase text-neutral-400 dark:text-zinc-500 tracking-wider font-sans select-none px-1">
+                Notice Actions
+              </span>
+              
+              <div className="flex flex-wrap items-center gap-2 justify-end">
+                {onBack && (
+                  <button
+                    onClick={onBack}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-neutral-50 dark:bg-zinc-800 dark:hover:bg-zinc-755 text-neutral-800 dark:text-zinc-200 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-neutral-200/80 dark:border-zinc-700 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
+                    title="Go back to dashboard"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    <span>Home</span>
+                  </button>
+                )}
+                
                 <button
-                  onClick={onBack}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-neutral-50 dark:bg-zinc-800 dark:hover:bg-zinc-755 text-neutral-800 dark:text-zinc-200 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-neutral-200/80 dark:border-zinc-700 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
-                  title="Go back to dashboard"
+                  onClick={handleCopyLink}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/30 dark:hover:bg-blue-950/55 text-blue-950 dark:text-blue-300 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-blue-200/50 dark:border-blue-900/40 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
+                  title="Copy shareable post link to clipboard"
                 >
-                  <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
-                  <span>Home</span>
+                  {copied ? <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" strokeWidth={3} /> : <Copy className="w-3.5 h-3.5" strokeWidth={2.5} />}
+                  <span>{copied ? "Copied!" : "Copy Link"}</span>
                 </button>
-              )}
-              
-              <button
-                onClick={handleCopyLink}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/30 dark:hover:bg-blue-950/55 text-blue-950 dark:text-blue-300 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-blue-200/50 dark:border-blue-900/40 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
-                title="Copy shareable post link to clipboard"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" strokeWidth={3} /> : <Copy className="w-3.5 h-3.5" strokeWidth={2.5} />}
-                <span>{copied ? "Copied!" : "Copy Link"}</span>
-              </button>
 
-              <button
-                onClick={handleShare}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/55 text-emerald-950 dark:text-emerald-300 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-emerald-200/50 dark:border-emerald-900/40 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
-                title="Share this job update via social media or messaging"
-              >
-                <Share2 className="w-3.5 h-3.5" strokeWidth={2.5} />
-                <span>Share</span>
-              </button>
-              
+                <button
+                  onClick={handleShare}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/55 text-emerald-950 dark:text-emerald-300 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border border-emerald-200/50 dark:border-emerald-900/40 shadow-3xs hover:scale-[1.02] active:scale-[0.98]"
+                  title="Share this job update via social media or messaging"
+                >
+                  <Share2 className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  <span>Share</span>
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex flex-wrap items-center gap-2 justify-end">
               <button
                 onClick={toggleBookmark}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 font-sans text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer select-none border shadow-3xs hover:scale-[1.02] active:scale-[0.98] ${
