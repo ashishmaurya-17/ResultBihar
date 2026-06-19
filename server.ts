@@ -4,7 +4,6 @@ import fs from "fs";
 import yaml from "yaml";
 import { createServer as createViteServer } from "vite";
 import { render } from "./src/entry-server";
-import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import { generateMockPostsForCollection } from "./src/lib/boardMocks";
 import { 
@@ -41,8 +40,7 @@ interface ServerPost {
   urgent?: boolean;
 }
 
-// Lazy-loaded Gemini instance to prevent server startup crash if key is not defined yet
-let aiInstance: GoogleGenAI | null = null;
+// Lazy-loaded AI instance for future scalability
 let warmedPostSummaries: { id: string; title: string; category: string; date: string }[] = [];
 const warmedPostsMap = new Map<string, ServerPost>();
 
@@ -62,24 +60,6 @@ function cmsLog(msg: string) {
   if (cmsLogs.length > 100) {
     cmsLogs.pop();
   }
-}
-
-function getGeminiClient() {
-  if (!aiInstance) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not set. Please add it to your environment variables or Settings > Secrets.");
-    }
-    aiInstance = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          "User-Agent": "aistudio-build",
-        }
-      }
-    });
-  }
-  return aiInstance;
 }
 
 // Simple recursive folder scanner to find all job updates
@@ -276,174 +256,12 @@ app.get("/api/notifications/digest", async (req, res) => {
         "- **Application Tip**: Use Sarkari Saathi chat helper (located on bottom-right corner) to generate eligibility answers for any of these active listings instantly.";
     }
 
-    // Try generating dynamic digest via Gemini if the key is available
-    if (process.env.GEMINI_API_KEY) {
-      try {
-        const ai = getGeminiClient();
-        
-        // Feed alerts and recent active post context to make the AI digest super high value
-        const alertsText = alertsToSummarize.length > 0 
-          ? alertsToSummarize.map(a => `- [${new Date(a.timestamp).toLocaleString('en-IN')}] ${a.message}`).join("\n")
-          : "None. No surge events recorded today.";
-
-        const recentPostList = recentWarmed.length > 0
-          ? recentWarmed.map(p => `- [${p.category.toUpperCase()}] "${p.title}"`).join("\n")
-          : "None currently listed.";
-
-        const prompt = `You are the chief content editor and expert curator for SarkariBoard (sarkariboard.com), a trusted government job info hub. 
-Analyze the recent system update alerts and recently published posts below, and draft a prestigious daily digest bulletin for our candidates.
-
---- SYSTEM ALERTS TRIGGERED TODAY ---
-${alertsText}
-
---- RECENT PORTAL JOBS/POSTS ---
-${recentPostList}
-
---- INSTRUCTIONS ---
-1. Begin with a professional, encouraging title like "### 📋 Daily Notification Digest & Critical Sync Summary".
-2. Synthesize and group the alerts into logical, high-impact bulleted sectors. Emphasize target commissions, vacancy volumes, and application deadlines.
-3. If there are NO system alerts, write a warm, beautifully composed "Daily Scanner Status" explaining that sync agents are listening normally, and provide 3 high-value tips or updates based on the recent portal jobs/posts.
-4. Keep the output extremely polished, clean, and in standard markdown. NEVER use conversational chat filler like "Here is your summary". Skip intros/outros and directly present the markdown content of the digest.
-5. Max 180 words. Focus strictly on facts, clarity, and bold accents.
-
-Begin compiling:`;
-
-        const response = await ai.models.generateContent({
-          model: "gemini-3.1-flash-lite",
-          contents: prompt,
-        });
-
-        if (response.text) {
-          return res.json({ digest: response.text.trim(), isAiPowered: true });
-        }
-      } catch (geminiError) {
-        console.warn("Gemini Digest generation failed, reverting to strict fallback.", geminiError);
-      }
-    }
-
-    // Return the high-quality fallback if Gemini failed or wasn't specified
+    // Return the high-quality fallback
     return res.json({ digest: fallbackDigest, isAiPowered: false });
 
   } catch (error: any) {
     console.error("Digest API handler error:", error);
     res.status(500).json({ error: "Failed to generate digest summary" });
-  }
-});
-
-// Low-latency chat assistant with local database context using gemini-3.1-flash-lite
-app.post("/api/assistant", async (req, res) => {
-  const { messages, currentUrl } = req.body;
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: "Messages array is required" });
-  }
-
-  // SSE headers for real-time low-latency response streaming
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-
-  try {
-    const ai = getGeminiClient();
-
-    // 1. Setup the custom system prompt for Sarkari Saathi
-    const systemInstruction = `You are "Sarkari Saathi", the official AI Chat Assistant for SarkariBoard (sarkariboard.com).
-Your primary role is to answer questions about government job recruitments (sarkari naukri), exam admit cards, results, exam syllabus, and government welfare schemes (Govt Yojana).
-
-Guidelines for your answers:
-1. Always be professional, precise, direct, and encouraging. Skip any generic introduction like "Hello how can I help".
-2. Use beautiful Markdown styling: bold text, bullet points, headers, and clean tables.
-3. If users ask about specific active jobs, admit cards, or results, use the local updates database:
-${warmedPostSummaries.slice(0, 35).map(p => `- [Category: ${p.category.toUpperCase()}] "${p.title}" (Date: ${p.date}) -> ID: ${p.id}`).join("\n")}
-4. IMPORTANT: If there is a matching post in our database, ALWAYS tell the user to navigate to its page using a hyperlink to "/post/[ID]" where [ID] is the exact ID. Example: "You can find all active direct links, fee details, and timelines on our dedicated page: [${warmedPostSummaries[0]?.title || "Detail Page"}](/post/${warmedPostSummaries[0]?.id || ""})".
-5. Keep your final response concise (ideally under 130 words) for ultra-fast reading and lightning quick rendering.
-
-User's current location on the platform: ${currentUrl || "Home Page"}.`;
-
-    // 3. Format messaging thread for @google/genai contents
-    const contents = messages.map((m: any) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }]
-    }));
-
-    // Generate stream using gemini-3.1-flash-lite (lowest latency)
-    const responseStream = await ai.models.generateContentStream({
-      model: "gemini-3.1-flash-lite",
-      contents,
-      config: {
-        systemInstruction,
-        temperature: 0.15, // High factual consistency
-      }
-    });
-
-    let tokenBuffer = "";
-    const BATCH_SIZE = 4; // Buffer 4 tokens before sending, to reduce reflows
-
-    for await (const chunk of responseStream) {
-      if (chunk.text) {
-        tokenBuffer += chunk.text;
-        if (tokenBuffer.length >= BATCH_SIZE) {
-            res.write(`data: ${JSON.stringify({ text: tokenBuffer })}\n\n`);
-            tokenBuffer = "";
-        }
-      }
-    }
-    if (tokenBuffer.length > 0) {
-        res.write(`data: ${JSON.stringify({ text: tokenBuffer })}\n\n`);
-    }
-    res.write("data: [DONE]\n\n");
-    res.end();
-  } catch (err: any) {
-    console.error("Assistant API Error:", err);
-    res.write(`data: ${JSON.stringify({ error: err.message || "An unexpected error occurred" })}\n\n`);
-    res.write("data: [DONE]\n\n");
-    res.end();
-  }
-});
-
-// AI eligibility summary powered by gemini-3.5-flash using raw content or structured parameters
-app.post("/api/post/summary", async (req, res) => {
-  const { postId, title, content, collection } = req.body;
-  if (!postId || !title) {
-    return res.status(400).json({ error: "postId and title are required parameters" });
-  }
-
-  try {
-    const ai = getGeminiClient();
-    
-    const systemInstruction = `You are a professional government exam eligibility analyst for SarkariBoard.
-Your task is to analyze the provided government notification details and output an extremely concise, scannable bulleted summary in Markdown.
-You MUST extract and highlight:
-- **Age Criteria**: Min/Max age limits or key relaxation rules
-- **Application Fees**: Flat rates or fees by category (General, OBC, SC/ST, EWS)
-- **Crucial Timelines**: Key registration dates, application deadlines, and exam timings
-
-Rules:
-1. Provide exactly three of four concise, dense, highly factual bullets based strictly on the text.
-2. Keep the output extremely short (under 95 words in total).
-3. Design it to be highly scannable by using bold labels: **Age Criteria**, **Application Fees**, and **Crucial Dates**.
-4. Avoid any conversational greeting, system messages, warnings, or concluding boilerplate. Start directly with the bullet points.`;
-
-    const cleanContent = content ? content.substring(0, 4000) : "No full content details available.";
-    const prompt = `Post Identifier: ${postId}
-Title: ${title}
-Category Area: ${collection || "Recruitment Notice"}
-Main Content Detail:
-${cleanContent}`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: prompt,
-      config: {
-        systemInstruction,
-        temperature: 0.1, // low temperature for absolute facts
-      }
-    });
-
-    const summaryText = response.text || "";
-    res.json({ success: true, summary: summaryText.trim() });
-  } catch (err: any) {
-    console.error("Post Summary API Error:", err);
-    res.status(500).json({ error: err.message || "Failed to generate eligibility summary" });
   }
 });
 

@@ -743,7 +743,14 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
                 <span className="font-mono text-[9px] text-neutral-400 dark:text-zinc-500 uppercase tracking-widest select-none">
                   A1_POST_DESK
                 </span>
-              </div>              {/* Meta Details Row */}
+              </div>
+
+              {/* Main Post Title/Heading */}
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-sans font-black text-neutral-900 dark:text-zinc-100 tracking-tight leading-snug my-2 select-all">
+                {post.a1_postName}
+              </h1>
+
+              {/* Meta Details Row */}
               <div className="flex flex-col gap-1.5 pt-4 border-t border-dashed border-neutral-200 dark:border-zinc-800 text-[11px] text-neutral-600 dark:text-zinc-400 font-sans">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                   <div className="flex items-center gap-1">
