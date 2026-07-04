@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { safeLocalStorage } from "../lib/storage";
+import TableOfContents from "./TableOfContents";
 
 const InfoTooltip: React.FC<{ content: string; align?: "right" | "center" }> = ({ content, align = "center" }) => {
   return (
@@ -121,6 +122,141 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
+
+  // Generate Table of Contents items dynamically from markdown or fallback schemas
+  const tocItems = useMemo(() => {
+    const items: { level: number; text: string; id: string; targetId: string }[] = [];
+    
+    if (rawContent && rawContent.trim().length > 0) {
+      const lines = rawContent.split("\n");
+      lines.forEach((line) => {
+        // H2 heading
+        const h2Match = line.match(/^##\s+(.*)$/);
+        if (h2Match) {
+          const rawText = h2Match[1].trim();
+          const text = rawText
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // clean links
+            .replace(/[*_~`]/g, "") // clean markdown decorators
+            .trim();
+          
+          let cleanId = text
+            .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2700}-\u{27BF}]|[\u{2600}-\u{26FF}]|[\u{2B50}]|📌|🗓️|💳|🎓|📋|🏃|🛠️|★/gu, "")
+            .replace(/[^\w\s-]/g, "")
+            .trim()
+            .replace(/\s+/g, "-")
+            .toLowerCase();
+
+          let targetId = cleanId;
+          const textLower = text.toLowerCase();
+          if (textLower.includes("overview") || textLower.includes("about")) {
+            targetId = "post-overview";
+          } else if (textLower.includes("schedule") || textLower.includes("dates") || textLower.includes("timeline")) {
+            targetId = "important-dates";
+          } else if (textLower.includes("fee") || textLower.includes("charges") || textLower.includes("payment")) {
+            targetId = "fee-details";
+          } else if (textLower.includes("age")) {
+            targetId = "age-limit-details";
+          } else if (textLower.includes("vacancy") || textLower.includes("seat") || textLower.includes("breakup") || textLower.includes("post breakup")) {
+            targetId = "vacancy-details";
+          } else if (textLower.includes("salary") || textLower.includes("pay")) {
+            targetId = "salary-info";
+          } else if (textLower.includes("qualification") || textLower.includes("academic") || textLower.includes("eligibility")) {
+            targetId = "qualifications-needed";
+          } else if (textLower.includes("process") || textLower.includes("how to fill") || textLower.includes("step-by-step") || textLower.includes("apply online")) {
+            targetId = "how-to-fill-form";
+          } else if (textLower.includes("selection")) {
+            targetId = "selection-mode";
+          } else if (textLower.includes("link") || textLower.includes("website") || textLower.includes("apply")) {
+            targetId = "useful-links";
+          } else if (textLower.includes("faq") || textLower.includes("questions") || textLower.includes("answer")) {
+            targetId = "faq-section";
+          }
+
+          items.push({ level: 2, text, id: cleanId, targetId });
+        }
+
+        // H3 heading
+        const h3Match = line.match(/^###\s+(.*)$/);
+        if (h3Match) {
+          const rawText = h3Match[1].trim();
+          const text = rawText
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+            .replace(/[*_~`]/g, "")
+            .trim();
+          
+          let cleanId = text
+            .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2700}-\u{27BF}]|[\u{2600}-\u{26FF}]|[\u{2B50}]|📌|🗓️|💳|🎓|📋|🏃|🛠️|★/gu, "")
+            .replace(/[^\w\s-]/g, "")
+            .trim()
+            .replace(/\s+/g, "-")
+            .toLowerCase();
+
+          let targetId = cleanId;
+          const textLower = text.toLowerCase();
+          if (textLower.includes("educational") || textLower.includes("qualification") || textLower.includes("academic") || textLower.includes("eligibility")) {
+            targetId = "qualifications-needed";
+          } else if (textLower.includes("age limit") || textLower.includes("age criteria")) {
+            targetId = "age-limit-details";
+          } else if (textLower.includes("height") || textLower.includes("chest") || textLower.includes("standards") || textLower.includes("physical endurance") || textLower.includes("pet") || textLower.includes("pst")) {
+            targetId = "qualifications-needed";
+          }
+
+          items.push({ level: 3, text, id: cleanId, targetId });
+        }
+      });
+    }
+
+    // Fallback if no markdown items parsed
+    if (items.length < 2) {
+      if (post.a7_postOverview) {
+        items.push({ level: 2, text: "📌 Post Overview & Highlights", id: "overview", targetId: "post-overview" });
+      }
+      if (post.a4_importantDates && post.a4_importantDates.length > 0) {
+        items.push({ level: 2, text: "🗓️ Important Schedule Dates", id: "dates", targetId: "important-dates" });
+      }
+      if (post.a5_applicationFee && post.a5_applicationFee.generalOBC && post.a5_applicationFee.generalOBC !== "Not Applicable") {
+        items.push({ level: 2, text: "💳 Application Process Fees", id: "fees", targetId: "fee-details" });
+      }
+      if (post.a6_ageLimit && post.a6_ageLimit.minAge && post.a6_ageLimit.minAge !== "N/A") {
+        items.push({ level: 2, text: "👤 Eligibility Age Limit Rules", id: "age", targetId: "age-limit-details" });
+      }
+      if (post.a8_vacancyDetails && post.a8_vacancyDetails.length > 0) {
+        items.push({ level: 2, text: "📋 Category-Wise Vacancy Seats", id: "vacancies", targetId: "vacancy-details" });
+      }
+      if (post.a17_salaryInfo && post.a17_salaryInfo.officialPay) {
+        items.push({ level: 2, text: "💰 Pay scale & Salary Structure", id: "salary", targetId: "salary-info" });
+      }
+      if (post.a9_eligibility) {
+        items.push({ level: 2, text: "🎓 Qualification Requirements", id: "eligibility", targetId: "qualifications-needed" });
+      }
+      if (post.a10_howToFill) {
+        items.push({ level: 2, text: "🛠️ Step-by-Step Registration Steps", id: "fill", targetId: "how-to-fill-form" });
+      }
+      if (post.a11_selectionMode) {
+        items.push({ level: 2, text: "🏅 Mode of Selection screening", id: "selection", targetId: "selection-mode" });
+      }
+      items.push({ level: 2, text: "🔗 Official Application Links", id: "links", targetId: "useful-links" });
+      if (post.a13_faq && post.a13_faq.length > 0) {
+        items.push({ level: 2, text: "❓ Frequently Asked Questions (FAQ)", id: "faq", targetId: "faq-section" });
+      }
+    }
+
+    return items;
+  }, [rawContent, post]);
+
+  // Handle smooth scroll on Table of Contents click
+  const handleTocClick = (targetId: string, text: string) => {
+    const target = document.getElementById(targetId);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      
+      // Dynamic focal highlight feedback using standard rings
+      target.classList.add("ring-2", "ring-rose-500", "ring-offset-4", "transition-all", "duration-500");
+      setTimeout(() => {
+        target.classList.remove("ring-2", "ring-rose-500", "ring-offset-4");
+      }, 1500);
+    }
+  };
 
   // States for automated Gemini post summary
   const [summary, setSummary] = useState<string>("");
@@ -975,9 +1111,12 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
             </div>
           </section>
 
+          {/* Table of Contents - Mobile Inline Version */}
+          <TableOfContents items={tocItems} onItemClick={handleTocClick} isMobileInline={true} />
+
           {/* BLOCK 3: Simple Description */}
           {post.a3_seoDescription && (
-            <section className="mb-8 p-5 sm:p-6 border border-neutral-150 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-950/20 text-neutral-800 dark:text-zinc-250 rounded-3xl relative">
+            <section id="post-description" className="scroll-mt-20 mb-8 p-5 sm:p-6 border border-neutral-150 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-950/20 text-neutral-800 dark:text-zinc-250 rounded-3xl relative">
               <span className="font-sans text-[11px] font-black text-rose-650 dark:text-rose-400 mb-2.5 flex items-center gap-1 select-none uppercase tracking-widest">
                 <span>DESCRIPTION DETAILS & INFO:</span>
                 <InfoTooltip content="Official summarized brief of the department recruitment announcement and core eligibility highlights." />
@@ -987,14 +1126,14 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
           )}
 
           {/* BLOCK 4: Important Dates */}
-          <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+          <div id="important-dates" className="scroll-mt-20 mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
             <SpectrumBorder />
             <section className="p-6 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A4_DATES</span>
               <ImportantDatesTimeline dates={post.a4_importantDates || []} />
 
               {/* Disclaimer below dates */}
-              <div className="mt-3 text-xs font-sans leading-relaxed text-amber-900 dark:text-amber-305 bg-amber-50/40 dark:bg-amber-950/20 p-4 rounded-2xl border border-amber-200/50 dark:border-amber-900/30">
+              <div className="mt-3 text-xs font-sans leading-relaxed text-amber-900 dark:text-amber-305 bg-amber-50/40 dark:bg-amber-955/20 p-4 rounded-2xl border border-amber-200/50 dark:border-amber-900/30">
                 <span className="font-sans font-black uppercase flex items-center gap-1.5 mb-1.5 text-amber-950 dark:text-amber-200 text-[10.5px] tracking-wider">
                   <AlertTriangle size={14} className="shrink-0 text-amber-605 animate-pulse" /> IMPORTANT NOTICE
                 </span>
@@ -1004,7 +1143,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
           </div>
 
           {/* BLOCK 5: Fee Details */}
-          <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+          <div id="fee-details" className="scroll-mt-20 mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
             <SpectrumBorder />
             <section className="p-6 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A5_FEE</span>
@@ -1013,7 +1152,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
           </div>
 
           {/* BLOCK 6: Age Details */}
-          <section className="mb-8 relative">
+          <section id="age-limit-details" className="scroll-mt-20 mb-8 relative">
             <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A6_AGE</span>
             <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
               <span>Age Limits & Rules</span>
@@ -1115,7 +1254,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 7: Post Overview */}
           {post.a7_postOverview && (
-            <section className="mb-8 relative">
+            <section id="post-overview" className="scroll-mt-20 mb-8 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A7_INFO</span>
               <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                 <span>About this Post</span>
@@ -1129,7 +1268,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 8: Vacancy Details */}
           {post.a8_vacancyDetails && post.a8_vacancyDetails.length > 0 && (
-            <section className="mb-8 relative">
+            <section id="vacancy-details" className="scroll-mt-20 mb-8 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A8_SEATS</span>
               <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                 <span>Seats & Vacancy Details</span>
@@ -1137,9 +1276,9 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
               </h2>
               <div className="overflow-x-auto w-full">
                 <SarkariDataTable
-                  headers={["Post Name", "Total Seats", "Castes & Categorized Seats"]}
-                  rows={vacancyRows}
-                  colWidths={["35%", "25%", "40%"]}
+                   headers={["Post Name", "Total Seats", "Castes & Categorized Seats"]}
+                   rows={vacancyRows}
+                   colWidths={["35%", "25%", "40%"]}
                 />
               </div>
             </section>
@@ -1147,7 +1286,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* FEATURE 2: SALARY / PAY SCALE DECODER */}
           {post.a17_salaryInfo && (
-            <section className="mb-8 relative">
+            <section id="salary-info" className="scroll-mt-20 mb-8 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A17_SALARY</span>
               <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                 <span>Monthly Salary & Pay scale (वेतनमान)</span>
@@ -1174,7 +1313,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 9: Eligibility */}
           {post.a9_eligibility && (
-            <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+            <div id="qualifications-needed" className="scroll-mt-20 mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
               <SpectrumBorder />
               <section className="p-6">
                 <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-neutral-900 dark:text-zinc-50 border-b-2 border-blue-600/30 dark:border-blue-400/30 pb-2 mb-5 tracking-wider flex items-center justify-between select-none">
@@ -1199,7 +1338,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 10: How to Fill */}
           {post.a10_howToFill && (
-            <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+            <div id="how-to-fill-form" className="scroll-mt-20 mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
               <SpectrumBorder />
               <section className="p-6">
                 <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-neutral-900 dark:text-zinc-50 border-b-2 border-emerald-600/30 dark:border-emerald-400/30 pb-2 mb-5 tracking-wider flex items-center justify-between select-none">
@@ -1233,7 +1372,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 11: Mode of Selection */}
           {post.a11_selectionMode && (
-            <div className="mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
+            <div id="selection-mode" className="scroll-mt-20 mb-10 bg-white dark:bg-zinc-900 border border-neutral-150 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm">
               <SpectrumBorder />
               <section className="p-6">
                 <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
@@ -1254,7 +1393,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
           )}
 
           {/* BLOCK 12: Useful links */}
-          <section className="mb-8 relative">
+          <section id="useful-links" className="scroll-mt-20 mb-8 relative">
             <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A12_LINKS</span>
             <InteractiveLinkHub
               usefulLinks={post.a12_usefulLinks || []}
@@ -1268,7 +1407,7 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
           {/* BLOCK 13: FAQ Section */}
           {post.a13_faq && post.a13_faq.length > 0 && (
-            <section className="mb-8 relative">
+            <section id="faq-section" className="scroll-mt-20 mb-8 relative">
               <span className="absolute right-0 top-1 text-[8px] text-gray-350 select-none font-mono opacity-25">A13_FAQ</span>
               <h2 className="text-xs sm:text-sm font-sans font-black uppercase text-gray-900 dark:text-zinc-100 border-b border-neutral-150 dark:border-zinc-800 pb-2 mb-4 tracking-wider flex items-center gap-1 select-none">
                 <span>Common Questions & Answers (FAQ)</span>
@@ -1483,6 +1622,11 @@ export const SarkariPostLayout: React.FC<SarkariPostLayoutProps> = ({
 
     {/* Sidebar Column (Right) */}
     <aside className="col-span-12 lg:col-span-4 xl:col-span-3 space-y-6 no-print w-full min-w-0 overflow-hidden">
+       
+       {/* 0. TABLE OF CONTENTS - DESKTOP STICKY PANEL */}
+       <div className="hidden lg:block lg:sticky lg:top-20 z-20">
+         <TableOfContents items={tocItems} onItemClick={handleTocClick} />
+       </div>
        
        {/* 1. SARKARIBOARD OFFICIAL ALERT DESK */}
        <div className="bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-neutral-800 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
